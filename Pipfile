@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asgiref = "==3.5.2"
+django = "==4.1"
+django-cors-headers = "*"
+djangorestframework = "==3.13.1"
+mysqlclient = "==2.1.0"
+drf-yasg2 = "*"
+pytz = "==2022.1"
+sqlparse = "==0.4.2"
+djangorestframework-simplejwt = "*"
+pillow = "*"
+django-filter = "*"
+celery = "*"
+redis = "*"
+django-celery-results = "*"
+django-celery-beat = "*"
+
+[dev-packages]
+isort = '*'
+
+[requires]
+python_version = "3.10"

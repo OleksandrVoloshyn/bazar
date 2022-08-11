@@ -1,0 +1,6 @@
+export * from './HomePage/HomePage'
+export * from './LoginPage/LoginPage'
+export * from './RegisterPage/RegisterPage'
+export * from './ActivatePage/ActivatePage'
+export * from './RecoveryPage/RecoveryPage'
+export * from './ChangePasswordPage/ChangePasswordPage'
