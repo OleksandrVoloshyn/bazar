@@ -2,10 +2,11 @@ import {FC} from "react"
 import {Link} from "react-router-dom";
 
 import {LoginForm} from "../../components";
+import {localStorageService} from "../../services";
 
 const LoginPage: FC = () => {
-    localStorage.removeItem('access')
-    localStorage.removeItem('refresh')
+    localStorageService.logout()
+
     return (
         <div>
             <LoginForm/>

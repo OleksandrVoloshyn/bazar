@@ -2,13 +2,14 @@ import {FC, useEffect} from "react"
 import {useAppDispatch, useAppSelector} from "../../hook";
 import {Link} from "react-router-dom";
 
-import {RegisterForm} from "../../components";
-import {authActions} from "../../redux/slices";
+import {Info, RegisterForm} from "../../components";
+import {authActions} from "../../redux";
 
 const RegisterPage: FC = () => {
     const dispatch = useAppDispatch();
     const {isRegister} = useAppSelector(({authReducer}) => authReducer);
-
+    //todo setError
+    //todo validate
     useEffect(() => {
         dispatch(authActions.setError())
     }, [dispatch])
@@ -16,7 +17,7 @@ const RegisterPage: FC = () => {
         <div>
             {
                 isRegister
-                    ? <div>Перейдіть будь ласка на пошту для підтвердження реєстрації</div>
+                    ? <Info data={'Перейдіть будь ласка на пошту для підтвердження реєстрації'}/>
                     : <div>
                         <RegisterForm/>
                         <Link to={'/login'}>Увійти</Link>

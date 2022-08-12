@@ -3,14 +3,14 @@ import {createBrowserHistory} from 'history'
 
 import {baseURL} from "../constants";
 import {authService} from "./auth.service";
+import {localStorageService} from "./localStorage.service";
 
 const history = createBrowserHistory();
 const axiosService = axios.create({baseURL});
 
 let isRefreshing = false
 axiosService.interceptors.request.use((config) => {
-    // todo окремий сервіс на локалсторедж
-    const access = localStorage.getItem('access');
+    const access = localStorageService.getAccess()
     if (access) {
         config.headers!.Authorization = `Bearer ${access}`
     }
@@ -21,19 +21,17 @@ axiosService.interceptors.response.use((config) => {
         return config
     },
     async (error) => {
-        const refreshToken = localStorage.getItem('refresh');
+        const refreshToken = localStorageService.getRefresh()
         if (error.response?.status === 401 && error.config && !isRefreshing && refreshToken) {
             isRefreshing = true
             try {
                 const {data} = await authService.refresh(refreshToken);
                 const {access, refresh} = data;
-                localStorage.setItem('access', access)
-                localStorage.setItem('refresh', refresh)
+                localStorageService.setAccess(access)
+                localStorageService.setRefresh(refresh)
             } catch (e) {
-                localStorage.removeItem('access')
-                localStorage.removeItem('refresh')
+                localStorageService.logout()
                 history.replace('/login')
-                // history.replace('/login?expSession=true')
             }
             isRefreshing = false
             return axiosService.request(error.config)

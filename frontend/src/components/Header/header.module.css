@@ -12,7 +12,7 @@
     color: cornflowerblue;
 }
 
-.auth > a {
+.auth > div > a {
     text-decoration: none;
     color: #93c54b;
 }

@@ -2,13 +2,23 @@ import {FC} from "react"
 import {Route, Routes} from "react-router-dom";
 
 import {useAppDispatch} from "./hook";
-import {MainLayout} from "./layouts";
-import {LoginPage, ActivatePage, HomePage, RegisterPage, RecoveryPage, ChangePasswordPage} from "./pages";
-import {authActions} from "./redux/slices";
+import {AccountLayout, AdminLayout, MainLayout} from "./layouts";
+import {
+    LoginPage,
+    ActivatePage,
+    HomePage,
+    RegisterPage,
+    RecoveryPage,
+    ChangePasswordPage,
+    AccountPage,
+    NotFoundPage, AdminPage
+} from "./pages";
+import {authActions} from "./redux";
+import {localStorageService} from "./services";
 
 const App: FC = () => {
     const dispatch = useAppDispatch();
-    const access = localStorage.getItem('access');
+    const access = localStorageService.getAccess()
 
     if (access) {
         dispatch(authActions.setAuth())
@@ -24,6 +34,13 @@ const App: FC = () => {
                 <Route path={'recovery/:token'} element={<ChangePasswordPage/>}/>
                 <Route path={'activate/:token'} element={<ActivatePage/>}/>
             </Route>
+            <Route path={'/account'} element={<AccountLayout/>}>
+                <Route index element={<AccountPage/>}/>
+            </Route>
+            <Route path={'/admin'} element={<AdminLayout/>}>
+                <Route index element={<AdminPage/>}/>
+            </Route>
+            <Route path={'*'} element={<NotFoundPage/>}/>
         </Routes>
     );
 };

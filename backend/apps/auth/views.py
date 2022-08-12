@@ -29,6 +29,7 @@ class ActivateUserView(GenericAPIView):
 
 
 class RecoveryPasswordRequestView(GenericAPIView):
+    """Send email for password recovery"""
     permission_classes = (AllowAny,)
     serializer_class = EmailSerializer
 
@@ -44,6 +45,7 @@ class RecoveryPasswordRequestView(GenericAPIView):
 
 
 class ChangePasswordView(GenericAPIView):
+    """recovery password"""
     permission_classes = (AllowAny,)
     serializer_class = PasswordSerializer
 

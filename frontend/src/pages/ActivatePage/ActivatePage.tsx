@@ -1,8 +1,9 @@
 import {FC, useEffect} from "react"
 import {useParams} from "react-router-dom";
-import {authService} from "../../services";
+
 import {useAppDispatch} from "../../hook";
-import {authActions} from "../../redux/slices";
+import {authActions} from "../../redux";
+import {Info} from "../../components";
 
 const ActivatePage: FC = () => {
     const {token} = useParams();
@@ -16,7 +17,7 @@ const ActivatePage: FC = () => {
 
     return (
         <div>
-            <span>Ваш акаунт активовано</span>
+            <Info data={'Ваш акаунт активовано'}/>
         </div>
     );
 };

@@ -1,9 +1,10 @@
-import {axiosService} from "./axios.service";
+import {axiosService, Res} from "./axios.service";
+
 import {urls} from "../constants";
 import {IUser} from "../interfaces";
 
 const userService = {
-    create: (user: IUser) => axiosService.post(urls.users, user)
+    create: (user: IUser):Res<any> => axiosService.post(urls.users, user)
 }
 
 export {userService}

@@ -3,11 +3,10 @@ from enum import Enum
 
 class RegEx(Enum):
     PASSWORD = (
-        r'^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,50}$',
-        ['password must contain 1 number (0-9)'
+        r'^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{8,50})\S$',
+        ['password must contain 1 number'
          'password must contain 1 uppercase letters'
          'password must contain 1 lowercase letters'
-         'password must contain 1 non-alpha numeric number'
          'password is 8-50 characters with no space']
     )
     NAME = (

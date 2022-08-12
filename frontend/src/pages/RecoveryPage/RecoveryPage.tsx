@@ -1,28 +1,33 @@
-import {FC, useEffect, useRef, useState} from "react"
-import {useAppDispatch} from "../../hook";
-import {authActions} from "../../redux/slices";
+import {FC, useEffect, useState} from "react"
+import {useAppDispatch, useInput} from "../../hook";
+
+import {authActions} from "../../redux";
+import {Info} from "../../components";
 
 const RecoveryPage: FC = () => {
-    const email = useRef<any>();
     const dispatch = useAppDispatch();
     const [sentMail, setSentMail] = useState<boolean>(false);
+    const email = useInput('', {isEmpty: true, isEmail: true})
 
     const sendMail = () => {
-        const emailForRecovery = email.current.value;
-        if (emailForRecovery) {
-            dispatch(authActions.recovery(emailForRecovery))
-            setSentMail(true)
-        }
+        dispatch(authActions.recovery(email.value))
+        setSentMail(true)
     }
     useEffect(() => {
     }, [sentMail])
+
     return (
         <div>
             {sentMail
-                ? <div>Перейдіть на вашу пошту для підтвердження</div>
-                : <div>
-                    <div><label>Пошта: <input type="text" ref={email}/></label></div>
-                    <button onClick={sendMail}>Відновити</button>
+                ? <Info data={'Перейдіть на вашу пошту для підтвердження'}/>
+                :
+                <div>
+                    <div><label>Пошта: <input onChange={e => email.onChange(e)} onBlur={e => email.onBlur(e)}
+                                              value={email.value} name={'email'}
+                                              type="text"/></label></div>
+                    {(email.isDirty && email.isEmpty) && <div>Поле не може бути пустим</div>}
+                    {(email.isDirty && email.isEmailError) && <div>Хуйова пошта</div>}
+                    <button disabled={!email.isInputValid} onClick={sendMail}>Відновити</button>
                 </div>
             }
         </div>
