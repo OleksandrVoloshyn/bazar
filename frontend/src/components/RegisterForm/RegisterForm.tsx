@@ -7,12 +7,9 @@ import {IUser} from "../../interfaces";
 import {registerValidator} from "../../validators";
 import {authActions} from "../../redux";
 
-interface IProps {
-}
-
-const RegisterForm: FC<IProps> = () => {
+const RegisterForm: FC = () => {
     const dispatch = useAppDispatch();
-    const {registerEmailError} = useAppSelector(({authReducer}) => authReducer);
+    const {registerErrors} = useAppSelector(({authReducer}) => authReducer);
 
     const {register, handleSubmit, formState: {errors}} = useForm<IUser>({
         resolver: joiResolver(registerValidator),
@@ -20,30 +17,37 @@ const RegisterForm: FC<IProps> = () => {
     });
 
     const submit: SubmitHandler<IUser> = async (user: IUser) => {
-        await dispatch(authActions.register(user))
+        await dispatch(authActions.register({user}))
     }
+
     useEffect(() => {
-    }, [registerEmailError])
+    }, [registerErrors])
+
     return (
         <form onSubmit={handleSubmit(submit)}>
+            <h1>Registration</h1>
+
             {/*todo какашка з поштою*/}
             {/*// @ts-ignore*/}
-            <div><label>Пошта: <input type="text" {...register('email')}/></label></div>
+            <div><label>Email: <input type="email" {...register('email')}/></label></div>
             {errors.email && <span>{errors.email.message}</span>}
-            {registerEmailError && <span>{registerEmailError}</span>}
-            <div><label>Пароль: <input type="password" {...register('password')}/></label></div>
+            {registerErrors?.email && <span>{registerErrors.email}</span>}
+            <div><label>Password: <input type="password" {...register('password')}/></label></div>
             {errors.password && <span>{errors.password.message}</span>}
 
-            <div><label>Ім'я: <input type="text" {...register('profile.name')}/></label></div>
-            {errors.profile?.name && <span>{errors.profile?.name.message}</span>}
-            <div><label>Прізвище: <input type="text" {...register('profile.surname')}/></label></div>
-            {errors.profile?.surname && <span>{errors.profile?.surname.message}</span>}
-            <div><label>Ваш вік: <input type="number" {...register('profile.age')}/></label></div>
-            {errors.profile?.age && <span>{errors.profile?.age.message}</span>}
-            <div><label>Номер телефону: <input type="text" {...register('profile.phone')}/></label></div>
-            {errors.profile?.phone && <span>{errors.profile?.phone.message}</span>}
+            <div><label>Name: <input type="text" {...register('profile.name')}/></label></div>
+            {errors.profile?.name && <span>{errors.profile.name.message}</span>}
+            {registerErrors?.name && <span> Forbidden name contain admin</span>}
+            <div><label>Surname: <input type="text" {...register('profile.surname')}/></label></div>
+            {errors.profile?.surname && <span>{errors.profile.surname.message}</span>}
+            <div><label>age: <input type="number" {...register('profile.age')}/></label></div>
+            {errors.profile?.age && <span>{errors.profile.age.message}</span>}
+            <div><label>Phone number: <input type="text" {...register('profile.phone')}/></label></div>
+            {errors.profile?.phone && <span>{errors.profile.phone.message}</span>}
 
-            <button>Зареєструватись</button>
+            <div>
+                <button>register</button>
+            </div>
         </form>
     );
 };

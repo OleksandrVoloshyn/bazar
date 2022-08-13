@@ -5,38 +5,29 @@ import {useNavigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../hook";
 import {authActions} from "../../redux";
 import {IUser} from "../../interfaces";
-import {joiResolver} from "@hookform/resolvers/joi";
-import {registerValidator} from "../../validators";
 
 const LoginForm: FC = () => {
-    const {register, handleSubmit, formState: {errors}} = useForm<Partial<IUser>>({
-        resolver: joiResolver(registerValidator),
-        mode: "onTouched"
-    });
-
-    const {loginError, isAuth} = useAppSelector(state => state.authReducer);
+    const {register, handleSubmit} = useForm<Partial<IUser>>();
+    const {loginError} = useAppSelector(state => state.authReducer);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
     const submit: SubmitHandler<Partial<IUser>> = async (user: Partial<IUser>) => {
-        await dispatch(authActions.login(user))
+        await dispatch(authActions.login({user}))
     }
 
     useEffect(() => {
-        !loginError && isAuth && navigate('/')
-    }, [navigate, loginError, isAuth])
+    }, [loginError])
 
     return (
         <form onSubmit={handleSubmit(submit)}>
             {/*// @ts-ignore*/}
-            <div><label>Пошта: <input type="text" {...register('email')}/></label></div>
-            {errors.email && <span>{errors.email.message}</span>}
-            <div><label>Пароль: <input type="text" {...register('password')}/></label></div>
-            {errors.password && <span>{errors.password.message}</span>}
+            <div><label>Email: <input type="email" {...register('email')}/></label></div>
+            <div><label>Password: <input type="text" {...register('password')}/></label></div>
+            {loginError && <span>Invalid login or password</span>}
 
-            <div>{loginError && <span>Невірний пароль або пошта</span>}</div>
-
-            <button>Увійти</button>
+            <div>
+                <button>Увійти</button>
+            </div>
         </form>
     );
 };

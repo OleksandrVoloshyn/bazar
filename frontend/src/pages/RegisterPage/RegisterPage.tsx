@@ -1,26 +1,31 @@
 import {FC, useEffect} from "react"
-import {useAppDispatch, useAppSelector} from "../../hook";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
+import {useAppDispatch, useAppSelector} from "../../hook";
 import {Info, RegisterForm} from "../../components";
+import css from './RegisterPage.module.css'
 import {authActions} from "../../redux";
 
 const RegisterPage: FC = () => {
+    const {isSentActivatedMail, isAuth} = useAppSelector(({authReducer}) => authReducer);
     const dispatch = useAppDispatch();
-    const {isRegister} = useAppSelector(({authReducer}) => authReducer);
-    //todo setError
-    //todo validate
+    const navigate = useNavigate();
+
     useEffect(() => {
+        if (isAuth) {
+            navigate('/')
+        }
         dispatch(authActions.setError())
-    }, [dispatch])
+    }, [navigate, dispatch, isSentActivatedMail, isAuth])
+
     return (
-        <div>
+        <div className={css.content}>
             {
-                isRegister
-                    ? <Info data={'Перейдіть будь ласка на пошту для підтвердження реєстрації'}/>
+                isSentActivatedMail
+                    ? <Info data={'Check your mail for activate'}/>
                     : <div>
                         <RegisterForm/>
-                        <Link to={'/login'}>Увійти</Link>
+                        <Link to={'/login'}>to login</Link>
                     </div>
             }
         </div>

@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Autoparks API",
+        title="Bazar API",
         default_version='v1',
         description="About cars",
         terms_of_service="https://www.google.com/policies/terms/",

@@ -6,7 +6,7 @@ interface IProps {
 
 const Info: FC<IProps> = ({data}) => {
     return (
-        <h2>{data}</h2>
+        <h2 style={{textAlign: "center"}}>{data}</h2>
     );
 };
 

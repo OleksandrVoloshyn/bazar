@@ -34,12 +34,16 @@ const App: FC = () => {
                 <Route path={'recovery/:token'} element={<ChangePasswordPage/>}/>
                 <Route path={'activate/:token'} element={<ActivatePage/>}/>
             </Route>
+
             <Route path={'/account'} element={<AccountLayout/>}>
+                {/*todo hoc for account*/}
                 <Route index element={<AccountPage/>}/>
             </Route>
+
             <Route path={'/admin'} element={<AdminLayout/>}>
                 <Route index element={<AdminPage/>}/>
             </Route>
+
             <Route path={'*'} element={<NotFoundPage/>}/>
         </Routes>
     );

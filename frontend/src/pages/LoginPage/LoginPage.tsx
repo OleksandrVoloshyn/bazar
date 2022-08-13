@@ -1,17 +1,21 @@
-import {FC} from "react"
-import {Link} from "react-router-dom";
+import {FC, useEffect} from "react"
+import {Link, useNavigate} from "react-router-dom";
 
 import {LoginForm} from "../../components";
-import {localStorageService} from "../../services";
+import {useAppSelector} from "../../hook";
 
 const LoginPage: FC = () => {
-    localStorageService.logout()
+    const {loginError, isAuth} = useAppSelector(({authReducer}) => authReducer);
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        isAuth && !loginError && navigate('/')
+    }, [navigate, loginError, isAuth])
     return (
         <div>
             <LoginForm/>
-            <div><Link to={'/register'}>Зареєструватись</Link></div>
-            <div><Link to={'/recovery'}>Забули пароль ?</Link></div>
+            <div><Link to={'/register'}>to registration</Link></div>
+            <div><Link to={'/recovery'}>recovery password</Link></div>
         </div>
     );
 };
