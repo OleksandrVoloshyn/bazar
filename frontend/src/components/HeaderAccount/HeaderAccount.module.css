@@ -1,0 +1,17 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    margin: 0 10px;
+    border-bottom: 1px solid black;
+}
+
+.logo {
+    text-decoration: none;
+    color: cornflowerblue;
+}
+
+.logout:hover {
+    cursor: pointer;
+}

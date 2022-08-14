@@ -67,8 +67,8 @@ const authSlice = createSlice({
     name: 'authSlice',
     initialState,
     reducers: {
-        setAuth: (state) => {
-            state.isAuth = true
+        setAuth: (state, action) => {
+            state.isAuth = action.payload
         },
         setError: (state) => {
             state.registerErrors = null

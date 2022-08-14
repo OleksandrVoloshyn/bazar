@@ -1,5 +1,3 @@
-import {bool} from "joi";
-
 const localStorageService = {
     getAccess: () => localStorage.getItem('access',),
     getRefresh: () => localStorage.getItem('refresh',),

@@ -10,8 +10,14 @@ import {
     RegisterPage,
     RecoveryPage,
     ChangePasswordPage,
-    AccountPage,
-    NotFoundPage, AdminPage
+    NotFoundPage,
+    AdminPage,
+    WelcomePage,
+    ProfilePage,
+    ProductListPage,
+    AddProductPage,
+    BasketPage,
+    PurchaseHistoryPage,
 } from "./pages";
 import {authActions} from "./redux";
 import {localStorageService} from "./services";
@@ -21,7 +27,7 @@ const App: FC = () => {
     const access = localStorageService.getAccess()
 
     if (access) {
-        dispatch(authActions.setAuth())
+        dispatch(authActions.setAuth(true))
     }
 
     return (
@@ -35,9 +41,14 @@ const App: FC = () => {
                 <Route path={'activate/:token'} element={<ActivatePage/>}/>
             </Route>
 
+            {/*todo hoc for account*/}
             <Route path={'/account'} element={<AccountLayout/>}>
-                {/*todo hoc for account*/}
-                <Route index element={<AccountPage/>}/>
+                <Route index element={<WelcomePage/>}/>
+                <Route path={'profile'} element={<ProfilePage/>}/>
+                <Route path={'product_list'} element={<ProductListPage/>}/>
+                <Route path={'add_product'} element={<AddProductPage/>}/>
+                <Route path={'basket'} element={<BasketPage/>}/>
+                <Route path={'history'} element={<PurchaseHistoryPage/>}/>
             </Route>
 
             <Route path={'/admin'} element={<AdminLayout/>}>

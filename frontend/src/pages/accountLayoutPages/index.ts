@@ -1,0 +1,6 @@
+export * from './WelcomePage/WelcomePage'
+export * from './ProfilePage/ProfilePage'
+export * from './AddProductPage/AddProductPage'
+export * from './BasketPage/BasketPage'
+export * from './ProductListPage/ProductListPage'
+export * from './PurchaseHistoryPage/PurchaseHistoryPage'
