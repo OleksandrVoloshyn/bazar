@@ -17,15 +17,6 @@ class UserCreateView(CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-class AddAvatarView(UpdateAPIView):
-    """add images to user's profile"""
-    http_method_names = ('patch',)
-    serializer_class = AddAvatarSerializer
-
-    def get_object(self):
-        return self.request.user.profile
-
-
 class UpdateProfile(UpdateAPIView):
     """update profile"""
     http_method_names = ('patch',)

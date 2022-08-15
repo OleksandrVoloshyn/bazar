@@ -1,13 +1,13 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {IUser, IUserProfile} from "../../interfaces";
+import {IUser} from "../../interfaces";
 import {userService} from "../../services";
 
 interface IState {
-    user: IUser | null
+    user?: IUser
 }
 
 const initialState: IState = {
-    user: null
+    user: undefined
 }
 
 const getCurrent = createAsyncThunk<IUser, void>(
@@ -18,18 +18,10 @@ const getCurrent = createAsyncThunk<IUser, void>(
     }
 );
 
-const addAvatar = createAsyncThunk<any, any>(
-    'userSlice/addAvatar',
-    async ({avatar}) => {
-        await userService.addAvatar(avatar)
-    }
-)
-
-const updateAccount = createAsyncThunk<Partial<IUserProfile>, { body: Partial<IUserProfile> }>(
+const updateAccount = createAsyncThunk<any, any>(
     'userSlice/updateAccount',
-    async ({body}) => {
-        // @ts-ignore
-        const {data} = userService.update(body)
+    async (body) => {
+        const {data} = await userService.updateProfile(body)
         return data
     }
 )
@@ -41,23 +33,19 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getCurrent.fulfilled, (state, action) => {
-                // @ts-ignore
                 state.user = action.payload
             })
-            .addCase(addAvatar.fulfilled, (state, action) => {
-                if (state.user) {
-                    state.user.profile.avatar = action.payload
-                }
-            })
             .addCase(updateAccount.fulfilled, (state, action) => {
-                // @ts-ignore
-                state.user.profile = action.payload
+                if (state.user) {
+                    state.user.profile = action.payload
+                }
+                console.log(action.payload)
             })
     }
 });
 
 
 const {reducer: userReducer} = userSlice;
-const userActions = {getCurrent, addAvatar, updateAccount}
+const userActions = {getCurrent, updateAccount}
 
 export {userReducer, userActions}

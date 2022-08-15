@@ -7,8 +7,8 @@ import {userActions} from "../../redux";
 
 const AccountLayout: FC = () => {
     const {isAuth} = useAppSelector(({authReducer}) => authReducer);
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         !isAuth && navigate('/')

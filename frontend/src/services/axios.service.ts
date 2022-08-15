@@ -6,7 +6,7 @@ import {authService} from "./auth.service";
 import {localStorageService} from "./localStorage.service";
 
 const history = createBrowserHistory();
-const axiosService = axios.create({baseURL});
+const axiosService = axios.create({baseURL, headers: {"Content-Type": "multipart/form-data"}});
 
 let isRefreshing = false
 axiosService.interceptors.request.use((config) => {

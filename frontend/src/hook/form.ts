@@ -1,12 +1,8 @@
 import {useEffect, useState} from "react";
+
 import {errorMessage} from "../constants";
 import {regEx} from "../validators";
-
-interface IValidations {
-    isEmpty: boolean,
-    isEmailError: boolean,
-    isPasswordError: boolean
-}
+import {IValidations} from "../interfaces";
 
 interface IError {
     status: boolean,
@@ -14,47 +10,73 @@ interface IError {
 }
 
 const useValidation = (value: string, validations: Partial<IValidations>) => {
+    const [emailError, setEmailError] = useState<IError>({status: false, msg: regEx.email.msg});
+    const [passwordError, setPasswordError] = useState<IError>({status: false, msg: regEx.password.msg});
+    const [nameError, setNameError] = useState<IError>({status: false, msg: regEx.name.msg});
+    const [ageError, setAgeError] = useState<IError>({status: false, msg: 'Invalid age'});
+    const [phoneError, setPhoneError] = useState<IError>({status: false, msg: regEx.phone.msg});
+
     const [empty, setEmpty] = useState<IError>({status: true, msg: errorMessage.empty});
-    const [emailError, setEmailError] = useState<IError>({status: false, msg: 'Invalid email'});
-    const [passwordError, setPasswordError] = useState<IError>({status: false, msg: 'invalid password'});
     const [isInputValid, setInputValid] = useState<boolean>(false);
 
     useEffect(() => {
         for (const validation in validations) {
             switch (validation) {
-
                 case 'isEmpty':
                     value ? setEmpty({...empty, status: false}) : setEmpty({...empty, status: true})
                     break
 
                 case 'isEmailError':
                     const emailReg = regEx.email.pattern
-
                     emailReg.test(String(value).toLowerCase())
                         ? setEmailError({...emailError, status: false})
                         : setEmailError({...emailError, status: true})
                     break
+
                 case 'isPasswordError':
                     const passwordReg = regEx.password.pattern
-
                     passwordReg.test(String(value))
                         ? setPasswordError({...passwordError, status: false})
                         : setPasswordError({...passwordError, status: true})
+                    break
 
+                case 'isNameError':
+                    const nameReg = regEx.name.pattern
+                    nameReg.test(String(value))
+                        ? setNameError({...nameError, status: false})
+                        : setNameError({...nameError, status: true})
+                    break
+
+                case 'isAgeError':
+                    const age = +value
+                    age >= 6 && age < 100
+                        ? setAgeError({...ageError, status: false})
+                        : setAgeError({...ageError, status: true})
+                    break
+
+                case 'isPhoneError':
+                    const phoneReg = regEx.phone.pattern
+                    phoneReg.test(String(value))
+                        ? setPhoneError({...phoneError, status: false})
+                        : setPhoneError({...phoneError, status: true})
+                    break
             }
         }
-    }, [validations, value, emailError, empty, passwordError])
+    }, [validations, value, emailError, empty, passwordError, nameError, ageError, phoneError])
 
     useEffect(() => {
-        empty.status || emailError.status || passwordError.status
+        empty.status || emailError.status || passwordError.status || nameError.status || ageError.status || phoneError.status
             ? setInputValid(false)
             : setInputValid(true)
-    }, [empty, emailError, passwordError])
+    }, [empty, emailError, passwordError, nameError, ageError, phoneError])
 
     return {
         empty,
         emailError,
         passwordError,
+        nameError,
+        ageError,
+        phoneError,
         isInputValid
     }
 }

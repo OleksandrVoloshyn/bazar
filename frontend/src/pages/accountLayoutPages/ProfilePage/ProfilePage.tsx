@@ -1,30 +1,51 @@
-import {FC, useEffect} from "react"
-import {useAppSelector} from "../../../hook";
-import {Link} from "react-router-dom";
-import {urls} from "../../../constants";
+import {FC, useRef, useState} from "react"
+
+import {useAppDispatch, useAppSelector} from "../../../hook";
+import {notFoundImage} from "../../../constants";
+import {ChangeProfileField} from "../../../components";
+import {userActions} from "../../../redux";
 
 const ProfilePage: FC = () => {
-    // todo повна інфа про юзера з можливістю змінни полів і аватарки
     const {user} = useAppSelector(({userReducer}) => userReducer);
+    const [isChangeAvatar, setIsChangeAvatar] = useState<boolean>(false);
+    const avatar = useRef<any>();
+    const dispatch = useAppDispatch();
 
-    const avatarSrc: string = urls.media + user?.profile.avatar
-
-    useEffect(() => {
-    }, [user])
+    const changeAvatar = async () => {
+        avatar.current.files[0] && await dispatch(userActions.updateAccount({avatar: avatar.current.files[0]}))
+        setIsChangeAvatar(false)
+    }
 
     return (
         <div>
             {user &&
                 <div>
-                    {user.profile.avatar
-                        ? <div><img src={avatarSrc} alt={'Avatar'} style={{height: '400px'}}/></div>
-                        : <div><img src={'https://lightwidget.com/wp-content/uploads/local-file-not-found.png'}
-                                    alt={'Avatar'} style={{height: '400px'}}/></div>}
+
                     <div>
-                        <div>Name: {user.profile.name}</div>
-                        <div>Surname: {user.profile.surname}</div>
-                        <div>Age: {user.profile.age}</div>
-                        <div>Phone: {user.profile.phone}</div>
+                        <img src={user.profile.avatar || notFoundImage} alt={'Avatar'} style={{height: '400px'}}/>
+                        {isChangeAvatar
+                            ? <div>
+                                <input type="file" ref={avatar}/>
+                                <button onClick={changeAvatar}>change</button>
+                            </div>
+                            : <button onClick={() => setIsChangeAvatar(true)}>change</button>
+                        }
+                    </div>
+
+                    <div>
+                        <ChangeProfileField fieldName={'name'} validators={{isEmpty: true, isNameError: true}}
+                                            initialState={user.profile.name} profile={user.profile}
+                                            errors={'nameError'}/>
+                        <ChangeProfileField fieldName={'surname'} validators={{isEmpty: true, isNameError: true}}
+                                            initialState={user.profile.surname} profile={user.profile}
+                                            errors={'nameError'}/>
+                        <ChangeProfileField fieldName={'age'} errors={'ageError'}
+                                            initialState={user.profile.age.toString()}
+                                            validators={{isEmpty: true, isAgeError: true}}
+                                            inputType={'number'} profile={user.profile}/>
+                        <ChangeProfileField fieldName={'phone'} validators={{isEmpty: true, isPhoneError: true}}
+                                            initialState={user.profile.phone} profile={user.profile}
+                                            errors={'phoneError'}/>
                     </div>
                 </div>
             }

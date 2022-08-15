@@ -1,7 +1,7 @@
 export interface IUserProfile {
     name: string,
     surname: string,
-    age: number | null,
+    age: number,
     phone: string,
-    avatar: string | null
+    avatar?: string
 }
