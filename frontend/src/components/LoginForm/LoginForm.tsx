@@ -1,31 +1,34 @@
-import {FC, useEffect} from "react"
+import {FC} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
+import {joiResolver} from "@hookform/resolvers/joi/dist/joi";
 
 import {useAppDispatch, useAppSelector} from "../../hook";
 import {authActions} from "../../redux";
 import {IUser} from "../../interfaces";
+import {registerValidator} from "../../validators";
 
 const LoginForm: FC = () => {
-    const {register, handleSubmit} = useForm<Partial<IUser>>();
     const {loginError} = useAppSelector(state => state.authReducer);
+    const {register, handleSubmit, formState: {errors}} = useForm<Partial<IUser>>({
+        resolver: joiResolver(registerValidator),
+        mode: "onTouched"
+    });
     const dispatch = useAppDispatch();
 
     const submit: SubmitHandler<Partial<IUser>> = async (user: Partial<IUser>) => {
         await dispatch(authActions.login({user}))
     }
 
-    useEffect(() => {
-    }, [loginError])
-
     return (
         <form onSubmit={handleSubmit(submit)}>
-            {/*// @ts-ignore*/}
             <div><label>Email: <input type="email" {...register('email')}/></label></div>
+            {errors.email && <div>{errors.email.message}</div>}
             <div><label>Password: <input type="text" {...register('password')}/></label></div>
+            {errors.password && <div>{errors.password.message}</div>}
             {loginError && <span>Invalid login or password</span>}
 
             <div>
-                <button>Увійти</button>
+                <button>login</button>
             </div>
         </form>
     );

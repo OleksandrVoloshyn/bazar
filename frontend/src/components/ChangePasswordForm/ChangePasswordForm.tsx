@@ -1,7 +1,6 @@
 import {FC} from "react"
 
 import {useAppDispatch, useInput} from "../../hook";
-import {localStorageService} from "../../services";
 import {authActions} from "../../redux";
 
 interface IProps {
@@ -15,7 +14,7 @@ const ChangePasswordForm: FC<IProps> = ({token, setChanged, setIsCrash}) => {
     const dispatch = useAppDispatch();
 
     const changePassword = () => {
-        const doRecovery = localStorageService.getDoRecovery();
+        const doRecovery = localStorage.getItem('doRecovery');
         if (doRecovery) {
             dispatch(authActions.changePassword({token, newPassword: password.value}))
             setChanged(true)
@@ -32,6 +31,7 @@ const ChangePasswordForm: FC<IProps> = ({token, setChanged, setIsCrash}) => {
                 <input onChange={e => password.onChange(e)} onBlur={e => password.onBlur(e)}
                        name={'password'} type="text" value={password.value}/></label>
             </div>
+            useEffect
             {password.isDirty && password.empty.status && <div>{password.empty.msg}</div>}
             {password.isDirty && password.passwordError.status && <div>{password.passwordError.msg}</div>}
             <div>

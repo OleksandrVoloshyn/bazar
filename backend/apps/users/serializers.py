@@ -16,12 +16,6 @@ class ProfileSerializer(ModelSerializer):
         exclude = ('user',)
 
 
-class AddAvatarSerializer(ModelSerializer):
-    class Meta:
-        model = ProfileModel
-        fields = ('avatar',)
-
-
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer()
 

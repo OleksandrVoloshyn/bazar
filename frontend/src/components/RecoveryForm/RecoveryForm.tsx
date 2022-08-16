@@ -1,4 +1,5 @@
-import {FC, useEffect} from "react"
+import {FC} from "react"
+
 import {useAppDispatch, useAppSelector, useInput} from "../../hook";
 import {authActions} from "../../redux";
 
@@ -10,9 +11,6 @@ const RecoveryForm: FC = () => {
     const sendMail = () => {
         dispatch(authActions.recovery({email: email.value}))
     }
-
-    useEffect(() => {
-    }, [hasSentRecoveryMailError])
 
     return (
         <div>

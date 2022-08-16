@@ -29,8 +29,8 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 ALLOWED_HOSTS = ['*']
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:5000",
 ]
+# todo don't need cors
 
 AUTH_USER_MODEL = 'users.UserModel'
 
@@ -53,8 +53,8 @@ INSTALLED_APPS = [
     # Apps
     'core',
     'apps.auth',
-    'apps.users'
-
+    'apps.users',
+    'apps.products'
 ]
 
 MIDDLEWARE = [

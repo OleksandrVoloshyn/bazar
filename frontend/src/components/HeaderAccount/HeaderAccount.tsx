@@ -1,17 +1,17 @@
 import {FC} from "react"
 import {Link, useNavigate} from "react-router-dom";
 
-import {localStorageService} from "../../services";
 import css from "./HeaderAccount.module.css";
 import {authActions} from "../../redux";
 import {useAppDispatch} from "../../hook";
+import {authService} from "../../services";
 
 const HeaderAccount: FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const logout = () => {
-        localStorageService.logout()
+        authService.logout()
         dispatch(authActions.setAuth(false))
         navigate('/')
     }

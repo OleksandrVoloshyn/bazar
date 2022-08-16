@@ -11,7 +11,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Bazar API",
         default_version='v1',
-        description="About cars",
+        description="Shop",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="contact@snippets.local"),
         license=openapi.License(name="BSD License"),
@@ -23,6 +23,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('auth', include('apps.auth.urls')),
     path('users', include('apps.users.urls')),
+    path('products', include('apps.products.urls')),
     path('doc', schema_view.with_ui('swagger', cache_timeout=0))
 ]
 

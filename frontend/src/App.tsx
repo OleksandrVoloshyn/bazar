@@ -20,11 +20,10 @@ import {
     PurchaseHistoryPage,
 } from "./pages";
 import {authActions} from "./redux";
-import {localStorageService} from "./services";
 
 const App: FC = () => {
     const dispatch = useAppDispatch();
-    const access = localStorageService.getAccess()
+    const access = localStorage.getItem('access')
 
     if (access) {
         dispatch(authActions.setAuth(true))

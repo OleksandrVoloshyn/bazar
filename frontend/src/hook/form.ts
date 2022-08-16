@@ -2,14 +2,14 @@ import {useEffect, useState} from "react";
 
 import {errorMessage} from "../constants";
 import {regEx} from "../validators";
-import {IValidations} from "../interfaces";
+import {IValidators} from "../interfaces";
 
 interface IError {
     status: boolean,
     msg: string
 }
 
-const useValidation = (value: string, validations: Partial<IValidations>) => {
+const useValidation = (value: string, validations: Partial<IValidators>) => {
     const [emailError, setEmailError] = useState<IError>({status: false, msg: regEx.email.msg});
     const [passwordError, setPasswordError] = useState<IError>({status: false, msg: regEx.password.msg});
     const [nameError, setNameError] = useState<IError>({status: false, msg: regEx.name.msg});
@@ -81,7 +81,7 @@ const useValidation = (value: string, validations: Partial<IValidations>) => {
     }
 }
 
-const useInput = (initialState: string, validations: Partial<IValidations>) => {
+const useInput = (initialState: string, validations: Partial<IValidators>) => {
     const [value, setValue] = useState<string>(initialState);
     const [isDirty, setDirty] = useState<boolean>(false);
     const valid = useValidation(value, validations)

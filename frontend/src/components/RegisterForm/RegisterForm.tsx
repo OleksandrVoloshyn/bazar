@@ -1,4 +1,4 @@
-import {FC, useEffect} from "react"
+import {FC} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
 import {joiResolver} from '@hookform/resolvers/joi'
 
@@ -20,21 +20,17 @@ const RegisterForm: FC = () => {
         await dispatch(authActions.register({user}))
     }
 
-    useEffect(() => {
-    }, [registerErrors])
-
     return (
         <form onSubmit={handleSubmit(submit)}>
             <h1>Registration</h1>
 
-            {/*todo какашка з поштою*/}
-            {/*// @ts-ignore*/}
             <div><label>Email: <input type="email" {...register('email')}/></label></div>
             {errors.email && <span>{errors.email.message}</span>}
             {registerErrors?.email && <span>{registerErrors.email}</span>}
             <div><label>Password: <input type="password" {...register('password')}/></label></div>
             {errors.password && <span>{errors.password.message}</span>}
 
+            {/* Profile */}
             <div><label>Name: <input type="text" {...register('profile.name')}/></label></div>
             {errors.profile?.name && <span>{errors.profile.name.message}</span>}
             {registerErrors?.name && <span> Forbidden name contain admin</span>}

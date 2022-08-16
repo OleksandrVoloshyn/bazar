@@ -26,7 +26,7 @@ const ProfilePage: FC = () => {
                         {isChangeAvatar
                             ? <div>
                                 <input type="file" ref={avatar}/>
-                                <button onClick={changeAvatar}>change</button>
+                                <button onClick={changeAvatar}>save</button>
                             </div>
                             : <button onClick={() => setIsChangeAvatar(true)}>change</button>
                         }

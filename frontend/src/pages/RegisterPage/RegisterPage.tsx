@@ -2,7 +2,7 @@ import {FC, useEffect} from "react"
 import {Link, useNavigate} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hook";
-import {Info, RegisterForm} from "../../components";
+import {MessageInfo, RegisterForm} from "../../components";
 import css from './RegisterPage.module.css'
 import {authActions} from "../../redux";
 
@@ -12,17 +12,18 @@ const RegisterPage: FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        // todo поставити hoc
         if (isAuth) {
             navigate('/')
         }
         dispatch(authActions.setError())
-    }, [navigate, dispatch, isSentActivatedMail, isAuth])
+    }, [dispatch, isAuth, navigate])
 
     return (
         <div className={css.content}>
             {
                 isSentActivatedMail
-                    ? <Info data={'Check your mail for activate'}/>
+                    ? <MessageInfo data={'Check your mail for activate'}/>
                     : <div>
                         <RegisterForm/>
                         <Link to={'/login'}>to login</Link>

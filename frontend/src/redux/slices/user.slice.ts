@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {IUser} from "../../interfaces";
+
+import {IUser, IUserProfile} from "../../interfaces";
 import {userService} from "../../services";
 
 interface IState {
@@ -18,7 +19,7 @@ const getCurrent = createAsyncThunk<IUser, void>(
     }
 );
 
-const updateAccount = createAsyncThunk<any, any>(
+const updateAccount = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
     'userSlice/updateAccount',
     async (body) => {
         const {data} = await userService.updateProfile(body)
@@ -39,7 +40,6 @@ const userSlice = createSlice({
                 if (state.user) {
                     state.user.profile = action.payload
                 }
-                console.log(action.payload)
             })
     }
 });

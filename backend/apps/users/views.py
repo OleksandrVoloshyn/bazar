@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .serializers import AddAvatarSerializer, ProfileSerializer, UserSerializer
+from .serializers import ProfileSerializer, UserSerializer
 
 UserModel = get_user_model()
 
@@ -17,7 +17,7 @@ class UserCreateView(CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-class UpdateProfile(UpdateAPIView):
+class UpdateProfileView(UpdateAPIView):
     """update profile"""
     http_method_names = ('patch',)
     serializer_class = ProfileSerializer

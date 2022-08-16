@@ -3,26 +3,24 @@ import {useParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hook";
 import {authActions} from "../../redux";
-import {Info} from "../../components";
+import {MessageInfo} from "../../components";
 
 const ActivatePage: FC = () => {
     const {isSuccessActivated} = useAppSelector(({authReducer}) => authReducer);
-    const dispatch = useAppDispatch();
     const {token} = useParams<string>();
+    const dispatch = useAppDispatch();
+
+    const msg = isSuccessActivated ? 'Your account was successfully activated, thanks for registration' : 'Ooopss, something wrong'
 
     useEffect(() => {
         if (token) {
             dispatch(authActions.activate({token}))
         }
-    }, [dispatch, token, isSuccessActivated])
+    }, [dispatch, token])
 
     return (
         <div>
-            {isSuccessActivated
-                ? <Info data={'Your account was successfully activated, thanks for registration'}/>
-                : <Info data={'Ooopss, something wrong'}/>
-            }
-
+            <MessageInfo data={msg}/>
         </div>
     );
 };

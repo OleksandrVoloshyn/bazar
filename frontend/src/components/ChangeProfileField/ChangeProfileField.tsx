@@ -1,14 +1,14 @@
 import {FC, useState} from "react"
 
 import {useAppDispatch, useInput} from "../../hook";
-import {IUserProfile, IValidations} from "../../interfaces";
+import {IUserProfile, IValidators} from "../../interfaces";
 import {userActions} from "../../redux";
 
 interface IProps {
     fieldName: string
     initialState: string,
     profile: IUserProfile
-    validators: Partial<IValidations>,
+    validators: Partial<IValidators>,
     inputType?: string,
     errors: string
 }
@@ -26,7 +26,6 @@ const ChangeProfileField: FC<IProps> = ({validators, initialState, fieldName, pr
         <div>
             {
                 isChange
-
                     ? <div>
                         <label>{fieldName}:
                             <input type={inputType} value={myInput.value} onBlur={e => myInput.onBlur(e)}

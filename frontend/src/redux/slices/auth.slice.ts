@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
-import {authService, localStorageService, userService} from "../../services";
+import {authService, userService} from "../../services";
 import {IToken, IUser} from "../../interfaces";
 
 interface IState {
@@ -96,8 +96,8 @@ const authSlice = createSlice({
                 state.isAuth = true
                 state.loginError = false
                 const {access, refresh} = action.payload;
-                localStorageService.setAccess(access)
-                localStorageService.setRefresh(refresh)
+                localStorage.setItem('access', access)
+                localStorage.setItem('refresh', refresh)
             })
             .addCase(login.rejected, (state) => {
                 state.loginError = true
@@ -105,7 +105,7 @@ const authSlice = createSlice({
             .addCase(recovery.fulfilled, state => {
                 state.isSentRecoveryMail = true
                 state.hasSentRecoveryMailError = false
-                localStorageService.setCandidateForRecovery()
+                localStorage.setItem('doRecovery', 'true')
             })
             .addCase(recovery.rejected, state => {
                 state.isSentRecoveryMail = false
@@ -114,7 +114,7 @@ const authSlice = createSlice({
     }
 });
 
-const {reducer: authReducer, actions: {setAuth, setError}} = authSlice;
+const {reducer: authReducer, actions: {setAuth, setError,}} = authSlice;
 const authActions = {login, setAuth, setError, activate, register, recovery, changePassword}
 
 export {authReducer, authActions}

@@ -2,7 +2,7 @@ import Joi from "joi";
 
 import {regEx} from "./regEx";
 import {errorMessage} from "../constants";
-
+//todo те саме
 const ProfileValidator = Joi.object({
     name: Joi.string().regex(regEx.name.pattern).required().messages({
         'string.pattern.base': regEx.name.msg,
