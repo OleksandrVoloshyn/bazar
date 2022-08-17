@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+
 import {productService} from "../../services";
 
 interface IState {
@@ -6,7 +7,9 @@ interface IState {
     next: any,
     total_items: any,
     total_pages: any,
-    products: []
+    products: [],
+    categories: [],
+    brands: []
 }
 
 const initialState: IState = {
@@ -14,16 +17,34 @@ const initialState: IState = {
     next: null,
     total_items: null,
     total_pages: null,
-    products: []
+    products: [],
+    categories: [],
+    brands: []
 }
 
-const getAll = createAsyncThunk(
+const getAll = createAsyncThunk<any, any>(
     'productSlice/getAll',
-    async () => {
-        const {data} = await productService.getAll();
+    async (QueryParamsObj) => {
+        const {data} = await productService.getAll(QueryParamsObj);
         return data
     }
 );
+
+const getCategories = createAsyncThunk(
+    'productSlice/getCategories',
+    async () => {
+        const {data} = await productService.getCategories();
+        return data
+    }
+)
+
+const getBrands = createAsyncThunk(
+    'productSlice/getBrands',
+    async () => {
+        const {data} = await productService.getBrands()
+        return data
+    }
+)
 
 const productSlice = createSlice({
     name: 'productSlice',
@@ -38,10 +59,17 @@ const productSlice = createSlice({
                 state.total_items = action.payload.total_items
                 state.total_pages = action.payload.total_pages
             })
+            .addCase(getCategories.fulfilled, (state, action) => {
+                state.categories = action.payload.data
+            })
+            .addCase(getBrands.fulfilled, (state, action) => {
+                state.brands = action.payload.data
+            })
+
     }
 });
 
 const {reducer: productReducer} = productSlice;
-const productActions = {getAll}
+const productActions = {getAll, getCategories, getBrands}
 
 export {productReducer, productActions}

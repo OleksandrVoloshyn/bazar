@@ -17,7 +17,7 @@ class CommentSerializer(ModelSerializer):
         fields = ('id', 'text', 'created_at', 'product', 'owner')
 
 
-class CategoriesSerializer(ModelSerializer):
+class CategorySerializer(ModelSerializer):
     class Meta:
         model = CategoryModel
         fields = ('id', 'title')
