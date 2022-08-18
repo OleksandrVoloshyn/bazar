@@ -56,7 +56,7 @@ const FilterSideBar: FC = () => {
                         <select {...register('brand')}>
                             <option></option>
                             {/* @ts-ignore*/}
-                            {brands && brands.map(brand => <option value={brand.name}>{brand.name}</option>)}
+                            {brands && brands.map(brand => <option key={brand.id} value={brand.name}>{brand.name}</option>)}
                         </select>
                     </label>
                 </div>

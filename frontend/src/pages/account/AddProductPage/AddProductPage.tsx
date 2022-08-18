@@ -1,10 +1,10 @@
 import {FC} from "react"
+import {ProductForm} from "../../../components";
 
 const AddProductPage: FC = () => {
-    // todo можливість добавляти нові продукти
     return (
         <div>
-            AddProductPage
+            <ProductForm/>
         </div>
     );
 };

@@ -9,7 +9,8 @@ interface IState {
     total_pages: any,
     products: [],
     categories: [],
-    brands: []
+    brands: [],
+    chosenProduct: any
 }
 
 const initialState: IState = {
@@ -19,7 +20,8 @@ const initialState: IState = {
     total_pages: null,
     products: [],
     categories: [],
-    brands: []
+    brands: [],
+    chosenProduct: null
 }
 
 const getAll = createAsyncThunk<any, any>(
@@ -29,6 +31,14 @@ const getAll = createAsyncThunk<any, any>(
         return data
     }
 );
+
+const getById = createAsyncThunk<any, any>(
+    'productSlice/getById',
+    async (pk) => {
+        const {data} = await productService.getById(pk)
+        return data
+    }
+)
 
 const getCategories = createAsyncThunk(
     'productSlice/getCategories',
@@ -65,11 +75,13 @@ const productSlice = createSlice({
             .addCase(getBrands.fulfilled, (state, action) => {
                 state.brands = action.payload.data
             })
-
+            .addCase(getById.fulfilled, (state, action) => {
+                state.chosenProduct = action.payload
+            })
     }
 });
 
 const {reducer: productReducer} = productSlice;
-const productActions = {getAll, getCategories, getBrands}
+const productActions = {getAll, getCategories, getBrands, getById}
 
 export {productReducer, productActions}

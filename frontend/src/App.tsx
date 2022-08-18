@@ -17,7 +17,7 @@ import {
     ProductListPage,
     AddProductPage,
     BasketPage,
-    PurchaseHistoryPage, MainFilterPage,
+    PurchaseHistoryPage, MainFilterPage, ProductDetailPage,
 } from "./pages";
 import {authActions} from "./redux";
 
@@ -34,6 +34,7 @@ const App: FC = () => {
             <Route path={'/'} element={<MainLayout/>}>
                 <Route index element={<HomePage/>}/>
                 <Route path={'category/:title'} element={<MainFilterPage/>}/>
+                <Route path={'products/:pk/details'} element={<ProductDetailPage/>}></Route>
 
                 <Route path={'login'} element={<LoginPage/>}/>
                 <Route path={'register'} element={<RegisterPage/>}/>

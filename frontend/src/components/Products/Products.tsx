@@ -1,9 +1,9 @@
 import {FC, FormEvent, useEffect, useMemo} from "react"
+import {useParams, useSearchParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hook";
 import {Product} from "../Product/Product";
 import {productActions} from "../../redux";
-import {useParams, useSearchParams} from "react-router-dom";
 
 const Products: FC = () => {
     const {products, prev, next} = useAppSelector(({productReducer}) => productReducer);
@@ -29,10 +29,18 @@ const Products: FC = () => {
         setQuery(queryObj)
     }
 
-    const pagination = (e: FormEvent) => {
+    const pagination_ordering = (e: FormEvent) => {
         e.preventDefault()
         // @ts-ignore
-        queryObj.pagination = e.target.value
+        if (e.target.name === 'ordering') {
+            // @ts-ignore
+            e.target.value ? (queryObj.ordering = e.target.value) : (delete queryObj.ordering)
+        }
+        // @ts-ignore
+        if (e.target.name === 'pagination') {
+            // @ts-ignore
+            queryObj.pagination = e.target.value
+        }
         setQuery(queryObj)
     }
     return (
@@ -42,15 +50,23 @@ const Products: FC = () => {
                 <button onClick={nextPage} disabled={!next}>Next</button>
             </div>
             <div>
-                <form onChange={e => pagination(e)}>
+                <form onChange={e => pagination_ordering(e)}>
                     <select name="pagination">
                         <option value="15">15</option>
                         <option value="30">30</option>
                     </select>
+                    <select name="ordering">
+                        <option></option>
+                        <option value="price">price</option>
+                        <option value="-price">-price</option>
+                        <option value="created_at">created_at</option>
+                        <option value="-created_at">-created_at</option>
+                    </select>
                 </form>
             </div>
             <h1>Products</h1>
-            {products && products.map(product => <Product product={product}/>)}
+            {/*// @ts-ignore*/}
+            {products && products.map(product => <Product key={product.id} product={product}/>)}
         </div>
     );
 };
