@@ -32,6 +32,24 @@ const getAll = createAsyncThunk<any, any>(
     }
 );
 
+const create = createAsyncThunk<any, any>(
+    'productSlice/create',
+    async (product) => {
+        console.log(product)
+        const {data} = await productService.create(product)
+        console.log(data)
+        // return data
+    }
+)
+
+const getMyProducts = createAsyncThunk<any, any>(
+    'productSlice/getMyProducts',
+    async () => {
+        const {data} = await productService.getMyProducts()
+        return data
+    }
+)
+
 const getById = createAsyncThunk<any, any>(
     'productSlice/getById',
     async (pk) => {
@@ -78,10 +96,17 @@ const productSlice = createSlice({
             .addCase(getById.fulfilled, (state, action) => {
                 state.chosenProduct = action.payload
             })
+            .addCase(getMyProducts.fulfilled, (state, action) => {
+                state.products = action.payload.data
+                state.prev = action.payload.prev
+                state.next = action.payload.next
+                state.total_items = action.payload.total_items
+                state.total_pages = action.payload.total_pages
+            })
     }
 });
 
 const {reducer: productReducer} = productSlice;
-const productActions = {getAll, getCategories, getBrands, getById}
+const productActions = {getAll, getCategories, getBrands, getById, create, getMyProducts}
 
 export {productReducer, productActions}

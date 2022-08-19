@@ -6,7 +6,6 @@ import {authService} from "./auth.service";
 
 const history = createBrowserHistory();
 const axiosService = axios.create({baseURL, headers: {"Content-Type": "multipart/form-data"}});
-// {"Content-Type": "multipart/form-data"} для фото
 
 let isRefreshing = false
 axiosService.interceptors.request.use((config) => {

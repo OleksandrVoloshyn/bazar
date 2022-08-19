@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ManyRelatedField, ModelSerializer, PrimaryKeyRelatedField
 
 from apps.users.serializers import UserSerializer
 
@@ -39,14 +39,26 @@ class ProductSerializer(ModelSerializer):
 
 
 class ProductDetailSerializer(ModelSerializer):
-    category = CategorySerializer()
-    owner = UserSerializer()
-    brand = BrandSerializer()
+    category = CategorySerializer(required=False)
+    owner = UserSerializer(required=False)
+    brand = BrandSerializer(required=False)
     comments = CommentSerializer(read_only=True, many=True)
-    images = ImageSerializer(many=True)
+    images = PrimaryKeyRelatedField(queryset=ProductImagesModel.objects.all(), many=True, required=False)
 
     class Meta:
         model = ProductModel
         fields = (
             'id', 'title', 'description', 'price', 'color', 'size', 'gender', 'created_at', 'category', 'owner',
             'brand', 'comments', 'images')
+# class ProductDetailSerializer(ModelSerializer):
+#     category = CategorySerializer(required=False)
+#     owner = UserSerializer(required=False)
+#     brand = BrandSerializer(required=False)
+#     comments = CommentSerializer(read_only=True, many=True)
+#     images = ImageSerializer(many=True, required=False)
+#
+#     class Meta:
+#         model = ProductModel
+#         fields = (
+#             'id', 'title', 'description', 'price', 'color', 'size', 'gender', 'created_at', 'category', 'owner',
+#             'brand', 'comments', 'images')

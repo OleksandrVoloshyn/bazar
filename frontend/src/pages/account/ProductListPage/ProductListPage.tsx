@@ -1,10 +1,20 @@
-import {FC} from "react"
+import {FC, useEffect} from "react"
+import {useAppDispatch, useAppSelector} from "../../../hook";
+import {productActions} from "../../../redux";
 
 const ProductListPage: FC = () => {
-    // todo Всі мої товари з можливістю видалляти
+    const dispatch = useAppDispatch();
+    const {products} = useAppSelector(({productReducer}) => productReducer);
+
+    useEffect(() => {
+        // @ts-ignore
+        dispatch(productActions.getMyProducts())
+    }, [dispatch])
+
     return (
         <div>
-            ProductListPage
+            {/*// @ts-ignore*/}
+            {products && products.map(product => <div>{product.id} -- {product.title}</div>)}
         </div>
     );
 };

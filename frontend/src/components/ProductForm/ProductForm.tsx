@@ -6,14 +6,16 @@ import {useForm} from "react-hook-form";
 const ProductForm: FC = () => {
     const {brands, categories} = useAppSelector(({productReducer}) => productReducer);
     const dispatch = useAppDispatch();
-    const {register, handleSubmit, reset, formState: {errors}} = useForm();
+    const {register, handleSubmit} = useForm();
 
     useEffect(() => {
         dispatch(productActions.getBrands())
         dispatch(productActions.getCategories())
     }, [dispatch])
+
     const submit = (product: any) => {
         console.log(product)
+        dispatch(productActions.create(product))
     }
 
     return (
@@ -64,6 +66,7 @@ const ProductForm: FC = () => {
                     </label>
                 </div>
                 <div><label>Images: <input type="file" multiple={true} {...register('images')}/></label></div>
+                {/*todo через state*/}
                 <button>Create</button>
             </form>
         </div>
