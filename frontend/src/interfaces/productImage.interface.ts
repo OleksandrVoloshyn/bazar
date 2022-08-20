@@ -1,7 +1,7 @@
 import {IProduct} from "./product.interface";
 
 export interface IProductImage {
-    id: string
+    id: string,
     image: string,
     product: IProduct
 }

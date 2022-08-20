@@ -16,7 +16,7 @@ const Products: FC = () => {
         if (title) {
             queryObj['category'] = title
         }
-        dispatch(productActions.getAll(queryObj))
+        dispatch(productActions.getAll({QueryParamsObj: queryObj}))
     }, [dispatch, queryObj, title])
 
     const prevPage = (): void => {

@@ -50,8 +50,8 @@ const ProductForm: FC = () => {
                     <label>Brand:
                         <select {...register('brand')}>
                             <option></option>
-                            {/* @ts-ignore*/}
-                            {brands && brands.map(brand => <option key={brand.id} value={brand.name}>{brand.name}</option>)}
+                            {brands && brands.map(brand => <option key={brand.id}
+                                                                   value={brand.name}>{brand.name}</option>)}
                         </select>
                     </label>
                 </div>
@@ -60,13 +60,12 @@ const ProductForm: FC = () => {
                     <label>Category:
                         <select {...register('category')}>
                             <option></option>
-                            {/* @ts-ignore*/}
-                            {categories && categories.map(category => <option key={category.id} value={category.name}>{category.name}</option>)}
+                            {categories && categories.map(category => <option key={category.id}
+                                                                              value={category.title}>{category.title}</option>)}
                         </select>
                     </label>
                 </div>
-                <div><label>Images: <input type="file" multiple={true} {...register('images')}/></label></div>
-                {/*todo через state*/}
+                <div><label>Images: <input type="file" multiple {...register('images')}/></label></div>
                 <button>Create</button>
             </form>
         </div>

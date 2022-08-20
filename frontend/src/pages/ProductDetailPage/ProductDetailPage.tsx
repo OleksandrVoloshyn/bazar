@@ -9,8 +9,11 @@ const ProductDetailPage: FC = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(productActions.getById(pk))
+        if (pk) {
+            dispatch(productActions.getById({pk}))
+        }
     }, [dispatch, pk])
+
     return (
         <div>
             {chosenProduct &&
@@ -26,8 +29,11 @@ const ProductDetailPage: FC = () => {
                     <div>owner - {chosenProduct.owner.profile.name} {chosenProduct.owner.profile.surname}</div>
                     <div>brand - {chosenProduct.brand.name}</div>
                     {/*todo map comments images slider*/}
-                    <div>comments
-                        - {chosenProduct.comments[0].id}:{chosenProduct.comments[0].text}:{chosenProduct.comments[0].created_at}</div>
+                    {chosenProduct.comments &&
+                        <div>comments
+                            - {chosenProduct.comments[0].id}:{chosenProduct.comments[0].text}:{chosenProduct.comments[0].created_at}</div>
+                    }
+
                 </div>
             }
         </div>

@@ -16,10 +16,15 @@ class ListProductView(ListCreateAPIView):
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('title', 'description')
     ordering_fields = ('price', 'created_at')
+
     # parser_classes = (MultiPartParser, FormParser)
 
+    def get_serializer_context(self):
+        print('ssssssssssssssssssssssssssssssss')
+        return {'request': self.request}
+
     def perform_create(self, serializer):
-        print(self.request.data.getlist('images'))
+        print('pppppppppppppppppppppppppppppppppppppppppp')
         serializer.save(owner_id=self.request.user.id)
 
 

@@ -1,5 +1,5 @@
 import {ChangeEvent, FC, useState} from "react"
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 
 import css from './header.module.css'
 import {useAppSelector} from "../../hook";

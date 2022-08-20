@@ -9,8 +9,8 @@ interface IProps {
     initialState: string,
     profile: IUserProfile
     validators: Partial<IValidators>,
-    inputType?: string,
     errors: string
+    inputType?: string,
 }
 
 const ChangeProfileField: FC<IProps> = ({validators, initialState, fieldName, profile, errors, inputType = 'text'}) => {
@@ -33,7 +33,7 @@ const ChangeProfileField: FC<IProps> = ({validators, initialState, fieldName, pr
                         </label>
                         {myInput.isDirty && myInput.empty.status && <div>{myInput.empty.msg}</div>}
                         {/*// @ts-ignore*/}
-                        {myInput.isDirty && myInput[errors]['status'] && <div>{myInput[errors]['msg']}</div>}
+                        {myInput.isDirty && myInput.errors['status'] && <div>{myInput[errors]['msg']}</div>}
 
                         <button onClick={changeField} disabled={!myInput.isInputValid}>change</button>
                     </div>
