@@ -7,7 +7,7 @@ import {productActions} from "../../redux";
 
 const Products: FC = () => {
     const {products, prev, next} = useAppSelector(({productReducer}) => productReducer);
-    const [query, setQuery] = useSearchParams();
+    const [query, setQuery] = useSearchParams({page: '1'});
     const queryObj = useMemo(() => Object.fromEntries(query.entries()), [query]);
     const dispatch = useAppDispatch();
     const {title} = useParams();

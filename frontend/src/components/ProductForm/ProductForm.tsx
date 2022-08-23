@@ -15,7 +15,7 @@ const ProductForm: FC = () => {
 
     const submit = (product: any) => {
         console.log(product)
-        dispatch(productActions.create(product))
+        dispatch(productActions.create({product}))
     }
 
     return (

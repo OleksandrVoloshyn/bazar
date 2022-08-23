@@ -22,7 +22,9 @@
     "@reduxjs/toolkit": "^1.8.3",
     "react-redux": "^8.0.2",
     "joi": "^17.6.0",
-    "@hookform/resolvers": "^2.9.7"
+    "@hookform/resolvers": "^2.9.7",
+    "nuka-carousel": "^5.2.0",
+    "react-icons": "^4.4.0"
   },
   "devDependencies": {
     "typescript-plugin-css-modules": "^3.4.0"

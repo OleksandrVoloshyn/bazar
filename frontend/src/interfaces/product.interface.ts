@@ -10,7 +10,7 @@ export interface IProduct {
     // description: string,
     price: number,
     // color: string,
-    // size: string,
+    size: string,
     // gender: string,
     // created_at: string,
     // category: ICategory,
@@ -32,6 +32,6 @@ export interface IProductDetails {
     category: ICategory,
     owner: IUser,
     brand: IBrand,
-    comments?: IComment[],
+    comments: IComment[],
     images?: IProductImage[]
 }

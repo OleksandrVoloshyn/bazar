@@ -11,7 +11,8 @@ interface IState {
     products: IProduct[],
     categories: ICategory[],
     brands: IBrand[],
-    chosenProduct: IProductDetails | null
+    chosenProduct: IProductDetails | null,
+    orders: IProduct[]
 }
 
 const initialState: IState = {
@@ -22,12 +23,13 @@ const initialState: IState = {
     products: [],
     categories: [],
     brands: [],
-    chosenProduct: null
+    chosenProduct: null,
+    orders: []
 }
 
 const getAll = createAsyncThunk<IResponce<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
     'productSlice/getAll',
-    async (QueryParamsObj) => {
+    async ({QueryParamsObj}) => {
         const {data} = await productService.getAll(QueryParamsObj);
         return data
     }
@@ -37,6 +39,14 @@ const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
     'productSlice/create',
     async ({product}) => {
         const {data} = await productService.create(product)
+        return data
+    }
+)
+
+const addComment = createAsyncThunk<any, { text: string, pk: string }>(
+    'productSlice/addComment',
+    async ({text, pk}) => {
+        const {data} = await productService.addComment(text, pk)
         return data
     }
 )
@@ -77,7 +87,17 @@ const getBrands = createAsyncThunk<IResponce<IBrand>, void>(
 const productSlice = createSlice({
     name: 'productSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        addToOrder: (state, action) => {
+            let isInOrders = false
+            state.orders.forEach(item => (item.id === action.payload.id) && (isInOrders = true))
+            !isInOrders && state.orders.push(action.payload)
+        },
+        deleteFromOrder: (state, action) => {
+            const index = state.orders.findIndex(item => item.id === action.payload.id);
+            state.orders.splice(index, 1)
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(getAll.fulfilled, (state, action) => {
@@ -103,10 +123,25 @@ const productSlice = createSlice({
                 state.total_items = action.payload.total_items
                 state.total_pages = action.payload.total_pages
             })
+            .addCase(addComment.fulfilled, (state, action) => {
+                if (state.chosenProduct) {
+                    state.chosenProduct.comments.push(action.payload)
+                }
+            })
     }
 });
 
-const {reducer: productReducer} = productSlice;
-const productActions = {getAll, getCategories, getBrands, getById, create, getMyProducts}
+const {reducer: productReducer, actions: {addToOrder, deleteFromOrder}} = productSlice;
+const productActions = {
+    getAll,
+    getCategories,
+    getBrands,
+    getById,
+    create,
+    getMyProducts,
+    addComment,
+    addToOrder,
+    deleteFromOrder
+}
 
 export {productReducer, productActions}

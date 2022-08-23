@@ -1,11 +1,14 @@
-import {FC, useEffect} from "react"
+import {FC, useEffect, useState} from "react"
 import {useParams} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../hook";
 import {productActions} from "../../redux";
+import {AddComment, Comments, ImageSlider} from "../../components";
+
 
 const ProductDetailPage: FC = () => {
-    const {pk} = useParams<string>();
     const {chosenProduct} = useAppSelector(({productReducer}) => productReducer);
+    const [addComment, setAddComment] = useState<boolean>(false);
+    const {pk} = useParams<string>();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -28,12 +31,10 @@ const ProductDetailPage: FC = () => {
                     <div>category - {chosenProduct.category.title}</div>
                     <div>owner - {chosenProduct.owner.profile.name} {chosenProduct.owner.profile.surname}</div>
                     <div>brand - {chosenProduct.brand.name}</div>
-                    {/*todo map comments images slider*/}
-                    {chosenProduct.comments &&
-                        <div>comments
-                            - {chosenProduct.comments[0].id}:{chosenProduct.comments[0].text}:{chosenProduct.comments[0].created_at}</div>
-                    }
-
+                    {chosenProduct.comments && <Comments comments={chosenProduct.comments}/>}
+                    {chosenProduct.images && <ImageSlider items={chosenProduct.images}/>}
+                    <div onClick={e => setAddComment(true)}>add comments</div>
+                    {addComment && <AddComment pk={chosenProduct.id} setAddComment={setAddComment}/>}
                 </div>
             }
         </div>

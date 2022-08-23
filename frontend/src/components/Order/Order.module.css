@@ -1,0 +1,10 @@
+.item {
+    display: flex;
+    justify-content: space-between;
+    max-width: 250px;
+}
+
+.delete_icon {
+    color: orangered;
+    cursor: pointer;
+}

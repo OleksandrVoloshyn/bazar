@@ -5,6 +5,7 @@
     height: 50px;
     margin: 0 10px;
     border-bottom: 1px solid black;
+    position: relative;
 }
 
 .logo {
@@ -15,4 +16,24 @@
 .auth > div > a {
     text-decoration: none;
     color: #93c54b;
+}
+
+.shop_cart_button {
+    cursor: pointer;
+    transition: color, transform 500ms ease;
+}
+
+.shop_cart_button:hover,
+.active {
+    color: darkolivegreen;
+    transform: scale(1.5);
+}
+
+.shop_cart {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    width: 450px;
+    background: snow;
+    z-index: 3;
 }
