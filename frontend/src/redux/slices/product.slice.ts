@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {productService} from "../../services";
-import {IBrand, ICategory, IProduct, IProductDetails, IQueryParams, IResponce} from "../../interfaces";
+import {IBrand, ICategory, IComment, IProduct, IProductDetails, IQueryParams, IResponce} from "../../interfaces";
 
 interface IState {
     prev: boolean,
@@ -12,7 +12,8 @@ interface IState {
     categories: ICategory[],
     brands: IBrand[],
     chosenProduct: IProductDetails | null,
-    orders: IProduct[]
+    orders: IProduct[],
+    myComments: IComment[]
 }
 
 const initialState: IState = {
@@ -24,7 +25,8 @@ const initialState: IState = {
     categories: [],
     brands: [],
     chosenProduct: null,
-    orders: []
+    orders: [],
+    myComments: []
 }
 
 const getAll = createAsyncThunk<IResponce<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
@@ -43,6 +45,12 @@ const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
     }
 )
 
+const update = createAsyncThunk<void, Partial<IProductDetails>>(
+    'productSlice/update',
+    async (product) => {
+        await productService.update(product)
+    }
+)
 const addComment = createAsyncThunk<any, { text: string, pk: string }>(
     'productSlice/addComment',
     async ({text, pk}) => {
@@ -59,6 +67,14 @@ const getMyProducts = createAsyncThunk<IResponce<IProduct>, void>(
     }
 )
 
+const getMyComments = createAsyncThunk(
+    'productSlice/getMyComments',
+    async () => {
+        const {data} = await productService.getMyComments()
+        return data
+    }
+)
+
 const getById = createAsyncThunk<IProductDetails, { pk: string }>(
     'productSlice/getById',
     async ({pk}) => {
@@ -71,7 +87,6 @@ const getCategories = createAsyncThunk<IResponce<ICategory>, void>(
     'productSlice/getCategories',
     async () => {
         const {data} = await productService.getCategories();
-        console.log(data)
         return data
     }
 )
@@ -81,6 +96,22 @@ const getBrands = createAsyncThunk<IResponce<IBrand>, void>(
     async () => {
         const {data} = await productService.getBrands()
         return data
+    }
+)
+
+const removeProduct = createAsyncThunk<string, { pk: string }>(
+    'productSlice/removeProduct',
+    async ({pk}) => {
+        await productService.removeById(pk)
+        return pk
+    }
+)
+
+const deleteComment = createAsyncThunk<string, { pk: string }>(
+    'productSlice/deleteComment',
+    async ({pk}) => {
+        await productService.deleteComment(pk)
+        return pk
     }
 )
 
@@ -128,6 +159,21 @@ const productSlice = createSlice({
                     state.chosenProduct.comments.push(action.payload)
                 }
             })
+            .addCase(removeProduct.fulfilled, (state, action) => {
+                const index = state.products.findIndex(item => item.id === action.payload);
+                state.products.splice(index, 1)
+            })
+            .addCase(getMyComments.fulfilled, (state, action) => {
+                state.myComments = action.payload.data
+                state.prev = action.payload.prev
+                state.next = action.payload.next
+                state.total_items = action.payload.total_items
+                state.total_pages = action.payload.total_pages
+            })
+            .addCase(deleteComment.fulfilled, (state, action) => {
+                const index = state.myComments.findIndex(item => item.id === action.payload);
+                state.myComments.splice(index, 1)
+            })
     }
 });
 
@@ -141,7 +187,11 @@ const productActions = {
     getMyProducts,
     addComment,
     addToOrder,
-    deleteFromOrder
+    deleteFromOrder,
+    removeProduct,
+    getMyComments,
+    deleteComment,
+    update
 }
 
 export {productReducer, productActions}

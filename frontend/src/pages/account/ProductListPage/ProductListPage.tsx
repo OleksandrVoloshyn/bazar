@@ -1,20 +1,33 @@
-import {FC, useEffect} from "react"
+import {FC, useEffect, useState} from "react"
 import {useAppDispatch, useAppSelector} from "../../../hook";
 import {productActions} from "../../../redux";
+import {ProductForm} from "../../../components";
 
 const ProductListPage: FC = () => {
     const dispatch = useAppDispatch();
     const {products} = useAppSelector(({productReducer}) => productReducer);
+    const [productIdForUpdate, setProductIdForUpdate] = useState<string>('');
 
     useEffect(() => {
-        // @ts-ignore
         dispatch(productActions.getMyProducts())
-    }, [dispatch])
+    }, [dispatch, productIdForUpdate])
+
+    const removeProduct = (pk: string) => {
+        dispatch(productActions.removeProduct({pk}))
+    }
 
     return (
         <div>
-            {/*// @ts-ignore*/}
-            {products && products.map(product => <div>{product.id} -- {product.title}</div>)}
+            {products && products.map(product => (
+                <div key={product.id}>
+                    {product.id} -- {product.title}
+                    {(productIdForUpdate && productIdForUpdate === product.id)
+                        ? <ProductForm productIdForUpdate={productIdForUpdate} setProductIdForUpdate={setProductIdForUpdate}/>
+                        : <button onClick={() => setProductIdForUpdate(product.id)}>update</button>
+                    }
+                    <button onClick={() => removeProduct(product.id)}>remove</button>
+                </div>
+            ))}
         </div>
     );
 };

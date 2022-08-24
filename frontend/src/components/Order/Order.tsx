@@ -15,6 +15,7 @@ const Order: FC<IProps> = ({item}) => {
     const deleteFromOrder = () => {
         dispatch(productActions.deleteFromOrder(item))
     }
+
     return (
         <div className={css.item}>
             <div>{item.id}--{item.title}--{item.price} </div>

@@ -7,16 +7,8 @@ import {IProductImage} from "./productImage.interface";
 export interface IProduct {
     id: string,
     title: string,
-    // description: string,
     price: number,
-    // color: string,
     size: string,
-    // gender: string,
-    // created_at: string,
-    // category: ICategory,
-    // owner: IUser,
-    // brand: IBrand,
-    // comments?: IComment[],
     images?: IProductImage[]
 }
 

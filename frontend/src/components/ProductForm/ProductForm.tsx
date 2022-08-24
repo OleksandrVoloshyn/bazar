@@ -3,19 +3,48 @@ import {useAppDispatch, useAppSelector} from "../../hook";
 import {productActions} from "../../redux";
 import {useForm} from "react-hook-form";
 
-const ProductForm: FC = () => {
-    const {brands, categories} = useAppSelector(({productReducer}) => productReducer);
+interface IProps {
+    productIdForUpdate?: string,
+    setProductIdForUpdate?: CallableFunction
+}
+
+const ProductForm: FC<IProps> = ({productIdForUpdate, setProductIdForUpdate}) => {
+    const {brands, categories, chosenProduct} = useAppSelector(({productReducer}) => productReducer);
     const dispatch = useAppDispatch();
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, setValue} = useForm();
 
     useEffect(() => {
         dispatch(productActions.getBrands())
         dispatch(productActions.getCategories())
-    }, [dispatch])
+        if (productIdForUpdate) {
+            dispatch(productActions.getById({pk: productIdForUpdate}))
 
-    const submit = (product: any) => {
-        console.log(product)
-        dispatch(productActions.create({product}))
+        }
+    }, [dispatch, productIdForUpdate, setValue])
+
+    useEffect(() => {
+        if (chosenProduct && productIdForUpdate) {
+            setValue('title', chosenProduct.title)
+            setValue('description', chosenProduct.description)
+            setValue('price', chosenProduct.price)
+            setValue('color', chosenProduct.color)
+            setValue('size', chosenProduct.size)
+            setValue('gender', chosenProduct.gender)
+            setValue('brand', chosenProduct.brand.name)
+            setValue('category', chosenProduct.category.title)
+        }
+    }, [setValue, chosenProduct, productIdForUpdate])
+
+    const submit = async (product: any) => {
+        if (productIdForUpdate && chosenProduct) {
+            product['id'] = productIdForUpdate
+            await dispatch(productActions.update(product))
+            if (setProductIdForUpdate) {
+                setProductIdForUpdate('')
+            }
+        } else {
+            dispatch(productActions.create({product}))
+        }
     }
 
     return (
@@ -66,7 +95,7 @@ const ProductForm: FC = () => {
                     </label>
                 </div>
                 <div><label>Images: <input type="file" multiple {...register('images')}/></label></div>
-                <button>Create</button>
+                <button>{(productIdForUpdate && chosenProduct) ? 'update' : 'create'}</button>
             </form>
         </div>
     );

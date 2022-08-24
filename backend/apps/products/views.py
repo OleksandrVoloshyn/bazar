@@ -1,5 +1,15 @@
-from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    GenericAPIView,
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import AllowAny
+
+from core.permissions.user_permission import IsOwnerOrAdmin
 
 from .filters import ProductFilter
 from .models import BrandModel, CategoryModel, CommentModel, ProductModel
@@ -33,6 +43,18 @@ class RetrieveProductView(RetrieveAPIView):
     permission_classes = (AllowAny,)
 
 
+class DestroyProductView(DestroyAPIView):
+    queryset = ProductModel.objects.all()
+    permission_classes = (IsOwnerOrAdmin,)
+
+
+class UpdateProductView(UpdateAPIView):
+    http_method_names = ('put',)
+    queryset = ProductModel.objects.all()
+    permission_classes = (IsOwnerOrAdmin,)
+    serializer_class = ProductDetailSerializer
+
+
 class ListCategoryView(ListAPIView):
     serializer_class = CategorySerializer
     queryset = CategoryModel.objects.all()
@@ -62,3 +84,17 @@ class CreateCommentView(CreateAPIView):
         user_id = self.request.user.id
         product_id = self.kwargs.get('pk')
         serializer.save(product_id=product_id, owner_id=user_id)
+
+
+class ListMyCommentsView(ListAPIView):
+    queryset = CommentModel.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return self.queryset.filter(owner_id=user_id)
+
+
+class DestroyCommentView(DestroyAPIView):
+    queryset = CommentModel.objects.all()
+    permission_classes = (IsOwnerOrAdmin,)

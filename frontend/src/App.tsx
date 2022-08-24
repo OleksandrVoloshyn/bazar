@@ -11,13 +11,19 @@ import {
     RecoveryPage,
     ChangePasswordPage,
     NotFoundPage,
-    AdminPage,
+    AdminWelcomePage,
     WelcomePage,
     ProfilePage,
     ProductListPage,
     AddProductPage,
     BasketPage,
-    PurchaseHistoryPage, MainFilterPage, ProductDetailPage,
+    PurchaseHistoryPage,
+    MainFilterPage,
+    ProductDetailPage,
+    CommentListPage,
+    AddValuesPage,
+    ProductControlPage,
+    UserControlPage, ChangeRolePage,
 } from "./pages";
 import {authActions} from "./redux";
 
@@ -48,13 +54,18 @@ const App: FC = () => {
                 <Route index element={<WelcomePage/>}/>
                 <Route path={'profile'} element={<ProfilePage/>}/>
                 <Route path={'product_list'} element={<ProductListPage/>}/>
+                <Route path={'comments'} element={<CommentListPage/>}/>
                 <Route path={'add_product'} element={<AddProductPage/>}/>
                 <Route path={'basket'} element={<BasketPage/>}/>
                 <Route path={'history'} element={<PurchaseHistoryPage/>}/>
             </Route>
-
+            {/*todo hoc for admin*/}
             <Route path={'/admin'} element={<AdminLayout/>}>
-                <Route index element={<AdminPage/>}/>
+                <Route index element={<AdminWelcomePage/>}/>
+                <Route path={'add_values'} element={<AddValuesPage/>}/>
+                <Route path={'product_control'} element={<ProductControlPage/>}/>
+                <Route path={'user_control'} element={<UserControlPage/>}/>
+                <Route path={'change_role'} element={<ChangeRolePage/>}/>
             </Route>
 
             <Route path={'*'} element={<NotFoundPage/>}/>

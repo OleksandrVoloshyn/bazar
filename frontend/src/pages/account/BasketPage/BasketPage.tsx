@@ -1,10 +1,11 @@
 import {FC} from "react"
+import {Orders} from "../../../components";
 
 const BasketPage: FC = () => {
-    // todo список обраних товарів в подальшому з купівлею
     return (
         <div>
-            BasketPage
+            <Orders/>
+        {/*    todo buy btn*/}
         </div>
     );
 };
