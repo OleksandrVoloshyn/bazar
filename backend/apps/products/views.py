@@ -71,6 +71,15 @@ class ListCategoryView(ListAPIView):
     permission_classes = (AllowAny,)
 
 
+class CreateCategoryView(CreateAPIView):
+    serializer_class = CategorySerializer
+
+
+class DestroyCategoryView(DestroyAPIView):
+    queryset = CategoryModel.objects.all()
+    #     permission isAdmin
+
+
 class ListBrandView(ListAPIView):
     serializer_class = BrandSerializer
     queryset = BrandModel.objects.all()

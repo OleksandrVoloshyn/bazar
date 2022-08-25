@@ -17,7 +17,9 @@ const productService = {
     deleteComment: (pk: string): Res<void> => axiosService.delete(`${urls.products}/comments/${pk}/remove`,),
     update: (product: Partial<IProductDetails>): Res<IProductDetails> => axiosService.put(`${urls.products}/${product.id}/update`, product),
     removeImageById: (pk: string) => axiosService.delete(`${urls.products}/images/${pk}/remove`),
-    addProductImage: (productId: string, file: File) => axiosService.post(`${urls.products}/${productId}/add_image`, {file})
+    addProductImage: (productId: string, file: File) => axiosService.post(`${urls.products}/${productId}/add_image`, {file}),
+    removeCategory: (pk: string) => axiosService.delete(`${urls.products}/categories/${pk}/remove`),
+    createCategory: (categoryTitle: string) => axiosService.post(`${urls.products}/categories/create`, {title: categoryTitle})
 }
 
 export {productService}

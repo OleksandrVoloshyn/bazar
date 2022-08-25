@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, isAllOf} from "@reduxjs/toolkit";
 
 import {productService} from "../../services";
 import {IBrand, ICategory, IComment, IProduct, IProductDetails, IQueryParams, IResponce} from "../../interfaces";
@@ -42,6 +42,13 @@ const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
     async ({product}) => {
         console.log(product)
         const {data} = await productService.create(product)
+        return data
+    }
+)
+const createCategory = createAsyncThunk<any, string>(
+    'productSlice/createCategory',
+    async (categoryTitle) => {
+        const {data} = await productService.createCategory(categoryTitle)
         return data
     }
 )
@@ -130,6 +137,14 @@ const deleteComment = createAsyncThunk<string, { pk: string }>(
     }
 )
 
+const removeCategory = createAsyncThunk<string, string>(
+    'productSlice/removeCategory',
+    async (pk) => {
+        await productService.removeCategory(pk)
+        return pk
+    }
+)
+
 const productSlice = createSlice({
     name: 'productSlice',
     initialState,
@@ -200,6 +215,13 @@ const productSlice = createSlice({
                     state.chosenProduct.images.push(action.payload)
                 }
             })
+            .addCase(removeCategory.fulfilled, (state, action) => {
+                const index = state.categories.findIndex(item => item.id === action.payload);
+                state.categories.splice(index, 1)
+            })
+            .addCase(createCategory.fulfilled, (state, action) => {
+                state.categories.push(action.payload)
+            })
     }
 });
 
@@ -219,7 +241,9 @@ const productActions = {
     deleteComment,
     update,
     removeProductImage,
-    addProductImage
+    addProductImage,
+    removeCategory,
+    createCategory
 }
 
 export {productReducer, productActions}

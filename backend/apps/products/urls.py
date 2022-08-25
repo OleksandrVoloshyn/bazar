@@ -1,9 +1,11 @@
 from django.urls import path
 
 from .views import (
+    CreateCategoryView,
     CreateCommentView,
     CreateProductImage,
     CreateProductView,
+    DestroyCategoryView,
     DestroyCommentView,
     DestroyProductImage,
     DestroyProductView,
@@ -29,5 +31,8 @@ urlpatterns = [
     path('/<str:pk>/update', UpdateProductView.as_view()),
     path('/comments/<str:pk>/remove', DestroyCommentView.as_view()),
     path('/images/<str:pk>/remove', DestroyProductImage.as_view()),
-    path('/<str:pk>/add_image', CreateProductImage.as_view())
+    path('/<str:pk>/add_image', CreateProductImage.as_view()),
+    path('/categories/<str:pk>/remove', DestroyCategoryView.as_view()),
+    path('/categories/create', CreateCategoryView.as_view()),
+
 ]
