@@ -40,7 +40,15 @@ const getAll = createAsyncThunk<IResponce<IProduct>, { QueryParamsObj: Partial<I
 const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
     'productSlice/create',
     async ({product}) => {
+        console.log(product)
         const {data} = await productService.create(product)
+        return data
+    }
+)
+const addProductImage = createAsyncThunk<any, { productId: string, file: File }>(
+    'productSlice/addProductImage',
+    async ({productId, file}) => {
+        const {data} = await productService.addProductImage(productId, file)
         return data
     }
 )
@@ -103,6 +111,13 @@ const removeProduct = createAsyncThunk<string, { pk: string }>(
     'productSlice/removeProduct',
     async ({pk}) => {
         await productService.removeById(pk)
+        return pk
+    }
+)
+const removeProductImage = createAsyncThunk<string, { pk: string }>(
+    'productSlice/removeProductImage',
+    async ({pk}) => {
+        await productService.removeImageById(pk)
         return pk
     }
 )
@@ -174,6 +189,17 @@ const productSlice = createSlice({
                 const index = state.myComments.findIndex(item => item.id === action.payload);
                 state.myComments.splice(index, 1)
             })
+            .addCase(removeProductImage.fulfilled, (state, action) => {
+                if (state.chosenProduct && state.chosenProduct.images) {
+                    const index = state.chosenProduct.images.findIndex(item => item.id === action.payload)
+                    state.chosenProduct.images.splice(index, 1)
+                }
+            })
+            .addCase(addProductImage.fulfilled, (state, action) => {
+                if (state.chosenProduct && state.chosenProduct.images) {
+                    state.chosenProduct.images.push(action.payload)
+                }
+            })
     }
 });
 
@@ -191,7 +217,9 @@ const productActions = {
     removeProduct,
     getMyComments,
     deleteComment,
-    update
+    update,
+    removeProductImage,
+    addProductImage
 }
 
 export {productReducer, productActions}

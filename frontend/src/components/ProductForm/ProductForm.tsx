@@ -2,6 +2,7 @@ import {FC, useEffect} from "react"
 import {useAppDispatch, useAppSelector} from "../../hook";
 import {productActions} from "../../redux";
 import {useForm} from "react-hook-form";
+import {UpdateProductImage} from "../UpdateProductImage/UpdateProductImage";
 
 interface IProps {
     productIdForUpdate?: string,
@@ -38,11 +39,13 @@ const ProductForm: FC<IProps> = ({productIdForUpdate, setProductIdForUpdate}) =>
     const submit = async (product: any) => {
         if (productIdForUpdate && chosenProduct) {
             product['id'] = productIdForUpdate
+            console.log(product)
             await dispatch(productActions.update(product))
             if (setProductIdForUpdate) {
                 setProductIdForUpdate('')
             }
         } else {
+            console.log(product, 'create')
             dispatch(productActions.create({product}))
         }
     }
@@ -94,7 +97,10 @@ const ProductForm: FC<IProps> = ({productIdForUpdate, setProductIdForUpdate}) =>
                         </select>
                     </label>
                 </div>
-                <div><label>Images: <input type="file" multiple {...register('images')}/></label></div>
+                {(chosenProduct && productIdForUpdate)
+                    ? <UpdateProductImage images={chosenProduct.images} productId={chosenProduct.id}/>
+                    : <div><label>Images: <input type="file" multiple {...register('images')}/></label></div>
+                }
                 <button>{(productIdForUpdate && chosenProduct) ? 'update' : 'create'}</button>
             </form>
         </div>

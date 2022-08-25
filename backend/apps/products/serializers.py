@@ -23,7 +23,7 @@ class CategorySerializer(ModelSerializer):
 class ImageSerializer(ModelSerializer):
     class Meta:
         model = ProductImagesModel
-        fields = ('image',)
+        fields = ('id','image',)
 
 
 class ProductSerializer(ModelSerializer):
@@ -48,7 +48,7 @@ class ProductDetailSerializer(ModelSerializer):
     owner = UserSerializer(required=False)
     brand = BrandSerializer(required=False)
     comments = CommentSerializer(read_only=True, many=True)
-    images = ImageSerializer(many=True, required=False)
+    images = ImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = ProductModel

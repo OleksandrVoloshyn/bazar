@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -8,15 +9,17 @@ from rest_framework.generics import (
     UpdateAPIView,
 )
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from core.permissions.user_permission import IsOwnerOrAdmin
 
 from .filters import ProductFilter
-from .models import BrandModel, CategoryModel, CommentModel, ProductModel
+from .models import BrandModel, CategoryModel, CommentModel, ProductImagesModel, ProductModel
 from .serializers import (
     BrandSerializer,
     CategorySerializer,
     CommentSerializer,
+    ImageSerializer,
     ProductDetailSerializer,
     ProductSerializer,
 )
@@ -34,7 +37,9 @@ class CreateProductView(CreateAPIView):
     serializer_class = ProductDetailSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner_id=self.request.user.id)
+        brand = BrandModel.objects.get(name__icontains=self.request.data['brand'])
+        category = CategoryModel.objects.get(title__icontains=self.request.data['category'])
+        serializer.save(owner_id=self.request.user.id, brand=brand, category=category)
 
 
 class RetrieveProductView(RetrieveAPIView):
@@ -53,6 +58,11 @@ class UpdateProductView(UpdateAPIView):
     queryset = ProductModel.objects.all()
     permission_classes = (IsOwnerOrAdmin,)
     serializer_class = ProductDetailSerializer
+
+    def perform_update(self, serializer):
+        brand = BrandModel.objects.get(name__icontains=self.request.data['brand'])
+        category = CategoryModel.objects.get(title__icontains=self.request.data['category'])
+        serializer.save(brand=brand, category=category)
 
 
 class ListCategoryView(ListAPIView):
@@ -98,3 +108,20 @@ class ListMyCommentsView(ListAPIView):
 class DestroyCommentView(DestroyAPIView):
     queryset = CommentModel.objects.all()
     permission_classes = (IsOwnerOrAdmin,)
+
+
+class DestroyProductImage(DestroyAPIView):
+    queryset = ProductImagesModel.objects.all()
+
+
+class CreateProductImage(GenericAPIView):
+    queryset = ProductImagesModel.objects.all()
+    serializer_class = ImageSerializer
+
+    def post(self, *args, **kwargs):
+        product_id = kwargs.get('pk')
+        image = self.request.FILES.getlist('file')[0]
+        serializer = self.serializer_class(data={'image': image})
+        serializer.is_valid(raise_exception=True)
+        serializer.save(product_id=product_id)
+        return Response(serializer.data, status=status.HTTP_200_OK)
