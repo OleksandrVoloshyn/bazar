@@ -52,6 +52,14 @@ const createCategory = createAsyncThunk<any, string>(
         return data
     }
 )
+
+const createBrand = createAsyncThunk<IBrand, IBrand>(
+    'productSlice/createBrand',
+    async (newBrand) => {
+        const {data} = await productService.createBrand(newBrand)
+        return data
+    }
+)
 const addProductImage = createAsyncThunk<any, { productId: string, file: File }>(
     'productSlice/addProductImage',
     async ({productId, file}) => {
@@ -145,6 +153,14 @@ const removeCategory = createAsyncThunk<string, string>(
     }
 )
 
+const removeBrand = createAsyncThunk<string, string>(
+    'productSlice/removeBrand',
+    async (pk) => {
+        await productService.removeBrand(pk)
+        return pk
+    }
+)
+
 const productSlice = createSlice({
     name: 'productSlice',
     initialState,
@@ -222,6 +238,13 @@ const productSlice = createSlice({
             .addCase(createCategory.fulfilled, (state, action) => {
                 state.categories.push(action.payload)
             })
+            .addCase(removeBrand.fulfilled, (state, action) => {
+                const index = state.brands.findIndex(item => item.id === action.payload);
+                state.brands.splice(index, 1)
+            })
+            .addCase(createBrand.fulfilled, (state, action) => {
+                state.brands.push(action.payload)
+            })
     }
 });
 
@@ -243,7 +266,9 @@ const productActions = {
     removeProductImage,
     addProductImage,
     removeCategory,
-    createCategory
+    createCategory,
+    removeBrand,
+    createBrand
 }
 
 export {productReducer, productActions}

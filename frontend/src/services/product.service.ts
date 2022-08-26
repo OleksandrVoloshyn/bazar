@@ -1,6 +1,6 @@
 import {axiosService, Res} from "./axios.service";
 
-import {IProduct, IProductDetails, IQueryParams, IResponce} from "../interfaces";
+import {IBrand, IProduct, IProductDetails, IQueryParams, IResponce} from "../interfaces";
 import {urls} from "../constants";
 
 const productService = {
@@ -19,7 +19,9 @@ const productService = {
     removeImageById: (pk: string) => axiosService.delete(`${urls.products}/images/${pk}/remove`),
     addProductImage: (productId: string, file: File) => axiosService.post(`${urls.products}/${productId}/add_image`, {file}),
     removeCategory: (pk: string) => axiosService.delete(`${urls.products}/categories/${pk}/remove`),
-    createCategory: (categoryTitle: string) => axiosService.post(`${urls.products}/categories/create`, {title: categoryTitle})
+    createCategory: (categoryTitle: string) => axiosService.post(`${urls.products}/categories/create`, {title: categoryTitle}),
+    removeBrand: (pk: string): Res<void> => axiosService.delete(`${urls.products}/brands/${pk}/remove`),
+    createBrand: (newBrand: IBrand): Res<IBrand> => axiosService.post(`${urls.products}/brands/create`, {...newBrand}, {headers: {"Content-Type": "multipart/form-data"}})
 }
 
 export {productService}

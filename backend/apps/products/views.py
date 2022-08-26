@@ -71,6 +71,8 @@ class ListCategoryView(ListAPIView):
     permission_classes = (AllowAny,)
 
 
+# todo чи краще створювати ліст і кріейт в одній вю але буде гет серіалайзер і створення нового пермішинк
+
 class CreateCategoryView(CreateAPIView):
     serializer_class = CategorySerializer
 
@@ -84,6 +86,14 @@ class ListBrandView(ListAPIView):
     serializer_class = BrandSerializer
     queryset = BrandModel.objects.all()
     permission_classes = (AllowAny,)
+
+
+class CreateBrandView(CreateAPIView):
+    serializer_class = BrandSerializer
+
+
+class DestroyBrandView(DestroyAPIView):
+    queryset = BrandModel.objects.all()
 
 
 class ListMyProductView(ListAPIView):
@@ -134,3 +144,4 @@ class CreateProductImage(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save(product_id=product_id)
         return Response(serializer.data, status=status.HTTP_200_OK)
+#     todo try change filelist to file on front

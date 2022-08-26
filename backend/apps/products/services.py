@@ -2,7 +2,7 @@ import os
 from uuid import uuid1
 
 
-def brand_upload_to(file: str):
+def brand_upload_to(instance, file: str):
     ext = file.split('.')[-1]
     return os.path.join('brands', f'{uuid1()}.{ext}')
 
