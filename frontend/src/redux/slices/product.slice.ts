@@ -127,6 +127,7 @@ const removeProduct = createAsyncThunk<string, { pk: string }>(
     async ({pk}) => {
         await productService.removeById(pk)
         return pk
+        //    todo passing data to fulfiled
     }
 )
 const removeProductImage = createAsyncThunk<string, { pk: string }>(
@@ -166,9 +167,10 @@ const productSlice = createSlice({
     initialState,
     reducers: {
         addToOrder: (state, action) => {
-            let isInOrders = false
-            state.orders.forEach(item => (item.id === action.payload.id) && (isInOrders = true))
-            !isInOrders && state.orders.push(action.payload)
+            // let isInOrders = false
+            // state.orders.forEach(item => (item.id === action.payload.id) && (isInOrders = true))
+            state.orders.forEach(item => (item.id === action.payload.id) && state.orders.push(action.payload))
+            // !isInOrders && state.orders.push(action.payload)
         },
         deleteFromOrder: (state, action) => {
             const index = state.orders.findIndex(item => item.id === action.payload.id);
@@ -201,9 +203,7 @@ const productSlice = createSlice({
                 state.total_pages = action.payload.total_pages
             })
             .addCase(addComment.fulfilled, (state, action) => {
-                if (state.chosenProduct) {
-                    state.chosenProduct.comments.push(action.payload)
-                }
+                    state.chosenProduct?.comments.push(action.payload)
             })
             .addCase(removeProduct.fulfilled, (state, action) => {
                 const index = state.products.findIndex(item => item.id === action.payload);

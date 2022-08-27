@@ -12,11 +12,13 @@ const RegisterPage: FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // todo поставити hoc
-        if (isAuth) {
-            navigate('/')
-        }
+        const access = localStorage.getItem('access')
+        access && navigate('/')
+        // if (isAuth) {
+        //     navigate('/')
+        // }
         dispatch(authActions.setError())
+    //    todo useless ??
     }, [dispatch, isAuth, navigate])
 
     return (

@@ -10,10 +10,10 @@ const Sidebar: FC = () => {
     useEffect(() => {
         dispatch(productActions.getCategories())
     }, [dispatch])
+
     return (
         <div>
             {categories && categories.map(category =>
-                // @ts-ignore
                 <div><Link to={`category/${category.title}`}>{category.title}</Link></div>)}
         </div>
     );

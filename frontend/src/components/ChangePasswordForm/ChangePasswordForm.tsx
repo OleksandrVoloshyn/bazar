@@ -31,7 +31,6 @@ const ChangePasswordForm: FC<IProps> = ({token, setChanged, setIsCrash}) => {
                 <input onChange={e => password.onChange(e)} onBlur={e => password.onBlur(e)}
                        name={'password'} type="text" value={password.value}/></label>
             </div>
-            useEffect
             {password.isDirty && password.empty.status && <div>{password.empty.msg}</div>}
             {password.isDirty && password.passwordError.status && <div>{password.passwordError.msg}</div>}
             <div>

@@ -22,6 +22,7 @@ const Products: FC = () => {
     const prevPage = (): void => {
         queryObj.page = (+queryObj.page - 1).toString()
         setQuery(queryObj)
+    //    todo try to change
     }
 
     const nextPage = (): void => {
@@ -30,6 +31,7 @@ const Products: FC = () => {
     }
 
     const pagination_ordering = (e: FormEvent) => {
+        // todo find correct TS
         e.preventDefault()
         // @ts-ignore
         if (e.target.name === 'ordering') {
@@ -65,7 +67,6 @@ const Products: FC = () => {
                 </form>
             </div>
             <h1>Products</h1>
-            {/*// @ts-ignore*/}
             {products && products.map(product => <Product key={product.id} product={product}/>)}
         </div>
     );

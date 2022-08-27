@@ -3,6 +3,7 @@ import {useAppDispatch, useAppSelector} from "../../../hook";
 import {userActions} from "../../../redux";
 
 const UserControlPage: FC = () => {
+    // todo duplicate with changerole
     const {userForRemove, userNotFound} = useAppSelector(({userReducer}) => userReducer);
     const [userEmail, setUserEmail] = useState<string>('');
     const dispatch = useAppDispatch();

@@ -4,7 +4,6 @@ import {productActions} from "../../../redux";
 import {useForm} from "react-hook-form";
 
 const AddValuesPage: FC = () => {
-    //todo add remove brand
     const {categories, brands} = useAppSelector(({productReducer}) => productReducer);
     const dispatch = useAppDispatch();
     const [categoryValue, setCategoryValue] = useState<string>('');
@@ -50,6 +49,7 @@ const AddValuesPage: FC = () => {
                     <div><label>Brand Name: <input type="text" {...register('name')}/></label></div>
                     <div><label>Description: <input type="text"{...register('description')}/></label></div>
                     <div><label>Image: <input type="file" {...register('image')}/></label></div>
+                    {/*todo not filelist find usual file send*/}
                     <button>create</button>
                 </form>
             </div>

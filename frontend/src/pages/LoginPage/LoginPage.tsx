@@ -9,10 +9,12 @@ const LoginPage: FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuth && !loginError) {
-            localStorage.removeItem('doRecovery')
-            navigate('/')
-        }
+        const access = localStorage.getItem('access')
+        access && navigate('/')
+        // if (isAuth && !loginError) {
+        //     localStorage.removeItem('doRecovery')
+        //     navigate('/')
+        // }
     }, [navigate, loginError, isAuth])
 
     return (

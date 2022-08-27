@@ -4,7 +4,6 @@ import {FaShoppingCart} from 'react-icons/fa'
 
 import css from './header.module.css'
 import {useAppSelector} from "../../hook";
-import {Order} from "../Order/Order";
 import {Orders} from "../Orders/Orders";
 
 const Header: FC = () => {
@@ -19,8 +18,6 @@ const Header: FC = () => {
         setSearchData('')
         setQuery(queryObj)
     }
-    console.log(cartOpen)
-
     return (
         <div className={css.header}>
             <h1><Link to={'/'} className={css.logo}>BAZAR</Link></h1>

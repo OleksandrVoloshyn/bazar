@@ -3,7 +3,7 @@ import {useAppDispatch, useAppSelector} from "../../../hook";
 import {userActions} from "../../../redux";
 
 const ChangeRolePage: FC = () => {
-    // todo userForChange  make separat component to find user
+    // todo userForChange  make separat component to find user, component for superuser
     const {userForRemove, userNotFound} = useAppSelector(({userReducer}) => userReducer);
     const [userEmail, setUserEmail] = useState<string>('');
     const dispatch = useAppDispatch();

@@ -85,6 +85,9 @@ const authSlice = createSlice({
                     state.registerErrors = null
                     state.isSentActivatedMail = true
                 }
+            //    todo how to get error in regected case
+            //     action.error
+            //    todo check lection
             })
             .addCase(activate.fulfilled, state => {
                 state.isSuccessActivated = true

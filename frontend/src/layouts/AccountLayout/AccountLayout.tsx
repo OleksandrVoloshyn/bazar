@@ -1,19 +1,9 @@
-import {FC, useEffect} from "react"
-import {Outlet, useNavigate} from "react-router-dom";
+import {FC} from "react"
+import {Outlet} from "react-router-dom";
 
-import {useAppDispatch, useAppSelector} from "../../hook";
 import {AccountFooBar, HeaderAccount} from "../../components";
-import {userActions} from "../../redux";
 
 const AccountLayout: FC = () => {
-    const {isAuth} = useAppSelector(({authReducer}) => authReducer);
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        !isAuth && navigate('/')
-        dispatch(userActions.getCurrent())
-    }, [dispatch, navigate, isAuth])
 
     return (
         <div>

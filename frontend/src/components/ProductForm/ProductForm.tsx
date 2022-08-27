@@ -19,7 +19,6 @@ const ProductForm: FC<IProps> = ({productIdForUpdate, setProductIdForUpdate}) =>
         dispatch(productActions.getCategories())
         if (productIdForUpdate) {
             dispatch(productActions.getById({pk: productIdForUpdate}))
-
         }
     }, [dispatch, productIdForUpdate, setValue])
 
@@ -39,7 +38,6 @@ const ProductForm: FC<IProps> = ({productIdForUpdate, setProductIdForUpdate}) =>
     const submit = async (product: any) => {
         if (productIdForUpdate && chosenProduct) {
             product['id'] = productIdForUpdate
-            console.log(product)
             await dispatch(productActions.update(product))
             if (setProductIdForUpdate) {
                 setProductIdForUpdate('')
@@ -82,6 +80,7 @@ const ProductForm: FC<IProps> = ({productIdForUpdate, setProductIdForUpdate}) =>
                     <label>Brand:
                         <select {...register('brand')}>
                             <option></option>
+                            {/*todo default other*/}
                             {brands && brands.map(brand => <option key={brand.id}
                                                                    value={brand.name}>{brand.name}</option>)}
                         </select>

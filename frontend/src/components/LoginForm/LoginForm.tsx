@@ -26,7 +26,6 @@ const LoginForm: FC = () => {
             <div><label>Password: <input type="text" {...register('password')}/></label></div>
             {errors.password && <div>{errors.password.message}</div>}
             {loginError && <span>Invalid login or password</span>}
-
             <div>
                 <button>login</button>
             </div>

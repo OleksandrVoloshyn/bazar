@@ -48,6 +48,7 @@ class RetrieveProductView(RetrieveAPIView):
     permission_classes = (AllowAny,)
 
 
+# todo Reatrive update destroy nedd to combine
 class DestroyProductView(DestroyAPIView):
     queryset = ProductModel.objects.all()
     permission_classes = (IsOwnerOrAdmin,)
@@ -71,7 +72,7 @@ class ListCategoryView(ListAPIView):
     permission_classes = (AllowAny,)
 
 
-# todo чи краще створювати ліст і кріейт в одній вю але буде гет серіалайзер і створення нового пермішинк
+# todo чи краще створювати ліст і кріейт в одній вю і створення нового пермішинк
 
 class CreateCategoryView(CreateAPIView):
     serializer_class = CategorySerializer
@@ -86,7 +87,7 @@ class ListBrandView(ListAPIView):
     serializer_class = BrandSerializer
     queryset = BrandModel.objects.all()
     permission_classes = (AllowAny,)
-
+# todo combine with diferend perm
 
 class CreateBrandView(CreateAPIView):
     serializer_class = BrandSerializer
@@ -128,6 +129,8 @@ class DestroyCommentView(DestroyAPIView):
     queryset = CommentModel.objects.all()
     permission_classes = (IsOwnerOrAdmin,)
 
+
+# todo combine views
 
 class DestroyProductImage(DestroyAPIView):
     queryset = ProductImagesModel.objects.all()

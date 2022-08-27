@@ -16,6 +16,7 @@ const ProfilePage: FC = () => {
         setIsChangeAvatar(false)
     }
 
+    // todo make usual profile component and with change  onClick
     return (
         <div>
             {user &&

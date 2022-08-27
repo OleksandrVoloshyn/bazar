@@ -25,7 +25,9 @@ import {
     ProductControlPage,
     UserControlPage, ChangeRolePage,
 } from "./pages";
-import {authActions} from "./redux";
+
+import {authActions, userActions} from "./redux";
+import {RequireAuth} from "./hoc";
 
 const App: FC = () => {
     const dispatch = useAppDispatch();
@@ -33,6 +35,7 @@ const App: FC = () => {
 
     if (access) {
         dispatch(authActions.setAuth(true))
+        dispatch(userActions.getCurrent())
     }
 
     return (
@@ -49,8 +52,7 @@ const App: FC = () => {
                 <Route path={'activate/:token'} element={<ActivatePage/>}/>
             </Route>
 
-            {/*todo hoc for account*/}
-            <Route path={'/account'} element={<AccountLayout/>}>
+            <Route path={'/account'} element={<RequireAuth><AccountLayout/></RequireAuth>}>
                 <Route index element={<WelcomePage/>}/>
                 <Route path={'profile'} element={<ProfilePage/>}/>
                 <Route path={'product_list'} element={<ProductListPage/>}/>
@@ -59,8 +61,8 @@ const App: FC = () => {
                 <Route path={'basket'} element={<BasketPage/>}/>
                 <Route path={'history'} element={<PurchaseHistoryPage/>}/>
             </Route>
-            {/*todo hoc for admin*/}
-            <Route path={'/admin'} element={<AdminLayout/>}>
+
+            <Route path={'/admin'} element={<RequireAuth><AdminLayout/></RequireAuth>}>
                 <Route index element={<AdminWelcomePage/>}/>
                 <Route path={'add_values'} element={<AddValuesPage/>}/>
                 <Route path={'product_control'} element={<ProductControlPage/>}/>
