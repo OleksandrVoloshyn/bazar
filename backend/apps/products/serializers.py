@@ -1,7 +1,7 @@
 from django.db import transaction
 
 from rest_framework.request import Request
-from rest_framework.serializers import FileField, ListField, ManyRelatedField, ModelSerializer
+from rest_framework.serializers import ModelSerializer
 
 from apps.users.serializers import UserSerializer
 

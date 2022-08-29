@@ -3,6 +3,8 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {authService, userService} from "../../services";
 import {IToken, IUser} from "../../interfaces";
 
+// todo add ts
+// todo remove some init states
 interface IState {
     registerErrors: null | any
     isSentActivatedMail: boolean,
@@ -23,15 +25,10 @@ const initialState: IState = {
     hasSentRecoveryMailError: null
 }
 
-const register = createAsyncThunk<any, { user: IUser }>(
+const register = createAsyncThunk<void, { user: IUser }>(
     'authSlice/register',
     async ({user}) => {
-        try {
-            await userService.create(user);
-        } catch (e: any) {
-            //    here can be error with the same email
-            return e.response.data
-        }
+        await userService.create(user);
     }
 )
 
@@ -77,26 +74,25 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(register.fulfilled, (state, action) => {
-                if (action.payload) {
-                    state.isSentActivatedMail = false
-                    state.registerErrors = action.payload
-                } else {
-                    state.registerErrors = null
-                    state.isSentActivatedMail = true
-                }
-            //    todo how to get error in regected case
-            //     action.error
-            //    todo check lection
+            .addCase(register.fulfilled, (state) => {
+                state.registerErrors = null
+                state.isSentActivatedMail = true
             })
+            .addCase(register.rejected, (state, action) => {
+                state.isSentActivatedMail = false
+                console.log(action.error)
+                state.registerErrors = action.error
+            })
+
             .addCase(activate.fulfilled, state => {
                 state.isSuccessActivated = true
             })
             .addCase(activate.rejected, state => {
                 state.isSuccessActivated = false
             })
+
             .addCase(login.fulfilled, (state, action) => {
-                state.isAuth = true
+                // state.isAuth = true
                 state.loginError = false
                 const {access, refresh} = action.payload;
                 localStorage.setItem('access', access)
@@ -105,10 +101,12 @@ const authSlice = createSlice({
             .addCase(login.rejected, (state) => {
                 state.loginError = true
             })
+
             .addCase(recovery.fulfilled, state => {
                 state.isSentRecoveryMail = true
                 state.hasSentRecoveryMailError = false
-                localStorage.setItem('doRecovery', 'true')
+                // todo can use one field
+                // localStorage.setItem('doRecovery', 'true')
             })
             .addCase(recovery.rejected, state => {
                 state.isSentRecoveryMail = false

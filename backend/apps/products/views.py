@@ -4,7 +4,6 @@ from rest_framework.generics import (
     DestroyAPIView,
     GenericAPIView,
     ListAPIView,
-    ListCreateAPIView,
     RetrieveAPIView,
     UpdateAPIView,
 )
@@ -32,11 +31,21 @@ class ListProductView(ListAPIView):
     filterset_class = ProductFilter
 
 
+class ListMyProductView(ListAPIView):
+    queryset = ProductModel.objects.all()
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return self.queryset.filter(owner_id=user_id)
+
+
 class CreateProductView(CreateAPIView):
     queryset = ProductModel.objects.all()
     serializer_class = ProductDetailSerializer
 
     def perform_create(self, serializer):
+        # todo передавати зразу айдішки
         brand = BrandModel.objects.get(name__icontains=self.request.data['brand'])
         category = CategoryModel.objects.get(title__icontains=self.request.data['category'])
         serializer.save(owner_id=self.request.user.id, brand=brand, category=category)
@@ -63,6 +72,7 @@ class UpdateProductView(UpdateAPIView):
     def perform_update(self, serializer):
         brand = BrandModel.objects.get(name__icontains=self.request.data['brand'])
         category = CategoryModel.objects.get(title__icontains=self.request.data['category'])
+        # todo передавати зразу айдішки
         serializer.save(brand=brand, category=category)
 
 
@@ -87,6 +97,8 @@ class ListBrandView(ListAPIView):
     serializer_class = BrandSerializer
     queryset = BrandModel.objects.all()
     permission_classes = (AllowAny,)
+
+
 # todo combine with diferend perm
 
 class CreateBrandView(CreateAPIView):
@@ -95,15 +107,6 @@ class CreateBrandView(CreateAPIView):
 
 class DestroyBrandView(DestroyAPIView):
     queryset = BrandModel.objects.all()
-
-
-class ListMyProductView(ListAPIView):
-    queryset = ProductModel.objects.all()
-    serializer_class = ProductSerializer
-
-    def get_queryset(self):
-        user_id = self.request.user.id
-        return self.queryset.filter(owner_id=user_id)
 
 
 class CreateCommentView(CreateAPIView):

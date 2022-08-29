@@ -10,7 +10,7 @@ const authService = {
     sendRecoveryToEmail: (email: string): Res<void> => axiosService.post(`${urls.auth}/recovery`, {email}),
     recoveryPassword: (token: string, newPassword: string): Res<void> => axiosService.post(`${urls.auth}/recovery/${token}`, {password: newPassword}),
 
-    logout: () => {
+    logout: (): void => {
         localStorage.removeItem('access')
         localStorage.removeItem('refresh')
     }

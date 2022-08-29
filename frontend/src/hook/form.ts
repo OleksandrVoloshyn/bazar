@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 
 import {errorMessage} from "../constants";
 import {regEx} from "../validators";
@@ -13,7 +13,7 @@ const useValidation = (value: string, validations: Partial<IValidators>) => {
     const [emailError, setEmailError] = useState<IError>({status: false, msg: regEx.email.msg});
     const [passwordError, setPasswordError] = useState<IError>({status: false, msg: regEx.password.msg});
     const [nameError, setNameError] = useState<IError>({status: false, msg: regEx.name.msg});
-    const [ageError, setAgeError] = useState<IError>({status: false, msg: 'Invalid age'});
+    const [ageError, setAgeError] = useState<IError>({status: false, msg: 'Invalid age min 6 max 100'});
     const [phoneError, setPhoneError] = useState<IError>({status: false, msg: regEx.phone.msg});
 
     const [empty, setEmpty] = useState<IError>({status: true, msg: errorMessage.empty});
@@ -87,11 +87,14 @@ const useInput = (initialState: string, validations: Partial<IValidators>) => {
     const valid = useValidation(value, validations)
 
 
+    // const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const onChange = (e: any) => {
+        //todo check type
         setValue(e.target.value)
     }
 
     const onBlur = (e: any) => {
+        // todo check type
         setDirty(true)
     }
 

@@ -10,6 +10,9 @@ interface IState {
     userNotFound: boolean
 }
 
+// todo change name userforremove to candidate
+// userNot found catch error
+
 const initialState: IState = {
     user: undefined,
     users: [],
@@ -29,6 +32,7 @@ const getCandidate = createAsyncThunk<IUser, string>(
     'userSlice/getCandidate',
     async (userEmail) => {
         const {data} = await userService.getForRemove(userEmail)
+        // todo change name
         return data
     }
 )
@@ -48,6 +52,7 @@ const toAdmin = createAsyncThunk<IUser, string>(
         return data
     }
 )
+
 const toLower = createAsyncThunk<IUser, string>(
     'userSlice/toLower',
     async (id) => {
@@ -72,11 +77,14 @@ const userSlice = createSlice({
             .addCase(getCurrent.fulfilled, (state, action) => {
                 state.user = action.payload
             })
+            //todo add rejected
             .addCase(updateAccount.fulfilled, (state, action) => {
                 if (state.user) {
                     state.user.profile = action.payload
                 }
             })
+            //todo add rejected
+
             .addCase(getCandidate.fulfilled, (state, action) => {
                 state.userForRemove = action.payload
                 state.userNotFound = false
@@ -84,12 +92,16 @@ const userSlice = createSlice({
             .addCase(getCandidate.rejected, (state, action) => {
                 state.userNotFound = true
             })
+
             .addCase(removeUser.fulfilled, (state) => {
                 state.userForRemove = undefined
             })
+
             .addCase(toAdmin.fulfilled, (state, action) => {
                 state.userForRemove = action.payload
             })
+            //todo rejected user is alredy admin
+
             .addCase(toLower.fulfilled, (state, action) => {
                 state.userForRemove = action.payload
             })

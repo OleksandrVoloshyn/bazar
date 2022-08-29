@@ -1,8 +1,9 @@
 import {createAsyncThunk, createSlice, isAllOf} from "@reduxjs/toolkit";
 
 import {productService} from "../../services";
-import {IBrand, ICategory, IComment, IProduct, IProductDetails, IQueryParams, IResponce} from "../../interfaces";
+import {IBrand, ICategory, IComment, IProduct, IProductDetails, IQueryParams, IResponse} from "../../interfaces";
 
+// todo cut down state partial iresponse
 interface IState {
     prev: boolean,
     next: boolean,
@@ -13,8 +14,9 @@ interface IState {
     brands: IBrand[],
     chosenProduct: IProductDetails | null,
     orders: IProduct[],
-    myComments: IComment[]
+    myComments: IComment[],
 }
+
 
 const initialState: IState = {
     prev: false,
@@ -26,10 +28,12 @@ const initialState: IState = {
     brands: [],
     chosenProduct: null,
     orders: [],
-    myComments: []
+    myComments: [],
 }
 
-const getAll = createAsyncThunk<IResponce<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
+// todo TS
+//todo change orders
+const getAll = createAsyncThunk<IResponse<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
     'productSlice/getAll',
     async ({QueryParamsObj}) => {
         const {data} = await productService.getAll(QueryParamsObj);
@@ -40,7 +44,6 @@ const getAll = createAsyncThunk<IResponce<IProduct>, { QueryParamsObj: Partial<I
 const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
     'productSlice/create',
     async ({product}) => {
-        console.log(product)
         const {data} = await productService.create(product)
         return data
     }
@@ -82,7 +85,7 @@ const addComment = createAsyncThunk<any, { text: string, pk: string }>(
     }
 )
 
-const getMyProducts = createAsyncThunk<IResponce<IProduct>, void>(
+const getMyProducts = createAsyncThunk<IResponse<IProduct>, void>(
     'productSlice/getMyProducts',
     async () => {
         const {data} = await productService.getMyProducts()
@@ -106,7 +109,7 @@ const getById = createAsyncThunk<IProductDetails, { pk: string }>(
     }
 )
 
-const getCategories = createAsyncThunk<IResponce<ICategory>, void>(
+const getCategories = createAsyncThunk<IResponse<ICategory>, void>(
     'productSlice/getCategories',
     async () => {
         const {data} = await productService.getCategories();
@@ -114,7 +117,7 @@ const getCategories = createAsyncThunk<IResponce<ICategory>, void>(
     }
 )
 
-const getBrands = createAsyncThunk<IResponce<IBrand>, void>(
+const getBrands = createAsyncThunk<IResponse<IBrand>, void>(
     'productSlice/getBrands',
     async () => {
         const {data} = await productService.getBrands()
@@ -127,13 +130,14 @@ const removeProduct = createAsyncThunk<string, { pk: string }>(
     async ({pk}) => {
         await productService.removeById(pk)
         return pk
-        //    todo passing data to fulfiled
+        //    todo passing pk to fulfiled
     }
 )
 const removeProductImage = createAsyncThunk<string, { pk: string }>(
     'productSlice/removeProductImage',
     async ({pk}) => {
         await productService.removeImageById(pk)
+        //    todo passing pk to fulfiled
         return pk
     }
 )
@@ -142,6 +146,7 @@ const deleteComment = createAsyncThunk<string, { pk: string }>(
     'productSlice/deleteComment',
     async ({pk}) => {
         await productService.deleteComment(pk)
+        //    todo passing pk to fulfiled
         return pk
     }
 )
@@ -150,6 +155,7 @@ const removeCategory = createAsyncThunk<string, string>(
     'productSlice/removeCategory',
     async (pk) => {
         await productService.removeCategory(pk)
+        //    todo passing pk to fulfiled
         return pk
     }
 )
@@ -158,6 +164,7 @@ const removeBrand = createAsyncThunk<string, string>(
     'productSlice/removeBrand',
     async (pk) => {
         await productService.removeBrand(pk)
+        //    todo passing pk to fulfiled
         return pk
     }
 )
@@ -166,6 +173,7 @@ const productSlice = createSlice({
     name: 'productSlice',
     initialState,
     reducers: {
+        //todo orders to local storage
         addToOrder: (state, action) => {
             // let isInOrders = false
             // state.orders.forEach(item => (item.id === action.payload.id) && (isInOrders = true))
@@ -203,7 +211,7 @@ const productSlice = createSlice({
                 state.total_pages = action.payload.total_pages
             })
             .addCase(addComment.fulfilled, (state, action) => {
-                    state.chosenProduct?.comments.push(action.payload)
+                state.chosenProduct?.comments.push(action.payload)
             })
             .addCase(removeProduct.fulfilled, (state, action) => {
                 const index = state.products.findIndex(item => item.id === action.payload);

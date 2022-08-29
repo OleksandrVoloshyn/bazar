@@ -1,4 +1,4 @@
-export interface IResponce<T> {
+export interface IResponse<T> {
     next: boolean,
     prev: boolean,
     data: T[],

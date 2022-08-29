@@ -1,16 +1,11 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import status
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    GenericAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
-    get_object_or_404,
-)
-from rest_framework.permissions import AllowAny
+from rest_framework.generics import CreateAPIView, DestroyAPIView, GenericAPIView, UpdateAPIView, get_object_or_404
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
+
+from core.permissions.user_permission import IsSuperUser
 
 from .serializers import ProfileSerializer, UserSerializer
 
@@ -42,10 +37,10 @@ class GetCurrentUserView(GenericAPIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
-class RetrieveUserByEmailView(GenericAPIView):
+class GetUserByEmailView(GenericAPIView):
+    """get user by email"""
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (AllowAny,)
 
     def get(self, *args, **kwargs):
         email = kwargs.get('email')
@@ -55,18 +50,19 @@ class RetrieveUserByEmailView(GenericAPIView):
 
 
 class DestroyUserView(DestroyAPIView):
+    """remove user"""
     queryset = UserModel.objects.all()
+    permission_classes = (IsAdminUser,)
 
 
 class UserToAdminView(GenericAPIView):
-    # permission_classes = (IsSuperUser,)
-    # todo make permission
+    """give admin power"""
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsSuperUser,)
 
     def patch(self, *args, **kwargs):
         candidate = self.get_object()
-
         if candidate.is_staff:
             raise ValueError('User is already admin')
         candidate.is_staff = True
@@ -77,9 +73,10 @@ class UserToAdminView(GenericAPIView):
 
 
 class UserToLowerView(UserToAdminView):
+    """remove admin power """
+
     def patch(self, *args, **kwargs):
         candidate = self.get_object()
-
         if candidate.is_staff:
             candidate.is_staff = False
             candidate.save()

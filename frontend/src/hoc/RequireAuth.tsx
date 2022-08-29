@@ -10,9 +10,10 @@ interface IProps {
 
 const RequireAuth: FC<IProps> = ({children}) => {
     const {user} = useAppSelector(({userReducer}) => userReducer);
-    const {pathname} = useLocation();
-    const access = localStorage.getItem('access')
     const dispatch = useAppDispatch();
+    const {pathname} = useLocation();
+
+    const access = localStorage.getItem('access')
 
     useEffect(() => {
         if (!user) {
@@ -26,7 +27,7 @@ const RequireAuth: FC<IProps> = ({children}) => {
 
 
     if (pathname.includes('admin') && !user?.is_staff) {
-        return <div>Шо за макин хацкер</div>
+        return <div>Шо за мамкин хацкер</div>
     }
 
     return children

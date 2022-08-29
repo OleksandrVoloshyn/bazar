@@ -35,9 +35,3 @@ class EmailService:
         url = f'{os.environ.get("FRONTEND_URL")}/recovery/{token}'
         cls._send_email.delay(user.email, TemplateEnum.RECOVERY.value, {'name': user.profile.name, 'link': url},
                               'Recovery')
-
-    # @staticmethod
-    # @app.task
-    # def send_spam():
-    #     for user in UserModel.objects.all():
-    #         EmailService._send_email(user.email, TemplateEnum.SPAM.value, {}, 'SPAM')

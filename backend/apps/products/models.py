@@ -24,6 +24,8 @@ class ProductModel(models.Model):
     brand = models.ForeignKey('BrandModel', models.SET_NULL, 'products', null=True)
 
 
+# todo validate all models
+
 class BrandModel(models.Model):
     class Meta:
         db_table = 'brand'
