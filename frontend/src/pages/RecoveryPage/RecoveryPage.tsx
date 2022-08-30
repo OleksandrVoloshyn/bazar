@@ -7,13 +7,10 @@ const RecoveryPage: FC = () => {
     const {isSentRecoveryMail} = useAppSelector(({authReducer}) => authReducer);
 
     return (
-        <div>
-            {isSentRecoveryMail
-                ? <MessageInfo data={'check your email for recovery password'}/>
-                : <RecoveryForm/>
-            }
-        </div>
-    );
+        isSentRecoveryMail
+            ? <MessageInfo data={'check your email for recovery password'}/>
+            : <RecoveryForm/>
+    )
 };
 
 export {RecoveryPage};

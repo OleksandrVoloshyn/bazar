@@ -1,4 +1,11 @@
-.content {
+.display_center {
     display: flex;
     justify-content: center;
+}
+
+.content {
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 100px;
+    padding: 10px;
 }

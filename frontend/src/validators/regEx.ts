@@ -1,5 +1,4 @@
 const regEx = {
-
     email: {pattern: /^.+@.+\..+$/, msg: 'Invalid email'},
     password: {
         pattern: /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{8,50})\S$/,

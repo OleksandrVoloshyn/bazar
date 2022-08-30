@@ -2,40 +2,78 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {authService, userService} from "../../services";
 import {IToken, IUser} from "../../interfaces";
+import {AxiosError} from "axios";
 
 // todo add ts
 // todo remove some init states
+interface IRegisterErrors {
+    email: string[],
+    profile: string[]
+}
+
 interface IState {
-    registerErrors: null | any
+    registerErrors?: Partial<IRegisterErrors>
     isSentActivatedMail: boolean,
-    isSuccessActivated: null | boolean,
-    isAuth: null | boolean,
-    loginError: null | boolean,
+    isSuccessActivated?: boolean,
+    activatedError?: string,
+
     isSentRecoveryMail: boolean,
-    hasSentRecoveryMailError: null | boolean
+    isRecoveryMailError: boolean,
+    isChangePasswordError: boolean,
+
+    isLoginError: boolean,
+    isAuth: boolean,
 }
 
 const initialState: IState = {
-    registerErrors: null,
+    registerErrors: undefined,
     isSentActivatedMail: false,
-    isSuccessActivated: null,
-    isAuth: null,
-    loginError: null,
+    isSuccessActivated: undefined,
+    activatedError: undefined,
+
     isSentRecoveryMail: false,
-    hasSentRecoveryMailError: null
+    isRecoveryMailError: false,
+    isChangePasswordError: false,
+
+    isLoginError: false,
+    isAuth: false
 }
 
 const register = createAsyncThunk<void, { user: IUser }>(
     'authSlice/register',
-    async ({user}) => {
-        await userService.create(user);
+    async ({user}, {rejectWithValue}) => {
+        try {
+            await userService.create(user);
+        } catch (e) {
+            const axErr = e as AxiosError
+            return rejectWithValue(axErr.response?.data)
+        }
     }
 )
 
 const activate = createAsyncThunk<void, { token: string }>(
     'authSlice/activate',
-    async ({token}) => {
-        await authService.activate(token)
+    async ({token}, {rejectWithValue}) => {
+        try {
+            await authService.activate(token)
+        } catch (e) {
+            const axiosErr = e as AxiosError
+            return rejectWithValue(axiosErr.response?.data)
+        }
+    }
+)
+
+const recovery = createAsyncThunk<void, { email: string }>(
+    'authSlice/recovery',
+    async ({email}) => {
+        await authService.sendRecoveryToEmail(email)
+    }
+)
+
+const changePassword = createAsyncThunk<void, { token: string, newPassword: string }>(
+    'authSlice/changePassword',
+    async ({token, newPassword}) => {
+        await authService.recoveryPassword(token, newPassword)
     }
 )
 
@@ -47,75 +85,63 @@ const login = createAsyncThunk<IToken, { user: Partial<IUser> }>(
     }
 );
 
-const recovery = createAsyncThunk<void, { email: string }>(
-    'authSlice/recovery',
-    async ({email}) => {
-        await authService.sendRecoveryToEmail(email)
-    }
-)
-const changePassword = createAsyncThunk<void, { token: string, newPassword: string }>(
-    'authSlice/changePassword',
-    async ({token, newPassword}) => {
-        await authService.recoveryPassword(token, newPassword)
-    }
-)
 
 const authSlice = createSlice({
     name: 'authSlice',
     initialState,
     reducers: {
-        setAuth: (state, action) => {
-            state.isAuth = action.payload
-        },
-        setError: (state) => {
-            state.registerErrors = null
-            state.loginError = null
+        resetErrors: (state) => {
+            state.registerErrors = undefined
+            state.isLoginError = false
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(register.fulfilled, (state) => {
-                state.registerErrors = null
+                state.registerErrors = undefined
                 state.isSentActivatedMail = true
             })
             .addCase(register.rejected, (state, action) => {
+                state.registerErrors = action.payload as Partial<IRegisterErrors>;
                 state.isSentActivatedMail = false
-                console.log(action.error)
-                state.registerErrors = action.error
             })
 
-            .addCase(activate.fulfilled, state => {
+            .addCase(activate.fulfilled, (state) => {
                 state.isSuccessActivated = true
             })
-            .addCase(activate.rejected, state => {
+            .addCase(activate.rejected, (state, action) => {
                 state.isSuccessActivated = false
+                const {details} = action.payload as { details: string }
+                state.activatedError = details
+            })
+
+            .addCase(recovery.fulfilled, state => {
+                state.isSentRecoveryMail = true
+            })
+            .addCase(recovery.rejected, state => {
+                state.isSentRecoveryMail = false
+                state.isRecoveryMailError = true
+            })
+
+            .addCase(changePassword.rejected, state => {
+                state.isChangePasswordError = true
             })
 
             .addCase(login.fulfilled, (state, action) => {
-                // state.isAuth = true
-                state.loginError = false
+                state.isLoginError = false
+                state.isAuth = true
                 const {access, refresh} = action.payload;
                 localStorage.setItem('access', access)
                 localStorage.setItem('refresh', refresh)
             })
             .addCase(login.rejected, (state) => {
-                state.loginError = true
+                state.isLoginError = true
             })
 
-            .addCase(recovery.fulfilled, state => {
-                state.isSentRecoveryMail = true
-                state.hasSentRecoveryMailError = false
-                // todo can use one field
-                // localStorage.setItem('doRecovery', 'true')
-            })
-            .addCase(recovery.rejected, state => {
-                state.isSentRecoveryMail = false
-                state.hasSentRecoveryMailError = true
-            })
     }
 });
 
-const {reducer: authReducer, actions: {setAuth, setError,}} = authSlice;
-const authActions = {login, setAuth, setError, activate, register, recovery, changePassword}
+const {reducer: authReducer, actions: {resetErrors}} = authSlice;
+const authActions = {register, resetErrors, activate, recovery, changePassword, login}
 
 export {authReducer, authActions}

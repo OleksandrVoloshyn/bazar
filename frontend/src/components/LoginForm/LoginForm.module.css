@@ -1,18 +1,14 @@
-.btn_div {
+.display_center {
     display: flex;
     justify-content: center;
-}
-
-.btn_div > button:hover {
-    color: darkolivegreen;
-    transition: 0.5s;
+    align-items: center;
 }
 
 .input_line {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 5px 0;
+    margin-bottom: 5px;
 }
 
 .input_line > input {
@@ -21,6 +17,7 @@
     padding: 3px;
 }
 
-.input_line > label {
-    font-weight: bold;
+.login_form button:hover {
+    color: darkolivegreen;
+    transition: 0.5s;
 }

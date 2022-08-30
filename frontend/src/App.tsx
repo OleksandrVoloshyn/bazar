@@ -30,13 +30,13 @@ import {authActions, userActions} from "./redux";
 import {RequireAuth} from "./hoc";
 
 const App: FC = () => {
-    const dispatch = useAppDispatch();
-    const access = localStorage.getItem('access')
+    // const dispatch = useAppDispatch();
+    // const access = localStorage.getItem('access')
 
-    if (access) {
-        dispatch(authActions.setAuth(true))
-        dispatch(userActions.getCurrent())
-    }
+    // if (access) {
+    //     dispatch(authActions.setAuth(true))
+    //     dispatch(userActions.getCurrent())
+    // }
 
     return (
         <Routes>
@@ -45,11 +45,12 @@ const App: FC = () => {
                 <Route path={'category/:title'} element={<MainFilterPage/>}/>
                 <Route path={'products/:pk/details'} element={<ProductDetailPage/>}></Route>
 
+                {/* AUTH */}
                 <Route path={'login'} element={<LoginPage/>}/>
                 <Route path={'register'} element={<RegisterPage/>}/>
+                <Route path={'activate/:token'} element={<ActivatePage/>}/>
                 <Route path={'recovery'} element={<RecoveryPage/>}/>
                 <Route path={'recovery/:token'} element={<ChangePasswordPage/>}/>
-                <Route path={'activate/:token'} element={<ActivatePage/>}/>
             </Route>
 
             <Route path={'/account'} element={<RequireAuth><AccountLayout/></RequireAuth>}>

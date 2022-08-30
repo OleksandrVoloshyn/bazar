@@ -87,14 +87,12 @@ const useInput = (initialState: string, validations: Partial<IValidators>) => {
     const valid = useValidation(value, validations)
 
 
-    // const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const onChange = (e: any) => {
-        //todo check type
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value)
     }
 
-    const onBlur = (e: any) => {
-        // todo check type
+    const onBlur = (e:any) => {
+        // todo remove
         setDirty(true)
     }
 
@@ -102,6 +100,7 @@ const useInput = (initialState: string, validations: Partial<IValidators>) => {
         value,
         onChange,
         onBlur,
+        setDirty,
         isDirty,
         ...valid
     }

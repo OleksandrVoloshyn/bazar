@@ -2,22 +2,20 @@ import {FC, useState} from "react"
 import {useParams} from "react-router-dom";
 
 import {ChangePasswordForm, MessageInfo} from "../../components";
+import {useAppSelector} from "../../hook";
 
 
 const ChangePasswordPage: FC = () => {
+    const {isChangePasswordError} = useAppSelector(({authReducer}) => authReducer);
     const [changed, setChanged] = useState<boolean>(false);
-    const [isCrash, setIsCrash] = useState<boolean>(false)
     const {token} = useParams<string>();
 
-    const msg = isCrash ? 'Шо за мамкин хацкер тут сидить' : 'your password was changed'
+    const msg = isChangePasswordError ? 'Oppps something wrong' : 'your password was changed'
 
     return (
-        <div>
-            {changed
-                ? <MessageInfo data={msg}/>
-                : <ChangePasswordForm setIsCrash={setIsCrash} setChanged={setChanged} token={token as string}/>
-            }
-        </div>
+        changed
+            ? <MessageInfo data={msg}/>
+            : <ChangePasswordForm setChanged={setChanged} token={token as string}/>
     );
 };
 

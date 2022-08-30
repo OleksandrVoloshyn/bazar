@@ -2,23 +2,24 @@ import {FC, useEffect} from "react"
 import {Link, useNavigate} from "react-router-dom";
 
 import {LoginForm} from "../../components";
-import {useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hook";
+import {authActions} from "../../redux";
+import css from './LoginPage.module.css'
 
 const LoginPage: FC = () => {
-    const {loginError, isAuth} = useAppSelector(({authReducer}) => authReducer);
+    const {isAuth} = useAppSelector(({authReducer})=>authReducer);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const access = localStorage.getItem('access')
         access && navigate('/')
-        // if (isAuth && !loginError) {
-        //     localStorage.removeItem('doRecovery')
-        //     navigate('/')
-        // }
-    }, [navigate, loginError, isAuth])
+
+        dispatch(authActions.resetErrors())
+    }, [navigate, isAuth])
 
     return (
-        <div>
+        <div className={css.wrap}>
             <LoginForm/>
             <div><Link to={'/register'}>to registration</Link></div>
             <div><Link to={'/recovery'}>recovery password</Link></div>

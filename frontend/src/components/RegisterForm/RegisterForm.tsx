@@ -1,4 +1,4 @@
-import {FC} from "react"
+import {FC, useEffect} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
 import {joiResolver} from '@hookform/resolvers/joi'
 
@@ -6,11 +6,12 @@ import {useAppDispatch, useAppSelector} from "../../hook";
 import {IUser} from "../../interfaces";
 import {registerValidator} from "../../validators";
 import {authActions} from "../../redux";
+import {InputError} from "../InputError/InputError";
+import css from './register_form.module.css'
 
 const RegisterForm: FC = () => {
-    const dispatch = useAppDispatch();
     const {registerErrors} = useAppSelector(({authReducer}) => authReducer);
-
+    const dispatch = useAppDispatch();
     const {register, handleSubmit, formState: {errors}} = useForm<IUser>({
         resolver: joiResolver(registerValidator),
         mode: "onTouched"
@@ -20,28 +21,52 @@ const RegisterForm: FC = () => {
         await dispatch(authActions.register({user}))
     }
 
-    return (
-        <form onSubmit={handleSubmit(submit)}>
-            <h1>Registration</h1>
+    useEffect(() => {
+        registerErrors && dispatch(authActions.resetErrors())
+    }, [dispatch])
 
-            <div><label>Email: <input type="email" {...register('email')}/></label></div>
-            {errors.email && <span>{errors.email.message}</span>}
-            {registerErrors?.email && <span>{registerErrors.email}</span>}
-            <div><label>Password: <input type="password" {...register('password')}/></label></div>
-            {errors.password && <span>{errors.password.message}</span>}
+    return (
+        <form onSubmit={handleSubmit(submit)} className={css.register_form}>
+            <div className={css.input_line}>
+                <label>Email: </label>
+                <input type="email" {...register('email')}/>
+            </div>
+            {errors.email?.message && <InputError errorMsg={errors.email.message}/>}
+            {registerErrors?.email && <InputError errorMsg={registerErrors?.email[0]}/>}
+
+            <div className={css.input_line}>
+                <label>Password: </label>
+                <input type="password" {...register('password')}/>
+            </div>
+            {errors.password?.message && <InputError errorMsg={errors.password.message}/>}
 
             {/* Profile */}
-            <div><label>Name: <input type="text" {...register('profile.name')}/></label></div>
-            {errors.profile?.name && <span>{errors.profile.name.message}</span>}
-            {registerErrors?.name && <span> Forbidden name contain admin</span>}
-            <div><label>Surname: <input type="text" {...register('profile.surname')}/></label></div>
-            {errors.profile?.surname && <span>{errors.profile.surname.message}</span>}
-            <div><label>age: <input type="number" {...register('profile.age')}/></label></div>
-            {errors.profile?.age && <span>{errors.profile.age.message}</span>}
-            <div><label>Phone number: <input type="text" {...register('profile.phone')}/></label></div>
-            {errors.profile?.phone && <span>{errors.profile.phone.message}</span>}
+            <div className={css.input_line}>
+                <label>Name: </label>
+                <input type="text" {...register('profile.name')}/>
+            </div>
+            {errors.profile?.name?.message && <InputError errorMsg={errors.profile.name.message}/>}
+            {registerErrors?.profile && <InputError errorMsg={registerErrors.profile[0]}/>}
 
-            <div>
+            <div className={css.input_line}>
+                <label>Surname: </label>
+                <input type="text" {...register('profile.surname')}/>
+            </div>
+            {errors.profile?.surname?.message && <InputError errorMsg={errors.profile.surname.message}/>}
+
+            <div className={css.input_line}>
+                <label>Age: </label>
+                <input type="number" {...register('profile.age')}/>
+            </div>
+            {errors.profile?.age?.message && <InputError errorMsg={errors.profile.age.message}/>}
+
+            <div className={css.input_line}>
+                <label>Phone number: </label>
+                <input type="text" {...register('profile.phone')}/>
+            </div>
+            {errors.profile?.phone?.message && <InputError errorMsg={errors.profile.phone.message}/>}
+
+            <div className={css.btn_div}>
                 <button>register</button>
             </div>
         </form>

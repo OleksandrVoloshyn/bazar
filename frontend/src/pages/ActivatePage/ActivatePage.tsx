@@ -6,21 +6,19 @@ import {authActions} from "../../redux";
 import {MessageInfo} from "../../components";
 
 const ActivatePage: FC = () => {
-    const {isSuccessActivated} = useAppSelector(({authReducer}) => authReducer);
+    const {isSuccessActivated, activatedError} = useAppSelector(({authReducer}) => authReducer);
     const {token} = useParams<string>();
     const dispatch = useAppDispatch();
 
-    const msg = isSuccessActivated ? 'Your account was successfully activated, thanks for registration' : 'Ooopss, something wrong'
+    const msg = isSuccessActivated ? 'Your account was successfully activated, thanks for registration' : activatedError
 
     useEffect(() => {
-        if (token) {
-            dispatch(authActions.activate({token}))
-        }
+        token && dispatch(authActions.activate({token}))
     }, [dispatch, token])
 
     return (
         <div>
-            <MessageInfo data={msg}/>
+            {msg && <MessageInfo data={msg}/>}
         </div>
     );
 };

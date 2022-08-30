@@ -7,19 +7,21 @@ import {useAppDispatch} from "../../hook";
 import {authService} from "../../services";
 
 const HeaderAccount: FC = () => {
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+    //todo remove component
 
-    const logout = () => {
-        authService.logout()
-        dispatch(authActions.setAuth(false))
-        navigate('/')
-    }
+    // const navigate = useNavigate();
+    // const dispatch = useAppDispatch();
+
+    // const logout = () => {
+    //     authService.logout()
+    //     dispatch(authActions.setAuth(false))
+    //     navigate('/')
+    // }
 
     return (
         <header className={css.header}>
             <h1><Link to={'/'} className={css.logo}>BAZAR</Link></h1>
-            <div onClick={logout} className={css.logout}>logout</div>
+            {/*<div onClick={logout} className={css.logout}>logout</div>*/}
         </header>
     );
 };

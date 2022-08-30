@@ -1,0 +1,24 @@
+.display_canter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input_line input {
+    border: 1px solid silver;
+    border-radius: 20px;
+    padding: 3px;
+}
+
+.recovery_form {
+    margin-top: 100px;
+}
+
+.recovery_form > button:hover {
+    color: darkolivegreen;
+    transition: 0.5s;
+}
+
+.recovery_form button {
+    margin-top: 5px;
+}

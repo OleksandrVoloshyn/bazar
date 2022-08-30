@@ -33,15 +33,6 @@ class UserSerializer(ModelSerializer):
             }
         }
 
-    def validate(self, attrs):
-        email = attrs['email']
-        password = attrs['password']
-
-        if email == password:
-            raise ValidationError({'email_eq_password': 'email equal password'})
-
-        return attrs
-
     @staticmethod
     def validate_profile(value):
         name: str = value['name']
