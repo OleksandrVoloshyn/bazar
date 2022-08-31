@@ -1,7 +1,7 @@
 import {FC, FormEvent, useEffect, useMemo} from "react"
 import {useParams, useSearchParams} from "react-router-dom";
 
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {Product} from "../Product/Product";
 import {productActions} from "../../redux";
 

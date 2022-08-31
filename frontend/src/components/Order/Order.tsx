@@ -3,7 +3,7 @@ import {FaTrash} from "react-icons/fa";
 
 import css from './Order.module.css'
 import {IProduct} from "../../interfaces";
-import {useAppDispatch} from "../../hook";
+import {useAppDispatch} from "../../hooks";
 import {productActions} from "../../redux";
 
 interface IProps {

@@ -1,7 +1,7 @@
 import {FC, ReactElement, useEffect} from "react"
-
 import {Navigate, useLocation} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../hook";
+
+import {useAppDispatch, useAppSelector} from "../hooks";
 import {userActions} from "../redux";
 
 interface IProps {

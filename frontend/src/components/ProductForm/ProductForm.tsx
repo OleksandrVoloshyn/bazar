@@ -1,5 +1,5 @@
 import {FC, useEffect} from "react"
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {productActions} from "../../redux";
 import {useForm} from "react-hook-form";
 import {UpdateProductImage} from "../UpdateProductImage/UpdateProductImage";

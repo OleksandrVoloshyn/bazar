@@ -1,6 +1,6 @@
 import {FC} from "react"
 
-import {useAppSelector} from "../../hook";
+import {useAppSelector} from "../../hooks";
 import {MessageInfo, RecoveryForm} from "../../components";
 
 const RecoveryPage: FC = () => {

@@ -5,8 +5,7 @@ import {baseURL} from "../constants";
 import {authService} from "./auth.service";
 
 const history = createBrowserHistory();
-const axiosService = axios.create({baseURL, headers: {"Content-Type": "multipart/form-data"}});
-// todo try remove headers here and add it in form with img
+const axiosService = axios.create({baseURL});
 
 let isRefreshing = false
 axiosService.interceptors.request.use((config) => {

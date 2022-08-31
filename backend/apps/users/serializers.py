@@ -15,6 +15,13 @@ class ProfileSerializer(ModelSerializer):
         model = ProfileModel
         exclude = ('user',)
 
+    @staticmethod
+    def validate_name(value):
+        name: str = value
+        if 'admin' == name.lower():
+            raise ValidationError('Forbidden name, contains admin')
+        return value
+
 
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer()

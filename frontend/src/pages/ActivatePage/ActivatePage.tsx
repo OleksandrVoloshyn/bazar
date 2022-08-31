@@ -1,7 +1,7 @@
 import {FC, useEffect} from "react"
 import {useParams} from "react-router-dom";
 
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {authActions} from "../../redux";
 import {MessageInfo} from "../../components";
 

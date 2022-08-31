@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import css from './Product.module.css'
 import {notFoundImage} from "../../constants";
 import {IProduct} from '../../interfaces'
-import {useAppDispatch} from "../../hook";
+import {useAppDispatch} from "../../hooks";
 import {productActions} from "../../redux";
 
 interface IProps {

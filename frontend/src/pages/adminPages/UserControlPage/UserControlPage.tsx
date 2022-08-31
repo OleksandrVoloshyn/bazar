@@ -1,35 +1,31 @@
 import {FC, useState} from "react"
-import {useAppDispatch, useAppSelector} from "../../../hook";
+import {BsSearch} from 'react-icons/bs'
+
+import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {userActions} from "../../../redux";
+import {Profile, Users} from "../../../components";
+
 
 const UserControlPage: FC = () => {
-    // todo duplicate with changerole
-    const {userForRemove, userNotFound} = useAppSelector(({userReducer}) => userReducer);
-    const [userEmail, setUserEmail] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<string>('');
     const dispatch = useAppDispatch();
 
-    const searchCandidate = () => {
-        dispatch(userActions.getCandidate(userEmail))
-    }
-    const removeUser = () => {
-        if (userForRemove?.id) {
-            dispatch(userActions.removeUser(userForRemove?.id))
+    const searchUsers = async () => {
+        if (searchValue) {
+            dispatch(userActions.searchUsers(searchValue))
         }
     }
 
     return (
         <div>
-            <div><label>
-                User Email: <input type="search" onChange={(e) => setUserEmail(e.target.value)}
-                                   value={userEmail}/></label>
+            <Profile/>
+            <div>
+                <label>Looking for users by name surname or email: </label>
+                <br/>
+                <input type="search" onChange={(e) => setSearchValue(e.target.value)} value={searchValue}/>
+                <BsSearch onClick={searchUsers}/>
             </div>
-            <button onClick={searchCandidate}>search</button>
-            {userForRemove
-                ? <div>{userForRemove.id} {userForRemove.email}
-                    <span onClick={removeUser}>X</span>
-                </div>
-                : userNotFound && <div>User with this email is not exist</div>
-            }
+            <Users/>
         </div>
     );
 };

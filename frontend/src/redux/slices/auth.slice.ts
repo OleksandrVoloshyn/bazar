@@ -1,15 +1,10 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-
-import {authService, userService} from "../../services";
-import {IToken, IUser} from "../../interfaces";
 import {AxiosError} from "axios";
 
-// todo add ts
-// todo remove some init states
-interface IRegisterErrors {
-    email: string[],
-    profile: string[]
-}
+import {authService, userService} from "../../services";
+import {IRegisterErrors, IToken, IUser} from "../../interfaces";
+
+
 
 interface IState {
     registerErrors?: Partial<IRegisterErrors>

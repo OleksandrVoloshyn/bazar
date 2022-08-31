@@ -2,7 +2,7 @@ import {FC, useEffect} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
 import {joiResolver} from '@hookform/resolvers/joi'
 
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {IUser} from "../../interfaces";
 import {registerValidator} from "../../validators";
 import {authActions} from "../../redux";
@@ -17,7 +17,7 @@ const RegisterForm: FC = () => {
         mode: "onTouched"
     });
 
-    const submit: SubmitHandler<IUser> = async (user: IUser) => {
+    const submit: SubmitHandler<IUser> = async (user) => {
         await dispatch(authActions.register({user}))
     }
 

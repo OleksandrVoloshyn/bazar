@@ -1,6 +1,6 @@
 import {FC, useEffect, useState} from "react"
 import {useParams} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {productActions} from "../../redux";
 import {AddComment, Comments, ImageSlider} from "../../components";
 

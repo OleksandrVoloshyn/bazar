@@ -1,0 +1,8 @@
+.wrap {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.m_left10 {
+    margin-left: 10px;
+}

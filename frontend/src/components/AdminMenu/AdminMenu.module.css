@@ -1,0 +1,13 @@
+.menu {
+    padding: 0 40px;
+}
+
+.menu li {
+    margin-bottom: 4px;
+    list-style-type: none;
+}
+
+.menu a {
+    color: cornflowerblue;
+    font-size: 20px;
+}

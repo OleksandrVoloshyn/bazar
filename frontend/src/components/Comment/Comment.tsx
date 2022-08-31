@@ -1,6 +1,6 @@
 import {FC} from "react"
 import {IComment} from "../../interfaces";
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {productActions} from "../../redux";
 
 interface IProps {

@@ -2,7 +2,7 @@ import {FC, useEffect} from "react"
 import {Link, useNavigate} from "react-router-dom";
 
 import {LoginForm} from "../../components";
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {authActions} from "../../redux";
 import css from './LoginPage.module.css'
 

@@ -1,5 +1,5 @@
 import {FC, useState} from "react"
-import {useAppDispatch, useAppSelector} from "../../../hook";
+import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {productActions} from "../../../redux";
 
 const ProductControlPage: FC = () => {

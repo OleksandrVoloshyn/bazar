@@ -1,0 +1,9 @@
+.auth a {
+    text-decoration: none;
+}
+
+.account {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+}

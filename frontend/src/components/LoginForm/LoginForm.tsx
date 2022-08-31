@@ -2,7 +2,7 @@ import {FC} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
 import {joiResolver} from "@hookform/resolvers/joi/dist/joi";
 
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {authActions} from "../../redux";
 import {IUser} from "../../interfaces";
 import {registerValidator} from "../../validators";

@@ -1,6 +1,6 @@
 import {FC, useState} from "react"
 import {productActions} from "../../redux";
-import {useAppDispatch} from "../../hook";
+import {useAppDispatch} from "../../hooks";
 
 interface IProps {
     pk: string,

@@ -1,23 +1,22 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AxiosError} from "axios";
 
-import {IUser, IUserProfile} from "../../interfaces";
+import {IResponse, IUser, IUserProfile} from "../../interfaces";
 import {userService} from "../../services";
 
 interface IState {
     user?: IUser,
-    users?: IUser[],
-    userForRemove?: IUser,
-    userNotFound: boolean
+    updateProfileErrors?: string
+    users?: IResponse<IUser>,
+    candidate?: IUser
 }
 
-// todo change name userforremove to candidate
-// userNot found catch error
 
 const initialState: IState = {
     user: undefined,
-    users: [],
-    userForRemove: undefined,
-    userNotFound: false
+    updateProfileErrors: undefined,
+    users: undefined,
+    candidate: undefined
 }
 
 const getCurrent = createAsyncThunk<IUser, void>(
@@ -28,42 +27,47 @@ const getCurrent = createAsyncThunk<IUser, void>(
     }
 );
 
-const getCandidate = createAsyncThunk<IUser, string>(
-    'userSlice/getCandidate',
-    async (userEmail) => {
-        const {data} = await userService.getForRemove(userEmail)
-        // todo change name
-        return data
-    }
-)
-
-const updateAccount = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
+const updateProfile = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
     'userSlice/updateAccount',
-    async (body) => {
-        const {data} = await userService.updateProfile(body)
-        return data
+    async (body, {rejectWithValue}) => {
+        try {
+            const {data} = await userService.updateProfile(body)
+            return data
+        } catch (e) {
+            const axErr = e as AxiosError
+            return rejectWithValue(axErr.response?.data)
+        }
+
     }
 )
 
-const toAdmin = createAsyncThunk<IUser, string>(
+const searchUsers = createAsyncThunk<IResponse<IUser>, string>(
+    'userSlice/getCandidate',
+    async (searchValue) => {
+        const {data} = await userService.searchUsers(searchValue)
+        return data
+    }
+);
+
+const toAdmin = createAsyncThunk<IUser, { pk: string }>(
     'userSlice/toAdmin',
-    async (id) => {
-        const {data} = await userService.toAdmin(id)
+    async ({pk}) => {
+        const {data} = await userService.toAdmin(pk)
         return data
     }
 )
 
-const toLower = createAsyncThunk<IUser, string>(
+const toLower = createAsyncThunk<IUser, { pk: string }>(
     'userSlice/toLower',
-    async (id) => {
-        const {data} = await userService.toLower(id)
+    async ({pk}) => {
+        const {data} = await userService.toLower(pk)
         return data
     }
 )
 
-const removeUser = createAsyncThunk<void, string>(
+const removeUser = createAsyncThunk<void, { pk: string }>(
     'userSlice/removeUser',
-    async (pk) => {
+    async ({pk}) => {
         await userService.removeUser(pk)
     }
 )
@@ -71,45 +75,59 @@ const removeUser = createAsyncThunk<void, string>(
 const userSlice = createSlice({
     name: 'userSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        makeCandidate: (state, action: PayloadAction<IUser>) => {
+            state.candidate = action.payload
+        },
+        resetCandidate: state => {
+            state.candidate = undefined
+        },
+        resetUsers: state => {
+            state.users = undefined
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getCurrent.fulfilled, (state, action) => {
                 state.user = action.payload
             })
-            //todo add rejected
-            .addCase(updateAccount.fulfilled, (state, action) => {
-                if (state.user) {
-                    state.user.profile = action.payload
-                }
-            })
-            //todo add rejected
 
-            .addCase(getCandidate.fulfilled, (state, action) => {
-                state.userForRemove = action.payload
-                state.userNotFound = false
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                state.updateProfileErrors = undefined
+                state.user && (state.user.profile = action.payload)
             })
-            .addCase(getCandidate.rejected, (state, action) => {
-                state.userNotFound = true
+            .addCase(updateProfile.rejected, (state, action) => {
+                const {name} = action.payload as { name: string[] }
+                state.updateProfileErrors = name[0]
             })
 
+            .addCase(searchUsers.fulfilled, (state, action) => {
+                state.users = action.payload
+            })
             .addCase(removeUser.fulfilled, (state) => {
-                state.userForRemove = undefined
+                state.candidate = undefined
             })
-
             .addCase(toAdmin.fulfilled, (state, action) => {
-                state.userForRemove = action.payload
+                state.candidate && (state.candidate.is_staff = true)
             })
-            //todo rejected user is alredy admin
-
             .addCase(toLower.fulfilled, (state, action) => {
-                state.userForRemove = action.payload
+                state.candidate && (state.candidate.is_staff = false)
             })
     }
 });
 
 
-const {reducer: userReducer} = userSlice;
-const userActions = {getCurrent, updateAccount, getCandidate, removeUser, toAdmin, toLower}
+const {reducer: userReducer, actions: {makeCandidate, resetCandidate, resetUsers}} = userSlice;
+const userActions = {
+    getCurrent,
+    updateProfile,
+    searchUsers,
+    makeCandidate,
+    resetCandidate,
+    toAdmin,
+    toLower,
+    removeUser,
+    resetUsers
+}
 
 export {userReducer, userActions}

@@ -1,15 +1,14 @@
 import {FC} from "react"
 import {Outlet} from "react-router-dom";
 
-import {AccountFooBar, HeaderAccount} from "../../components";
+import {AccountMenu, Header} from "../../components";
 
 const AccountLayout: FC = () => {
-
     return (
         <div>
-            <HeaderAccount/>
+            <Header/>
             <div style={{display: "flex"}}>
-                <AccountFooBar/>
+                <AccountMenu/>
                 <Outlet/>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import {FC, useEffect} from "react"
 import {useSearchParams} from "react-router-dom";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {productActions} from "../../redux";
 
 const FilterSideBar: FC = () => {

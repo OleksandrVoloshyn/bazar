@@ -1,6 +1,6 @@
 import {FC} from "react"
 
-import {useAppSelector} from "../../hook";
+import {useAppSelector} from "../../hooks";
 import {Order} from "../Order/Order";
 
 const Orders: FC = () => {

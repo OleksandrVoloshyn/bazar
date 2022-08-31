@@ -2,7 +2,7 @@ import {FC, useState} from "react"
 import {useParams} from "react-router-dom";
 
 import {ChangePasswordForm, MessageInfo} from "../../components";
-import {useAppSelector} from "../../hook";
+import {useAppSelector} from "../../hooks";
 
 
 const ChangePasswordPage: FC = () => {

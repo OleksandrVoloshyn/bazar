@@ -1,5 +1,5 @@
 import {FC, useEffect} from "react"
-import {useAppDispatch, useAppSelector} from "../../hook";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {Link} from "react-router-dom";
 import {productActions} from "../../redux";
 

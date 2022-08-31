@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, DestroyAPIView, GenericAPIView, UpdateAPIView, get_object_or_404
+from rest_framework.filters import SearchFilter
+from rest_framework.generics import DestroyAPIView, GenericAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
@@ -12,11 +13,24 @@ from .serializers import ProfileSerializer, UserSerializer
 UserModel = get_user_model()
 
 
-class UserCreateView(CreateAPIView):
-    """create user"""
+# todo check swagger
+class ListCreateUsersView(ListCreateAPIView):
+    """
+    GET search users for changing
+    POST create user
+    """
     serializer_class = UserSerializer
     queryset = UserModel.objects.all()
-    permission_classes = (AllowAny,)
+
+    filter_backends = (SearchFilter,)
+    search_fields = ('email', 'profile__name', 'profile__surname')
+
+    def get_permissions(self):
+        method = self.request.method
+        if method == "POST":
+            return [AllowAny()]
+        if method == "GET":
+            return [IsAdminUser()]
 
 
 class UpdateProfileView(UpdateAPIView):
@@ -37,18 +51,6 @@ class GetCurrentUserView(GenericAPIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
-class GetUserByEmailView(GenericAPIView):
-    """get user by email"""
-    queryset = UserModel.objects.all()
-    serializer_class = UserSerializer
-
-    def get(self, *args, **kwargs):
-        email = kwargs.get('email')
-        user = get_object_or_404(self.get_queryset(), email=email)
-        serializer = self.get_serializer(user)
-        return Response(serializer.data, status.HTTP_200_OK)
-
-
 class DestroyUserView(DestroyAPIView):
     """remove user"""
     queryset = UserModel.objects.all()
@@ -63,10 +65,9 @@ class UserToAdminView(GenericAPIView):
 
     def patch(self, *args, **kwargs):
         candidate = self.get_object()
-        if candidate.is_staff:
-            raise ValueError('User is already admin')
-        candidate.is_staff = True
-        candidate.save()
+        if not candidate.is_staff:
+            candidate.is_staff = True
+            candidate.save()
 
         serializer = self.serializer_class(candidate)
         return Response(serializer.data, status.HTTP_200_OK)

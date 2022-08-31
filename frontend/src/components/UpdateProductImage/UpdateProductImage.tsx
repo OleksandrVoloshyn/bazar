@@ -1,7 +1,7 @@
 import {ElementRef, FC, useRef} from "react"
 import {IProductImage} from "../../interfaces";
 import {notFoundImage} from '../../constants'
-import {useAppDispatch} from "../../hook";
+import {useAppDispatch} from "../../hooks";
 import {productActions} from "../../redux";
 
 interface IProps {

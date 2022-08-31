@@ -1,13 +1,14 @@
 import {FC} from "react"
-import {AdminFooBar, HeaderAccount} from "../../components";
 import {Outlet} from "react-router-dom";
+
+import {AdminMenu, Header} from "../../components";
 
 const AdminLayout: FC = () => {
     return (
         <div>
-            <HeaderAccount/>
+            <Header/>
             <div style={{display: "flex"}}>
-                <AdminFooBar/>
+                <AdminMenu/>
                 <Outlet/>
             </div>
         </div>

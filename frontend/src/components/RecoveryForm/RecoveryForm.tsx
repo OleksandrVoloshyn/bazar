@@ -1,6 +1,6 @@
 import {FC} from "react"
 
-import {useAppDispatch, useAppSelector, useInput} from "../../hook";
+import {useAppDispatch, useAppSelector, useInput} from "../../hooks";
 import {authActions} from "../../redux";
 import {InputError} from "../InputError/InputError";
 import css from './RecoveryForm.module.css'

@@ -1,6 +1,6 @@
 import {FC} from "react"
 
-import {useAppDispatch, useInput} from "../../hook";
+import {useAppDispatch, useInput} from "../../hooks";
 import {authActions} from "../../redux";
 import css from './ChangePasswordForm.module.css'
 import {InputError} from "../InputError/InputError";

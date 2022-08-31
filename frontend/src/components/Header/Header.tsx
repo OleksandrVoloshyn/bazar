@@ -21,18 +21,18 @@ const Header: FC = () => {
         <div className={css.header}>
             <h1><Link to={'/'} className={css.logo}>BAZAR</Link></h1>
 
-            <div>
-                <input type="search" value={searchData}
-                       onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchData(e.target.value)}/>
-                <button onClick={searchFunc} disabled={!searchData}>search</button>
-            </div>
+            {/*<div>*/}
+            {/*    <input type="search" value={searchData}*/}
+            {/*           onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchData(e.target.value)}/>*/}
+            {/*    <button onClick={searchFunc} disabled={!searchData}>search</button>*/}
+            {/*</div>*/}
 
-            <FaShoppingCart className={`${css.shop_cart_button} ${cartOpen && css.active}`}
-                            onClick={() => setCartOpen(!cartOpen)}/>
+            {/*<FaShoppingCart className={`${css.shop_cart_button} ${cartOpen && css.active}`}*/}
+            {/*                onClick={() => setCartOpen(!cartOpen)}/>*/}
+            {/**/}
+            {/*{cartOpen && <div className={css.shop_cart}><Orders/></div>}*/}
 
-            {cartOpen && <div className={css.shop_cart}><Orders/></div>}
-
-            <div className={css.auth}><AuthBar/></div>
+            <AuthBar/>
         </div>
     );
 };

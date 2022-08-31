@@ -5,5 +5,6 @@ export interface IUser {
     email: string,
     password: string,
     is_staff: boolean,
+    is_superuser: boolean,
     profile: IUserProfile
 }

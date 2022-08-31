@@ -1,7 +1,7 @@
 import {FC, useEffect} from "react"
 import {Link, useNavigate} from "react-router-dom";
 
-import {useAppSelector} from "../../hook";
+import {useAppSelector} from "../../hooks";
 import {MessageInfo, RegisterForm} from "../../components";
 import css from './RegisterPage.module.css'
 
