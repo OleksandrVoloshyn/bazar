@@ -21,9 +21,10 @@ export * from './UpdateProductImage/UpdateProductImage'
 export * from './Profile/Profile'
 export * from './UpdateProfileForm/UpdateProfileForm'
 export * from './ProfileAvatar/ProfileAvatar'
+export * from './CategoriesControl/CategoriesControl'
 export * from './Users/Users'
 export * from './User/User'
-
+export * from './CategoryForControl/CategoryForControl'
 
 export * from './AuthBar/AuthBar'
 export * from './InputError/InputError'

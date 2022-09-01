@@ -1,25 +1,19 @@
-import {FC, useEffect, useState} from "react"
-import {useAppDispatch, useAppSelector} from "../../../hooks";
-import {productActions} from "../../../redux";
+import {FC, useEffect} from "react"
 import {useForm} from "react-hook-form";
 
-const AddValuesPage: FC = () => {
-    const {categories, brands} = useAppSelector(({productReducer}) => productReducer);
+import {useAppDispatch, useAppSelector} from "../../../hooks";
+import {productActions} from "../../../redux";
+import {CategoriesControl} from "../../../components";
+
+const ValuesPage: FC = () => {
+    const {brands} = useAppSelector(({productReducer}) => productReducer);
     const dispatch = useAppDispatch();
-    const [categoryValue, setCategoryValue] = useState<string>('');
     const {register, handleSubmit} = useForm();
 
+
     useEffect(() => {
-        dispatch(productActions.getCategories())
         dispatch(productActions.getBrands())
     }, [dispatch])
-
-    const addNewCategory = () => {
-        dispatch(productActions.createCategory(categoryValue))
-    }
-    const removeCategory = (id: string) => {
-        dispatch(productActions.removeCategory(id))
-    }
 
     const brandSubmit = (newBrand: any) => {
         if (newBrand.image[0]) {
@@ -33,15 +27,7 @@ const AddValuesPage: FC = () => {
 
     return (
         <div>
-            <div>
-                <div><label>New Category: <input type="text" onChange={(e) => setCategoryValue(e.target.value)}
-                                                 value={categoryValue}/></label>
-                    <button onClick={addNewCategory} disabled={!categoryValue}>add</button>
-                </div>
-                {categories.map(category => <div key={category.id}>{category.title}
-                    <span onClick={() => removeCategory(category.id)}>X</span></div>)}
-            </div>
-            <hr/>
+            <CategoriesControl/>
             <div>
                 {brands.map(brand => <div key={brand.id}>{brand.name}
                     <span onClick={() => removeBrand(brand.id)}>X</span></div>)}
@@ -57,4 +43,4 @@ const AddValuesPage: FC = () => {
     );
 };
 
-export {AddValuesPage};
+export {ValuesPage};

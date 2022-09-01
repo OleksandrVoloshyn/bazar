@@ -3,9 +3,9 @@ import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {productActions} from "../../../redux";
 
 const ProductControlPage: FC = () => {
+    const {products} = useAppSelector(({productReducer}) => productReducer);
     const [productTitle, setProductTitle] = useState<string>('');
     const dispatch = useAppDispatch();
-    const {products} = useAppSelector(({productReducer}) => productReducer);
 
     const searchCandidates = () => {
         dispatch(productActions.getAll({QueryParamsObj: {search: productTitle}}))

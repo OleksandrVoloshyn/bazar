@@ -32,7 +32,7 @@ class BrandModel(models.Model):
 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=255, blank=True)
-    image = models.ImageField(upload_to=brand_upload_to, blank=True, null=True)
+    image = models.ImageField(upload_to=brand_upload_to, blank=True)
 
 
 class CommentModel(models.Model):

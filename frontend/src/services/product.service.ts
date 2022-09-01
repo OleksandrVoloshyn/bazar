@@ -1,6 +1,6 @@
 import {axiosService, Res} from "./axios.service";
 
-import {IBrand, IProduct, IProductDetails, IQueryParams, IResponse} from "../interfaces";
+import {IBrand, ICategory, IProduct, IProductDetails, IQueryParams, IResponse} from "../interfaces";
 import {urls} from "../constants";
 //todo add TS
 //todo change names
@@ -15,9 +15,10 @@ const productService = {
     update: (product: Partial<IProductDetails>): Res<IProductDetails> => axiosService.put(`${urls.products}/${product.id}/update`, product),
     removeById: (pk: string): Res<void> => axiosService.delete(`${urls.products}/${pk}/remove`,),
 
-    getCategories: () => axiosService.get(`${urls.products}/categories`),
-    createCategory: (categoryTitle: string) => axiosService.post(`${urls.products}/categories/create`, {title: categoryTitle}),
-    removeCategory: (pk: string) => axiosService.delete(`${urls.products}/categories/${pk}/remove`),
+    getCategories: (): Res<IResponse<ICategory>> => axiosService.get(`${urls.products}/categories`),
+    createCategory: (categoryTitle: string): Res<ICategory> => axiosService.post(`${urls.products}/categories`, {title: categoryTitle}),
+    updateCategory: (title: string, pk: string): Res<ICategory> => axiosService.put(`${urls.products}/categories/${pk}`, {title}),
+    removeCategory: (pk: string): Res<void> => axiosService.delete(`${urls.products}/categories/${pk}`),
 
     getBrands: () => axiosService.get(`${urls.products}/brands`),
     removeBrand: (pk: string): Res<void> => axiosService.delete(`${urls.products}/brands/${pk}/remove`),

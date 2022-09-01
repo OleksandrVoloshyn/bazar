@@ -25,7 +25,7 @@ const useValidation = (value: string, validations: Partial<IValidators>) => {
                 case 'isEmpty':
                     value ? setEmpty({...empty, status: false}) : setEmpty({...empty, status: true})
                     break
-
+                //todo remove useless cases
                 case 'isEmailError':
                     const emailReg = regEx.email.pattern
                     emailReg.test(String(value).toLowerCase())
@@ -91,8 +91,7 @@ const useInput = (initialState: string, validations: Partial<IValidators>) => {
         setValue(e.target.value)
     }
 
-    const onBlur = (e:any) => {
-        // todo remove
+    const onBlur = () => {
         setDirty(true)
     }
 
@@ -100,7 +99,6 @@ const useInput = (initialState: string, validations: Partial<IValidators>) => {
         value,
         onChange,
         onBlur,
-        setDirty,
         isDirty,
         ...valid
     }

@@ -13,11 +13,12 @@ from .serializers import ProfileSerializer, UserSerializer
 UserModel = get_user_model()
 
 
-# todo check swagger
 class ListCreateUsersView(ListCreateAPIView):
     """
-    GET search users for changing
-    POST create user
+    get:
+        search users for changing
+    post:
+        create user
     """
     serializer_class = UserSerializer
     queryset = UserModel.objects.all()

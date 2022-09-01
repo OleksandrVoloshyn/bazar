@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice, isAllOf} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {productService} from "../../services";
 import {IBrand, ICategory, IComment, IProduct, IProductDetails, IQueryParams, IResponse} from "../../interfaces";
@@ -45,13 +45,6 @@ const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
     'productSlice/create',
     async ({product}) => {
         const {data} = await productService.create(product)
-        return data
-    }
-)
-const createCategory = createAsyncThunk<any, string>(
-    'productSlice/createCategory',
-    async (categoryTitle) => {
-        const {data} = await productService.createCategory(categoryTitle)
         return data
     }
 )
@@ -116,6 +109,27 @@ const getCategories = createAsyncThunk<IResponse<ICategory>, void>(
         return data
     }
 )
+const createCategory = createAsyncThunk<ICategory, { categoryTitle: string }>(
+    'productSlice/createCategory',
+    async ({categoryTitle}) => {
+        const {data} = await productService.createCategory(categoryTitle)
+        return data
+    }
+)
+const updateCategory = createAsyncThunk<ICategory, { pk: string, title: string }>(
+    'productSlice/updateCategory',
+    async ({pk, title}) => {
+        const {data} = await productService.updateCategory(title, pk);
+        return data
+    }
+)
+const removeCategory = createAsyncThunk<void, { pk: string }>(
+    'productSlice/removeCategory',
+    async ({pk}, {dispatch}) => {
+        await productService.removeCategory(pk)
+        dispatch(productActions.removeCategoryFromState(pk))
+    }
+)
 
 const getBrands = createAsyncThunk<IResponse<IBrand>, void>(
     'productSlice/getBrands',
@@ -151,14 +165,6 @@ const deleteComment = createAsyncThunk<string, { pk: string }>(
     }
 )
 
-const removeCategory = createAsyncThunk<string, string>(
-    'productSlice/removeCategory',
-    async (pk) => {
-        await productService.removeCategory(pk)
-        //    todo passing pk to fulfiled
-        return pk
-    }
-)
 
 const removeBrand = createAsyncThunk<string, string>(
     'productSlice/removeBrand',
@@ -173,6 +179,11 @@ const productSlice = createSlice({
     name: 'productSlice',
     initialState,
     reducers: {
+        removeCategoryFromState: (state, action) => {
+            const index = state.categories.findIndex(item => item.id === action.payload);
+            state.categories.splice(index, 1)
+        },
+
         //todo orders to local storage
         addToOrder: (state, action) => {
             // let isInOrders = false
@@ -194,9 +205,19 @@ const productSlice = createSlice({
                 state.total_items = action.payload.total_items
                 state.total_pages = action.payload.total_pages
             })
+
             .addCase(getCategories.fulfilled, (state, action) => {
                 state.categories = action.payload.data
             })
+            .addCase(createCategory.fulfilled, (state, action) => {
+                state.categories.push(action.payload)
+            })
+            .addCase(updateCategory.fulfilled, (state, action) => {
+                const index = state.categories.findIndex(item => item.id === action.payload.id)
+                state.categories.splice(index, 1, action.payload)
+            })
+
+
             .addCase(getBrands.fulfilled, (state, action) => {
                 state.brands = action.payload.data
             })
@@ -239,13 +260,6 @@ const productSlice = createSlice({
                     state.chosenProduct.images.push(action.payload)
                 }
             })
-            .addCase(removeCategory.fulfilled, (state, action) => {
-                const index = state.categories.findIndex(item => item.id === action.payload);
-                state.categories.splice(index, 1)
-            })
-            .addCase(createCategory.fulfilled, (state, action) => {
-                state.categories.push(action.payload)
-            })
             .addCase(removeBrand.fulfilled, (state, action) => {
                 const index = state.brands.findIndex(item => item.id === action.payload);
                 state.brands.splice(index, 1)
@@ -256,7 +270,7 @@ const productSlice = createSlice({
     }
 });
 
-const {reducer: productReducer, actions: {addToOrder, deleteFromOrder}} = productSlice;
+const {reducer: productReducer, actions: {removeCategoryFromState, addToOrder, deleteFromOrder}} = productSlice;
 const productActions = {
     getAll,
     getCategories,
@@ -276,7 +290,9 @@ const productActions = {
     removeCategory,
     createCategory,
     removeBrand,
-    createBrand
+    createBrand,
+    removeCategoryFromState,
+    updateCategory
 }
 
 export {productReducer, productActions}

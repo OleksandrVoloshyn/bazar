@@ -1,9 +1,10 @@
 import {FC, useState} from "react"
 import {BsSearch} from 'react-icons/bs'
 
-import {useAppDispatch, useAppSelector} from "../../../hooks";
+import {useAppDispatch} from "../../../hooks";
 import {userActions} from "../../../redux";
 import {Profile, Users} from "../../../components";
+import css from './UserConrolPage.module.css'
 
 
 const UserControlPage: FC = () => {
@@ -12,7 +13,7 @@ const UserControlPage: FC = () => {
 
     const searchUsers = async () => {
         if (searchValue) {
-            dispatch(userActions.searchUsers(searchValue))
+            await dispatch(userActions.searchUsers(searchValue))
         }
     }
 
@@ -21,9 +22,10 @@ const UserControlPage: FC = () => {
             <Profile/>
             <div>
                 <label>Looking for users by name surname or email: </label>
-                <br/>
-                <input type="search" onChange={(e) => setSearchValue(e.target.value)} value={searchValue}/>
-                <BsSearch onClick={searchUsers}/>
+                <div className={css.search_line}>
+                    <input type="search" onChange={(e) => setSearchValue(e.target.value)} value={searchValue}/>
+                    <BsSearch onClick={searchUsers}/>
+                </div>
             </div>
             <Users/>
         </div>

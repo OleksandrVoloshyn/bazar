@@ -18,9 +18,9 @@ import {
     MainFilterPage,
     ProductDetailPage,
     CommentListPage,
-    AddValuesPage,
     ProductControlPage,
-    UserControlPage
+    UserControlPage,
+    ValuesPage
 } from "./pages";
 
 import {RequireAuth} from "./hoc";
@@ -55,7 +55,7 @@ const App: FC = () => {
             <Route path={'/admin'} element={<RequireAuth><AdminLayout/></RequireAuth>}>
                 <Route index element={<Navigate to={'users_control'}/>}/>
                 <Route path={'users_control'} element={<UserControlPage/>}/>
-                <Route path={'add_values'} element={<AddValuesPage/>}/>
+                <Route path={'product_values'} element={<ValuesPage/>}/>
                 <Route path={'product_control'} element={<ProductControlPage/>}/>
             </Route>
 

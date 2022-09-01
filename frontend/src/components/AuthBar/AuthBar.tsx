@@ -21,7 +21,7 @@ const AuthBar: FC = () => {
         <div className={css.auth}>
             {access
                 ? isNotMainPage
-                    ? <div onClick={logout}>logout</div>
+                    ? <div onClick={logout} className={css.logout}>logout</div>
                     : <div className={css.account}>
                         <VscAccount/>
                         <Link to={'account'}>My Account</Link>

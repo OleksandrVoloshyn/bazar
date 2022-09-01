@@ -4,10 +4,11 @@ from rest_framework.generics import (
     DestroyAPIView,
     GenericAPIView,
     ListAPIView,
+    ListCreateAPIView,
     RetrieveAPIView,
     UpdateAPIView,
 )
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
 from core.permissions.user_permission import IsOwnerOrAdmin
@@ -76,21 +77,35 @@ class UpdateProductView(UpdateAPIView):
         serializer.save(brand=brand, category=category)
 
 
-class ListCategoryView(ListAPIView):
-    serializer_class = CategorySerializer
+class ListCreateCategoryView(ListCreateAPIView):
+    """
+    get:
+        get list of categories
+    post:
+        create category
+    """
     queryset = CategoryModel.objects.all()
-    permission_classes = (AllowAny,)
-
-
-# todo чи краще створювати ліст і кріейт в одній вю і створення нового пермішинк
-
-class CreateCategoryView(CreateAPIView):
     serializer_class = CategorySerializer
 
+    def get_permissions(self):
+        method = self.request.method
+        if method == "GET":
+            return [AllowAny()]
+        if method == "POST":
+            return [IsAdminUser()]
 
-class DestroyCategoryView(DestroyAPIView):
+
+class UpdateDestroyCategoryView(UpdateAPIView, DestroyAPIView):
+    """
+    put:
+        change category title
+    delete:
+        remove category
+    """
+    http_method_names = ('put', 'delete')
     queryset = CategoryModel.objects.all()
-    #     permission isAdmin
+    serializer_class = CategorySerializer
+    permission_classes = (IsAdminUser,)
 
 
 class ListBrandView(ListAPIView):

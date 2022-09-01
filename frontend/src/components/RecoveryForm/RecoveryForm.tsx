@@ -15,7 +15,7 @@ const RecoveryForm: FC = () => {
             <div className={`${css.display_canter} ${css.input_line}`}>
                 <label>Email: </label>
                 <input onChange={e => emailInput.onChange(e)}
-                       onBlur={() => emailInput.setDirty(true)}
+                       onBlur={() => emailInput.onBlur()}
                        value={emailInput.value} name={'email'} type="text"/>
             </div>
             {isRecoveryMailError && <InputError errorMsg={'Ooops something wrong try again'}/>}

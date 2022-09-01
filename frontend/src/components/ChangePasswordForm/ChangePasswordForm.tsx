@@ -22,7 +22,7 @@ const ChangePasswordForm: FC<IProps> = ({token, setChanged}) => {
     return (
         <div className={css.change_password_form}>
             <div className={`${css.display_canter} ${css.input_line}`}><label>New Password:</label>
-                <input onChange={e => password.onChange(e)} onBlur={() => password.setDirty(true)}
+                <input onChange={e => password.onChange(e)} onBlur={() => password.onBlur()}
                        name={'password'} type="text" value={password.value}/>
             </div>
             {password.isDirty && password.empty.status && <InputError errorMsg={password.empty.msg}/>}

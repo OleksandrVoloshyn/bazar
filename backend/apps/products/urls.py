@@ -2,21 +2,20 @@ from django.urls import path
 
 from .views import (
     CreateBrandView,
-    CreateCategoryView,
     CreateCommentView,
     CreateProductImage,
     CreateProductView,
     DestroyBrandView,
-    DestroyCategoryView,
     DestroyCommentView,
     DestroyProductImage,
     DestroyProductView,
     ListBrandView,
-    ListCategoryView,
+    ListCreateCategoryView,
     ListMyCommentsView,
     ListMyProductView,
     ListProductView,
     RetrieveProductView,
+    UpdateDestroyCategoryView,
     UpdateProductView,
 )
 
@@ -32,9 +31,8 @@ urlpatterns = [
     path('/user/comments', ListMyCommentsView.as_view()),
     path('/comments/<str:pk>/remove', DestroyCommentView.as_view()),
 
-    path('/categories', ListCategoryView.as_view()),
-    path('/categories/<str:pk>/remove', DestroyCategoryView.as_view()),
-    path('/categories/create', CreateCategoryView.as_view()),
+    path('/categories', ListCreateCategoryView.as_view()),
+    path('/categories/<str:pk>', UpdateDestroyCategoryView.as_view()),
 
     path('/brands', ListBrandView.as_view()),
     path('/brands/<str:pk>/remove', DestroyBrandView.as_view()),
