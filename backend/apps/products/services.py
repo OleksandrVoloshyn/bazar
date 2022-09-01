@@ -4,7 +4,7 @@ from uuid import uuid1
 
 def brand_upload_to(instance, file: str):
     ext = file.split('.')[-1]
-    return os.path.join('brands', f'{uuid1()}.{ext}')
+    return os.path.join('brands', instance.name, f'{uuid1()}.{ext}')
 
 
 def product_upload_to(instance, file: str):

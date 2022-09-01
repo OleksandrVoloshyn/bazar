@@ -49,6 +49,13 @@ const searchUsers = createAsyncThunk<IResponse<IUser>, string>(
     }
 );
 
+const removeUser = createAsyncThunk<void, { pk: string }>(
+    'userSlice/removeUser',
+    async ({pk}) => {
+        await userService.removeUser(pk)
+    }
+)
+
 const toAdmin = createAsyncThunk<IUser, { pk: string }>(
     'userSlice/toAdmin',
     async ({pk}) => {
@@ -65,12 +72,6 @@ const toLower = createAsyncThunk<IUser, { pk: string }>(
     }
 )
 
-const removeUser = createAsyncThunk<void, { pk: string }>(
-    'userSlice/removeUser',
-    async ({pk}) => {
-        await userService.removeUser(pk)
-    }
-)
 
 const userSlice = createSlice({
     name: 'userSlice',

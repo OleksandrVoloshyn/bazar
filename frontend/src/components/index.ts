@@ -25,6 +25,7 @@ export * from './CategoriesControl/CategoriesControl'
 export * from './Users/Users'
 export * from './User/User'
 export * from './CategoryForControl/CategoryForControl'
+export * from './BrandsControl/BrandsControl'
 
 export * from './AuthBar/AuthBar'
 export * from './InputError/InputError'

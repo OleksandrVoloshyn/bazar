@@ -2,8 +2,8 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {productService} from "../../services";
 import {IBrand, ICategory, IComment, IProduct, IProductDetails, IQueryParams, IResponse} from "../../interfaces";
+import {string} from "joi";
 
-// todo cut down state partial iresponse
 interface IState {
     prev: boolean,
     next: boolean,
@@ -49,13 +49,6 @@ const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
     }
 )
 
-const createBrand = createAsyncThunk<IBrand, IBrand>(
-    'productSlice/createBrand',
-    async (newBrand) => {
-        const {data} = await productService.createBrand(newBrand)
-        return data
-    }
-)
 const addProductImage = createAsyncThunk<any, { productId: string, file: File }>(
     'productSlice/addProductImage',
     async ({productId, file}) => {
@@ -127,7 +120,7 @@ const removeCategory = createAsyncThunk<void, { pk: string }>(
     'productSlice/removeCategory',
     async ({pk}, {dispatch}) => {
         await productService.removeCategory(pk)
-        dispatch(productActions.removeCategoryFromState(pk))
+        dispatch(removeCategoryFromState(pk))
     }
 )
 
@@ -138,20 +131,39 @@ const getBrands = createAsyncThunk<IResponse<IBrand>, void>(
         return data
     }
 )
+const createBrand = createAsyncThunk<IBrand, { newBrand: IBrand }>(
+    'productSlice/createBrand',
+    async ({newBrand}) => {
+        const {data} = await productService.createBrand(newBrand)
+        return data
+    }
+)
+const updateBrand = createAsyncThunk<IBrand, { newBrandData: Partial<IBrand>, pk: string }>(
+    'productSlice/updateBrand',
+    async ({newBrandData, pk}) => {
+        const {data} = await productService.updateBrand(newBrandData, pk)
+        return data
+    }
+)
+const removeBrand = createAsyncThunk<void, { pk: string }>(
+    'productSlice/removeBrand',
+    async ({pk}, {dispatch}) => {
+        await productService.removeBrand(pk)
+        dispatch(removeBrandFromState(pk))
+    }
+)
 
 const removeProduct = createAsyncThunk<string, { pk: string }>(
     'productSlice/removeProduct',
     async ({pk}) => {
         await productService.removeById(pk)
         return pk
-        //    todo passing pk to fulfiled
     }
 )
 const removeProductImage = createAsyncThunk<string, { pk: string }>(
     'productSlice/removeProductImage',
     async ({pk}) => {
         await productService.removeImageById(pk)
-        //    todo passing pk to fulfiled
         return pk
     }
 )
@@ -160,17 +172,6 @@ const deleteComment = createAsyncThunk<string, { pk: string }>(
     'productSlice/deleteComment',
     async ({pk}) => {
         await productService.deleteComment(pk)
-        //    todo passing pk to fulfiled
-        return pk
-    }
-)
-
-
-const removeBrand = createAsyncThunk<string, string>(
-    'productSlice/removeBrand',
-    async (pk) => {
-        await productService.removeBrand(pk)
-        //    todo passing pk to fulfiled
         return pk
     }
 )
@@ -182,6 +183,10 @@ const productSlice = createSlice({
         removeCategoryFromState: (state, action) => {
             const index = state.categories.findIndex(item => item.id === action.payload);
             state.categories.splice(index, 1)
+        },
+        removeBrandFromState: (state, action) => {
+            const index = state.brands.findIndex(item => item.id === action.payload);
+            state.brands.splice(index, 1)
         },
 
         //todo orders to local storage
@@ -217,10 +222,17 @@ const productSlice = createSlice({
                 state.categories.splice(index, 1, action.payload)
             })
 
-
             .addCase(getBrands.fulfilled, (state, action) => {
                 state.brands = action.payload.data
             })
+            .addCase(createBrand.fulfilled, (state, action) => {
+                state.brands.push(action.payload)
+            })
+            .addCase(updateBrand.fulfilled, (state, action) => {
+                const index = state.brands.findIndex(item => item.id === action.payload.id)
+                state.brands.splice(index, 1, action.payload)
+            })
+
             .addCase(getById.fulfilled, (state, action) => {
                 state.chosenProduct = action.payload
             })
@@ -260,17 +272,13 @@ const productSlice = createSlice({
                     state.chosenProduct.images.push(action.payload)
                 }
             })
-            .addCase(removeBrand.fulfilled, (state, action) => {
-                const index = state.brands.findIndex(item => item.id === action.payload);
-                state.brands.splice(index, 1)
-            })
-            .addCase(createBrand.fulfilled, (state, action) => {
-                state.brands.push(action.payload)
-            })
     }
 });
 
-const {reducer: productReducer, actions: {removeCategoryFromState, addToOrder, deleteFromOrder}} = productSlice;
+const {
+    reducer: productReducer,
+    actions: {removeCategoryFromState, removeBrandFromState, addToOrder, deleteFromOrder}
+} = productSlice;
 const productActions = {
     getAll,
     getCategories,
@@ -292,7 +300,9 @@ const productActions = {
     removeBrand,
     createBrand,
     removeCategoryFromState,
-    updateCategory
+    updateCategory,
+    removeBrandFromState,
+    updateBrand
 }
 
 export {productReducer, productActions}

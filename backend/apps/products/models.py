@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
 from django.db import models
 
+from .enums import RegEx
 from .services import brand_upload_to, product_upload_to
 
 UserModel = get_user_model()
@@ -23,8 +25,6 @@ class ProductModel(models.Model):
     owner = models.ForeignKey(UserModel, models.CASCADE, 'products')
     brand = models.ForeignKey('BrandModel', models.SET_NULL, 'products', null=True)
 
-
-# todo validate all models
 
 class BrandModel(models.Model):
     class Meta:

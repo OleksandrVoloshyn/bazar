@@ -1,0 +1,15 @@
+.brand_header {
+    border: 1px solid limegreen;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3px;
+    cursor: pointer;
+}
+
+.create_form__line{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

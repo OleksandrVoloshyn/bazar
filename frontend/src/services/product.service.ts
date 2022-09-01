@@ -2,14 +2,10 @@ import {axiosService, Res} from "./axios.service";
 
 import {IBrand, ICategory, IProduct, IProductDetails, IQueryParams, IResponse} from "../interfaces";
 import {urls} from "../constants";
-//todo add TS
-//todo change names
+
 const productService = {
     getAll: (QueryParamsObj: Partial<IQueryParams>): Res<IResponse<IProduct>> => axiosService.get(urls.products, {params: {...QueryParamsObj}}),
-    //todo change name to get
     create: (product: Partial<IProductDetails>) => axiosService.post(`${urls.products}/create`, product),
-    // {headers: {"Content-Type": "multipart/form-data"}}
-    // todo  try form data only for form with images
     getById: (pk: string) => axiosService.get(`${urls.products}/${pk}/details`),
     getMyProducts: () => axiosService.get(`${urls.products}/user/products`),
     update: (product: Partial<IProductDetails>): Res<IProductDetails> => axiosService.put(`${urls.products}/${product.id}/update`, product),
@@ -20,9 +16,10 @@ const productService = {
     updateCategory: (title: string, pk: string): Res<ICategory> => axiosService.put(`${urls.products}/categories/${pk}`, {title}),
     removeCategory: (pk: string): Res<void> => axiosService.delete(`${urls.products}/categories/${pk}`),
 
-    getBrands: () => axiosService.get(`${urls.products}/brands`),
-    removeBrand: (pk: string): Res<void> => axiosService.delete(`${urls.products}/brands/${pk}/remove`),
-    createBrand: (newBrand: IBrand): Res<IBrand> => axiosService.post(`${urls.products}/brands/create`, {...newBrand}, {headers: {"Content-Type": "multipart/form-data"}}),
+    getBrands: (): Res<IResponse<IBrand>> => axiosService.get(`${urls.products}/brands`),
+    createBrand: (brand: IBrand): Res<IBrand> => axiosService.post(`${urls.products}/brands`, {...brand}, {headers: {"Content-Type": "multipart/form-data"}}),
+    updateBrand: (data: Partial<IBrand>, pk: string): Res<IBrand> => axiosService.patch(`${urls.products}/brands/${pk}`, {...data}, {headers: {"Content-Type": "multipart/form-data"}}),
+    removeBrand: (pk: string): Res<void> => axiosService.delete(`${urls.products}/brands/${pk}`),
 
     getMyComments: () => axiosService.get(`${urls.products}/user/comments`),
     addComment: (text: string, pk: string) => axiosService.post(`${urls.products}/${pk}/add_comment`, {text}),

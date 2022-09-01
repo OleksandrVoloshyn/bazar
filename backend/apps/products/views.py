@@ -108,20 +108,35 @@ class UpdateDestroyCategoryView(UpdateAPIView, DestroyAPIView):
     permission_classes = (IsAdminUser,)
 
 
-class ListBrandView(ListAPIView):
-    serializer_class = BrandSerializer
+class ListCreateBrandView(ListCreateAPIView):
+    """
+    get:
+        get brand
+    post:
+        create new brand
+    """
     queryset = BrandModel.objects.all()
-    permission_classes = (AllowAny,)
-
-
-# todo combine with diferend perm
-
-class CreateBrandView(CreateAPIView):
     serializer_class = BrandSerializer
 
+    def get_permissions(self):
+        method = self.request.method
+        if method == "GET":
+            return [AllowAny()]
+        if method == "POST":
+            return [IsAdminUser()]
 
-class DestroyBrandView(DestroyAPIView):
+
+class UpdateDestroyBrandView(UpdateAPIView, DestroyAPIView):
+    """
+    patch:
+        update brand
+    delete:
+        remove brand
+    """
+    http_method_names = ('patch', 'delete')
     queryset = BrandModel.objects.all()
+    serializer_class = BrandSerializer
+    permission_classes = (IsAdminUser,)
 
 
 class CreateCommentView(CreateAPIView):
@@ -147,8 +162,6 @@ class DestroyCommentView(DestroyAPIView):
     queryset = CommentModel.objects.all()
     permission_classes = (IsOwnerOrAdmin,)
 
-
-# todo combine views
 
 class DestroyProductImage(DestroyAPIView):
     queryset = ProductImagesModel.objects.all()

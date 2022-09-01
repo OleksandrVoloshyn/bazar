@@ -15,6 +15,8 @@ const CategoryForControl: FC<IProps> = ({category}) => {
     const [newTitle, setNewTitle] = useState<string>('')
     const dispatch = useAppDispatch();
 
+    const updateBtnDisabled = !newTitle || (newTitle.length > 50)
+
     const toUpdateCategory = async (data: ICategory) => {
         setIsUpdating(true)
         setCategoryIdForUpdate(data.id)
@@ -29,9 +31,10 @@ const CategoryForControl: FC<IProps> = ({category}) => {
 
     return (
         <div key={category.id}>
-            {isUpdating && (category.id === categoryIdForUpdate) ? <div>
+            {isUpdating && (category.id === categoryIdForUpdate)
+                ? <div>
                     <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)}/>
-                    <button onClick={() => updateCategory(category.id)}>save</button>
+                    <button onClick={() => updateCategory(category.id)} disabled={updateBtnDisabled}>save</button>
                 </div>
                 : <div>{category.title}
                     <BsFillPencilFill onClick={() => toUpdateCategory(category)}/>

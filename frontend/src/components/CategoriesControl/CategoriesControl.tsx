@@ -8,10 +8,11 @@ import css from './CategoriesControl.module.css'
 
 const CategoriesControl: FC = () => {
     const {categories} = useAppSelector(({productReducer}) => productReducer);
+    const [categoryValue, setCategoryValue] = useState<string>('');
+    const [isActive, setIsActive] = useState<boolean>(false);
     const dispatch = useAppDispatch();
 
-    const [isActive, setIsActive] = useState<boolean>(false);
-    const [categoryValue, setCategoryValue] = useState<string>('');
+    const createBtnDisabled = !categoryValue || (categoryValue.length > 50)
 
     const activate = async () => {
         setIsActive(prevState => !prevState)
@@ -36,7 +37,7 @@ const CategoriesControl: FC = () => {
             {isActive && <div>
                 <label>New Category: </label>
                 <input type="text" onChange={(e) => setCategoryValue(e.target.value)} value={categoryValue}/>
-                <button onClick={createCategory} disabled={!categoryValue}>create</button>
+                <button onClick={createCategory} disabled={createBtnDisabled}>create</button>
 
                 {categories.map(category => <CategoryForControl key={category.id} category={category}/>)}
             </div>}
