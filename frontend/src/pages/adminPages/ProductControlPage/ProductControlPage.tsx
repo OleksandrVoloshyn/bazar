@@ -3,7 +3,7 @@ import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {productActions} from "../../../redux";
 
 const ProductControlPage: FC = () => {
-    const {products} = useAppSelector(({productReducer}) => productReducer);
+    // const {products} = useAppSelector(({productReducer}) => productReducer);
     const [productTitle, setProductTitle] = useState<string>('');
     const dispatch = useAppDispatch();
 
@@ -22,12 +22,12 @@ const ProductControlPage: FC = () => {
                               value={productTitle}/></label>
             </div>
             <button onClick={searchCandidates}>search</button>
-            {products.length
-                ? products.map(product => <div key={product.id}>
-                    {product.id} -- {product.title} <span onClick={() => removeProduct(product.id)}>X</span>
-                </div>)
-                : <div>Nothing</div>
-            }
+            {/*{products.length*/}
+            {/*    ? products.map(product => <div key={product.id}>*/}
+            {/*        {product.id} -- {product.title} <span onClick={() => removeProduct(product.id)}>X</span>*/}
+            {/*    </div>)*/}
+            {/*    : <div>Nothing</div>*/}
+            {/*}*/}
         </div>
     );
 };

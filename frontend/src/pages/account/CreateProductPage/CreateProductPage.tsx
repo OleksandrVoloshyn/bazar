@@ -1,7 +1,8 @@
 import {FC} from "react"
+
 import {ProductForm} from "../../../components";
 
-const AddProductPage: FC = () => {
+const CreateProductPage: FC = () => {
     return (
         <div>
             <ProductForm/>
@@ -9,4 +10,4 @@ const AddProductPage: FC = () => {
     );
 };
 
-export {AddProductPage};
+export {CreateProductPage};

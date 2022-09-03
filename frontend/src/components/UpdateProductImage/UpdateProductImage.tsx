@@ -1,8 +1,11 @@
-import {ElementRef, FC, useRef} from "react"
+import {FC, useRef} from "react"
+import {BsPlusCircle, BsTrash} from 'react-icons/bs'
+
 import {IProductImage} from "../../interfaces";
 import {notFoundImage} from '../../constants'
 import {useAppDispatch} from "../../hooks";
 import {productActions} from "../../redux";
+import css from './UpdateProductImage.module.css'
 
 interface IProps {
     images?: IProductImage[],
@@ -10,27 +13,26 @@ interface IProps {
 }
 
 const UpdateProductImage: FC<IProps> = ({images, productId}) => {
-    const defaultImageValue = [{image: notFoundImage, id: '-1'} as IProductImage]
+    const defaultImageValue = [{image: notFoundImage, id: ''} as IProductImage]
     const imagesResult = images?.length ? images : defaultImageValue
     const dispatch = useAppDispatch();
     const newImage = useRef<any>();
 
-    const addImage = () => {
+    const addImageToProduct = () => {
         if (newImage.current.files[0]) {
-            dispatch(productActions.addProductImage({productId, file: newImage.current.files[0]}))
+            dispatch(productActions.addImageToProduct({productId, file: newImage.current.files[0]}))
         }
     }
 
-    const removeProductImage = (pk: string) => {
-        dispatch(productActions.removeProductImage({pk}))
-    }
     return (
         <div>
-            {imagesResult.map(item => <div key={item.id}><img src={item.image} alt='productImage'/>
-                {(item.id !== '-1') && <span onClick={() => removeProductImage(item.id)}>X</span>}
+            {imagesResult.map(item => <div key={item.id}>
+                <img src={item.image} width={'100px'} alt='productImage'/>
+                {item.id && <BsTrash className={css.cursor}
+                                     onClick={() => dispatch(productActions.removeProductImage({pk: item.id}))}/>}
             </div>)}
             <input type="file" name={'newImage'} ref={newImage}/>
-            <div onClick={addImage}>add image</div>
+            <BsPlusCircle onClick={addImageToProduct} className={css.cursor}/>
         </div>
     );
 };

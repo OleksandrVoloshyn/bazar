@@ -2,7 +2,13 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import DestroyAPIView, GenericAPIView, ListCreateAPIView, UpdateAPIView
+from rest_framework.generics import (
+    DestroyAPIView,
+    GenericAPIView,
+    ListCreateAPIView,
+    RetrieveDestroyAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
@@ -28,10 +34,9 @@ class ListCreateUsersView(ListCreateAPIView):
 
     def get_permissions(self):
         method = self.request.method
-        if method == "POST":
-            return [AllowAny()]
         if method == "GET":
             return [IsAdminUser()]
+        return [AllowAny()]
 
 
 class UpdateProfileView(UpdateAPIView):
@@ -44,7 +49,7 @@ class UpdateProfileView(UpdateAPIView):
 
 
 class GetCurrentUserView(GenericAPIView):
-    """get current user"""
+    """get current user from token"""
     serializer_class = UserSerializer
 
     def get(self, *args, **kwargs):
@@ -52,10 +57,21 @@ class GetCurrentUserView(GenericAPIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
-class DestroyUserView(DestroyAPIView):
-    """remove user"""
+class RetrieveDestroyUserView(RetrieveDestroyAPIView):
+    """
+    get:
+        get user
+    delete:
+        remove user
+    """
     queryset = UserModel.objects.all()
-    permission_classes = (IsAdminUser,)
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        method = self.request.method
+        if method == "DELETE":
+            return [IsAdminUser()]
+        return [AllowAny()]
 
 
 class UserToAdminView(GenericAPIView):

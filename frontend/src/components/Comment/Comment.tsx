@@ -1,24 +1,35 @@
-import {FC} from "react"
+import {FC, useEffect} from "react"
 import {IComment} from "../../interfaces";
+import {BsTrash} from 'react-icons/bs'
+
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {productActions} from "../../redux";
+import {productActions, userActions} from "../../redux";
+import {Link} from "react-router-dom";
 
 interface IProps {
-    comment: IComment
+    comment: IComment,
+    isProduct?: boolean
 }
 
-const Comment: FC<IProps> = ({comment}) => {
+const Comment: FC<IProps> = ({comment, isProduct}) => {
     const {user} = useAppSelector(({userReducer}) => userReducer);
     const isOwner = user?.id === comment.owner.id
     const dispatch = useAppDispatch();
 
-    const removeComment = () => {
-        dispatch(productActions.deleteComment({pk:comment.id}))
-    }
+    useEffect(() => {
+        dispatch(userActions.getCurrent())
+    }, [])
+
     return (
         <div>
-            {comment.id} -- {comment.text} -- {comment.owner.profile.name} {isOwner &&
-            <span onClick={removeComment}>X</span>}
+            {isProduct
+                ? <span><Link to={`/products/${comment.product.id}/details`}>{comment.product.title}</Link></span>
+                : <span>
+                    <Link to={`/users/${comment.owner.id}`}>
+                        {comment.owner.profile.name} {comment.owner.profile.surname}
+                    </Link></span>}
+            : {comment.text}
+            {isOwner && <BsTrash onClick={() => dispatch(productActions.deleteComment({pk: comment.id}))}/>}
         </div>
     );
 };

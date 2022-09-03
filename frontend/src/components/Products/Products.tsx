@@ -6,7 +6,7 @@ import {Product} from "../Product/Product";
 import {productActions} from "../../redux";
 
 const Products: FC = () => {
-    const {products, prev, next} = useAppSelector(({productReducer}) => productReducer);
+    // const {products, prev, next} = useAppSelector(({productReducer}) => productReducer);
     const [query, setQuery] = useSearchParams({page: '1'});
     const queryObj = useMemo(() => Object.fromEntries(query.entries()), [query]);
     const dispatch = useAppDispatch();
@@ -48,8 +48,8 @@ const Products: FC = () => {
     return (
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
             <div>
-                <button onClick={prevPage} disabled={!prev}>Prev</button>
-                <button onClick={nextPage} disabled={!next}>Next</button>
+                {/*<button onClick={prevPage} disabled={!prev}>Prev</button>*/}
+                {/*<button onClick={nextPage} disabled={!next}>Next</button>*/}
             </div>
             <div>
                 <form onChange={e => pagination_ordering(e)}>
@@ -67,7 +67,7 @@ const Products: FC = () => {
                 </form>
             </div>
             <h1>Products</h1>
-            {products && products.map(product => <Product key={product.id} product={product}/>)}
+            {/*{products && products.map(product => <Product key={product.id} product={product}/>)}*/}
         </div>
     );
 };

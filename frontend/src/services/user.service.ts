@@ -13,7 +13,8 @@ const userService = {
 
     toAdmin: (pk: string): Res<IUser> => axiosService.patch(`${urls.users}/${pk}/to_admin`),
     toLower: (pk: string): Res<IUser> => axiosService.patch(`${urls.users}/${pk}/to_lower`),
-    removeUser: (pk: string): Res<void> => axiosService.delete(`${urls.users}/${pk}/remove`),
+    getById: (pk: string): Res<IUser> => axiosService.get(`${urls.users}/${pk}/target`),
+    removeUser: (pk: string): Res<void> => axiosService.delete(`${urls.users}/${pk}/target`),
 }
 
 

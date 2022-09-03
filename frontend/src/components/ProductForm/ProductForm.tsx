@@ -1,106 +1,117 @@
 import {FC, useEffect} from "react"
+import {SubmitHandler, useForm} from "react-hook-form";
+
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {productActions} from "../../redux";
-import {useForm} from "react-hook-form";
 import {UpdateProductImage} from "../UpdateProductImage/UpdateProductImage";
+import {IProductDetails} from "../../interfaces";
+import css from './ProductForm.module.css'
+import {useNavigate} from "react-router-dom";
 
 interface IProps {
-    productIdForUpdate?: string,
-    setProductIdForUpdate?: CallableFunction
+    idForUpdate?: string,
 }
 
-const ProductForm: FC<IProps> = ({productIdForUpdate, setProductIdForUpdate}) => {
+// todo validate
+const ProductForm: FC<IProps> = ({idForUpdate}) => {
     const {brands, categories, chosenProduct} = useAppSelector(({productReducer}) => productReducer);
+    const {register, handleSubmit, setValue, reset} = useForm<IProductDetails>();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const {register, handleSubmit, setValue} = useForm();
+
+    const isUpdating = (idForUpdate && !chosenProduct) || (idForUpdate && chosenProduct?.id !== idForUpdate)
 
     useEffect(() => {
         dispatch(productActions.getBrands())
         dispatch(productActions.getCategories())
-        if (productIdForUpdate) {
-            dispatch(productActions.getById({pk: productIdForUpdate}))
-        }
-    }, [dispatch, productIdForUpdate, setValue])
+        isUpdating ? dispatch(productActions.getProductById({pk: idForUpdate})) : reset()
 
-    useEffect(() => {
-        if (chosenProduct && productIdForUpdate) {
+        return () => {
+            dispatch(productActions.removeChosenProductFromState())
+        }
+    }, [idForUpdate])
+
+    const setFormForUpdate = () => {
+        if (chosenProduct) {
             setValue('title', chosenProduct.title)
             setValue('description', chosenProduct.description)
             setValue('price', chosenProduct.price)
             setValue('color', chosenProduct.color)
             setValue('size', chosenProduct.size)
             setValue('gender', chosenProduct.gender)
-            setValue('brand', chosenProduct.brand.name)
-            setValue('category', chosenProduct.category.title)
+            chosenProduct.brand ? setValue('brand.id', chosenProduct.brand.id) : setValue('brand.id', '')
+            chosenProduct.category ? setValue('category.id', chosenProduct.category.id) : setValue('category.id', '')
         }
-    }, [setValue, chosenProduct, productIdForUpdate])
+    }
 
-    const submit = async (product: any) => {
-        if (productIdForUpdate && chosenProduct) {
-            product['id'] = productIdForUpdate
-            await dispatch(productActions.update(product))
-            if (setProductIdForUpdate) {
-                setProductIdForUpdate('')
-            }
+    chosenProduct && setFormForUpdate()
+
+    const submit: SubmitHandler<Partial<IProductDetails>> = async (product) => {
+        if (chosenProduct) {
+            product['id'] = idForUpdate
+            await dispatch(productActions.updateProduct(product))
+            navigate('/account/my_products')
         } else {
-            console.log(product, 'create')
-            dispatch(productActions.create({product}))
+            dispatch(productActions.createProduct({product}))
         }
+        reset()
     }
 
     return (
         <div>
             <form onSubmit={handleSubmit(submit)}>
-                <div><label>Title: <input type="text" {...register('title')}/></label></div>
-                <div><label>Description: <textarea maxLength={1000} {...register('description')}/></label></div>
-                <div><label>Price: <input type="number" {...register('price', {valueAsNumber: true})}/></label></div>
-                <div><label>Color: <input type="text" {...register('color')}/></label></div>
+                <div className={css.input_line}><label>Title: </label><input {...register('title')}/></div>
+                <div className={css.input_line}><label>Description: </label><textarea {...register('description')}/>
+                </div>
+                <div className={css.input_line}><label>Price: </label><input type="number" {...register('price')}/>
+                </div>
+                <div className={css.input_line}><label>Color: </label><input {...register('color')}/></div>
 
-                <div><label>Size:
+                <div className={css.input_line}>
+                    <label>Size: </label>
                     <select {...register('size')}>
-                        <option></option>
+                        <option value="XS">XS</option>
                         <option value="S">S</option>
                         <option value="M">M</option>
                         <option value="L">L</option>
                         <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
                     </select>
-                </label></div>
-
-                <div>
-                    <label>Gender:
-                        <select {...register('gender')}>
-                            <option></option>
-                            <option value="Male">Man</option>
-                            <option value="Female">Woman</option>
-                        </select>
-                    </label>
                 </div>
 
-                <div>
-                    <label>Brand:
-                        <select {...register('brand')}>
-                            <option></option>
-                            {/*todo default other*/}
-                            {brands && brands.map(brand => <option key={brand.id}
-                                                                   value={brand.name}>{brand.name}</option>)}
-                        </select>
-                    </label>
+                <div className={css.input_line}>
+                    <label>Gender: </label>
+                    <select {...register('gender')}>
+                        <option value="Male">Man</option>
+                        <option value="Female">Woman</option>
+                    </select>
                 </div>
 
-                <div>
-                    <label>Category:
-                        <select {...register('category')}>
-                            <option></option>
-                            {categories && categories.map(category => <option key={category.id}
-                                                                              value={category.title}>{category.title}</option>)}
-                        </select>
-                    </label>
+                <div className={css.input_line}>
+                    <label>Brand: </label>
+                    <select {...register('brand.id')}>
+                        <option></option>
+                        {brands && brands.map(brand => <option key={brand.id}
+                                                               value={brand.id}>{brand.name}</option>)}
+                    </select>
                 </div>
-                {(chosenProduct && productIdForUpdate)
+
+                <div className={css.input_line}>
+                    <label>Category: </label>
+                    <select {...register('category.id')}>
+                        <option></option>
+                        {categories && categories.map(category => <option key={category.id}
+                                                                          value={category.id}>{category.title}</option>)}
+                    </select>
+                </div>
+
+                {chosenProduct
                     ? <UpdateProductImage images={chosenProduct.images} productId={chosenProduct.id}/>
-                    : <div><label>Images: <input type="file" multiple {...register('images')}/></label></div>
-                }
-                <button>{(productIdForUpdate && chosenProduct) ? 'update' : 'create'}</button>
+                    : <div><label>Images: <input type="file" multiple {...register('images')}/></label></div>}
+
+                <div className={css.btn_div}>
+                    <button>{chosenProduct ? 'update' : 'create'}</button>
+                </div>
             </form>
         </div>
     );

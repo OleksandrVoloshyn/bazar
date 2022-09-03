@@ -11,16 +11,15 @@ import {
     ChangePasswordPage,
     NotFoundPage,
     UserPage,
-    ProductListPage,
-    AddProductPage,
+    ClientProductsPage,
+    CreateProductPage,
     BasketPage,
-    PurchaseHistoryPage,
     MainFilterPage,
     ProductDetailPage,
     CommentListPage,
     ProductControlPage,
     UserControlPage,
-    ValuesPage
+    ValuesPage, UpdateProductPage
 } from "./pages";
 
 import {RequireAuth} from "./hoc";
@@ -32,6 +31,7 @@ const App: FC = () => {
                 <Route index element={<HomePage/>}/>
                 <Route path={'category/:title'} element={<MainFilterPage/>}/>
                 <Route path={'products/:pk/details'} element={<ProductDetailPage/>}></Route>
+                <Route path={'users/:pk'} element={<UserPage/>}></Route>
 
                 {/* AUTH */}
                 <Route path={'login'} element={<LoginPage/>}/>
@@ -44,12 +44,14 @@ const App: FC = () => {
             <Route path={'/account'} element={<RequireAuth><AccountLayout/></RequireAuth>}>
                 <Route index element={<Navigate to={'profile'}/>}/>
                 <Route path={'profile'} element={<UserPage/>}/>
+                <Route path={'create_product'} element={<CreateProductPage/>}/>
+                <Route path={'my_products'} element={<ClientProductsPage/>}>
+                    <Route path={':pk/details'} element={<ProductDetailPage/>}/>
+                    <Route path={':pk/update'} element={<UpdateProductPage/>}/>
+                </Route>
 
-                <Route path={'my_products'} element={<ProductListPage/>}/>
                 <Route path={'comments'} element={<CommentListPage/>}/>
-                <Route path={'create_product'} element={<AddProductPage/>}/>
                 <Route path={'basket'} element={<BasketPage/>}/>
-                <Route path={'history'} element={<PurchaseHistoryPage/>}/>
             </Route>
 
             <Route path={'/admin'} element={<RequireAuth><AdminLayout/></RequireAuth>}>
@@ -64,4 +66,8 @@ const App: FC = () => {
     );
 };
 
-export {App};
+export
+{
+    App
+}
+    ;

@@ -1,15 +1,12 @@
-from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
-    GenericAPIView,
     ListAPIView,
     ListCreateAPIView,
-    RetrieveAPIView,
+    RetrieveUpdateDestroyAPIView,
     UpdateAPIView,
 )
 from rest_framework.permissions import AllowAny, IsAdminUser
-from rest_framework.response import Response
 
 from core.permissions.user_permission import IsOwnerOrAdmin
 
@@ -26,55 +23,64 @@ from .serializers import (
 
 
 class ListProductView(ListAPIView):
+    """get products with short info, can filter"""
     serializer_class = ProductSerializer
     queryset = ProductModel.objects.all()
     permission_classes = (AllowAny,)
     filterset_class = ProductFilter
 
 
-class ListMyProductView(ListAPIView):
+class ListClientProductsView(ListAPIView):
+    """get client's product"""
     queryset = ProductModel.objects.all()
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        user_id = self.request.user.id
-        return self.queryset.filter(owner_id=user_id)
+        return self.queryset.filter(owner_id=self.request.user.id)
 
 
 class CreateProductView(CreateAPIView):
-    queryset = ProductModel.objects.all()
+    """create product"""
     serializer_class = ProductDetailSerializer
 
-    def perform_create(self, serializer):
-        # todo передавати зразу айдішки
-        brand = BrandModel.objects.get(name__icontains=self.request.data['brand'])
-        category = CategoryModel.objects.get(title__icontains=self.request.data['category'])
-        serializer.save(owner_id=self.request.user.id, brand=brand, category=category)
 
-
-class RetrieveProductView(RetrieveAPIView):
+class RetrieveUpdateDestroyProductView(RetrieveUpdateDestroyAPIView):
+    """
+    get:
+        get a product
+    patch:
+        update text fields of product
+    delete:
+        remove product
+    """
     queryset = ProductModel.objects.all()
     serializer_class = ProductDetailSerializer
-    permission_classes = (AllowAny,)
+    http_method_names = ('get', 'patch', 'delete')
 
-
-# todo Reatrive update destroy nedd to combine
-class DestroyProductView(DestroyAPIView):
-    queryset = ProductModel.objects.all()
-    permission_classes = (IsOwnerOrAdmin,)
-
-
-class UpdateProductView(UpdateAPIView):
-    http_method_names = ('put',)
-    queryset = ProductModel.objects.all()
-    permission_classes = (IsOwnerOrAdmin,)
-    serializer_class = ProductDetailSerializer
+    def get_permissions(self):
+        method = self.request.method
+        if method == "GET":
+            return [AllowAny()]
+        return [IsOwnerOrAdmin()]
 
     def perform_update(self, serializer):
-        brand = BrandModel.objects.get(name__icontains=self.request.data['brand'])
-        category = CategoryModel.objects.get(title__icontains=self.request.data['category'])
-        # todo передавати зразу айдішки
-        serializer.save(brand=brand, category=category)
+        brand_id = self.request.data['brand'].get('id') or None
+        category_id = self.request.data['category'].get('id') or None
+        serializer.save(brand_id=brand_id, category_id=category_id)
+
+
+class CreateProductImageView(CreateAPIView):
+    """add image to product"""
+    serializer_class = ImageSerializer
+
+    def perform_create(self, serializer):
+        product_id = self.kwargs.get('pk')
+        serializer.save(product_id=product_id)
+
+
+class RemoveProductImageView(DestroyAPIView):
+    """remove image by id"""
+    queryset = ProductImagesModel.objects.all()
 
 
 class ListCreateCategoryView(ListCreateAPIView):
@@ -91,8 +97,7 @@ class ListCreateCategoryView(ListCreateAPIView):
         method = self.request.method
         if method == "GET":
             return [AllowAny()]
-        if method == "POST":
-            return [IsAdminUser()]
+        return [IsAdminUser()]
 
 
 class UpdateDestroyCategoryView(UpdateAPIView, DestroyAPIView):
@@ -111,7 +116,7 @@ class UpdateDestroyCategoryView(UpdateAPIView, DestroyAPIView):
 class ListCreateBrandView(ListCreateAPIView):
     """
     get:
-        get brand
+        get brands
     post:
         create new brand
     """
@@ -122,8 +127,7 @@ class ListCreateBrandView(ListCreateAPIView):
         method = self.request.method
         if method == "GET":
             return [AllowAny()]
-        if method == "POST":
-            return [IsAdminUser()]
+        return [IsAdminUser()]
 
 
 class UpdateDestroyBrandView(UpdateAPIView, DestroyAPIView):
@@ -140,7 +144,7 @@ class UpdateDestroyBrandView(UpdateAPIView, DestroyAPIView):
 
 
 class CreateCommentView(CreateAPIView):
-    queryset = CommentModel.objects.all()
+    """create comment"""
     serializer_class = CommentSerializer
 
     def perform_create(self, serializer):
@@ -149,9 +153,11 @@ class CreateCommentView(CreateAPIView):
         serializer.save(product_id=product_id, owner_id=user_id)
 
 
-class ListMyCommentsView(ListAPIView):
+class ListClientCommentsView(ListAPIView):
+    """get client comments by id from token"""
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = (IsOwnerOrAdmin,)
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -159,23 +165,6 @@ class ListMyCommentsView(ListAPIView):
 
 
 class DestroyCommentView(DestroyAPIView):
+    """remove comment"""
     queryset = CommentModel.objects.all()
     permission_classes = (IsOwnerOrAdmin,)
-
-
-class DestroyProductImage(DestroyAPIView):
-    queryset = ProductImagesModel.objects.all()
-
-
-class CreateProductImage(GenericAPIView):
-    queryset = ProductImagesModel.objects.all()
-    serializer_class = ImageSerializer
-
-    def post(self, *args, **kwargs):
-        product_id = kwargs.get('pk')
-        image = self.request.FILES.getlist('file')[0]
-        serializer = self.serializer_class(data={'image': image})
-        serializer.is_valid(raise_exception=True)
-        serializer.save(product_id=product_id)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-#     todo try change filelist to file on front

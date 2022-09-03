@@ -1,17 +1,23 @@
 import {FC, useState} from "react"
 import {BsChevronDown, BsChevronUp} from "react-icons/bs";
 import {SubmitHandler, useForm} from "react-hook-form";
+import {joiResolver} from "@hookform/resolvers/joi";
 import {BsFillPencilFill, BsTrash, BsBackspaceFill} from "react-icons/bs";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {productActions} from "../../redux";
-import css from './BrandsControl.module.css'
 import {IBrand} from "../../interfaces";
+import {BrandValidator} from "../../validators";
+import {InputError} from "../InputError/InputError";
+import css from './BrandsControl.module.css'
 
 const BrandsControl: FC = () => {
     const {brands} = useAppSelector(({productReducer}) => productReducer);
-    const {register, handleSubmit, setValue, reset} = useForm<IBrand>();
     const dispatch = useAppDispatch();
+    const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<IBrand>({
+        resolver: joiResolver(BrandValidator),
+        mode: "onTouched"
+    });
 
     const [isActive, setIsActive] = useState<boolean>(false);
     const [brandForUpdate, setBrandForUpdate] = useState<IBrand | null>(null)
@@ -29,9 +35,7 @@ const BrandsControl: FC = () => {
 
     const activate = async () => {
         setIsActive(prevState => !prevState)
-        !isActive
-            ? await dispatch(productActions.getBrands())
-            : cancelUpdate()
+        !isActive ? await dispatch(productActions.getBrands()) : cancelUpdate()
     }
 
     const cancelUpdate = () => {
@@ -56,10 +60,14 @@ const BrandsControl: FC = () => {
                 <div>
                     <form onSubmit={handleSubmit(brandSubmit)} className={css.create_form}>
                         <div className={css.create_form__line}><label>Brand Name: </label><input{...register('name')}/>
+                            {errors.name?.message && <InputError errorMsg={errors.name.message}/>}
                         </div>
+
                         <div className={css.create_form__line}><label>Description: </label>
-                            <input{...register('description')}/>
+                            <textarea {...register('description')}/>
+                            {errors.description?.message && <InputError errorMsg={errors.description.message}/>}
                         </div>
+
                         <div>
                             <label>Image: <input type="file" {...register('image')}/></label>
                             <button>{brandForUpdate ? 'update' : 'create'}</button>

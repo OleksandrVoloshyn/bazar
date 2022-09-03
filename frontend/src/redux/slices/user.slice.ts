@@ -27,6 +27,14 @@ const getCurrent = createAsyncThunk<IUser, void>(
     }
 );
 
+const getById = createAsyncThunk<IUser, { pk: string }>(
+    'userSlice/getById',
+    async ({pk}) => {
+        const {data} = await userService.getById(pk);
+        return data
+    }
+)
+
 const updateProfile = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
     'userSlice/updateAccount',
     async (body, {rejectWithValue}) => {
@@ -51,10 +59,12 @@ const searchUsers = createAsyncThunk<IResponse<IUser>, string>(
 
 const removeUser = createAsyncThunk<void, { pk: string }>(
     'userSlice/removeUser',
-    async ({pk}) => {
+    async ({pk}, {dispatch}) => {
         await userService.removeUser(pk)
+        dispatch(removeUserFromState(pk))
     }
 )
+
 
 const toAdmin = createAsyncThunk<IUser, { pk: string }>(
     'userSlice/toAdmin',
@@ -85,7 +95,14 @@ const userSlice = createSlice({
         },
         resetUsers: state => {
             state.users = undefined
-        }
+        },
+        removeUserFromState: (state, action) => {
+            if (state.users) {
+                const index = state.users.data.findIndex(item => item.id == action.payload);
+                state.users.data.splice(index, 1)
+            }
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -105,6 +122,9 @@ const userSlice = createSlice({
             .addCase(searchUsers.fulfilled, (state, action) => {
                 state.users = action.payload
             })
+            .addCase(getById.fulfilled, (state, action) => {
+                state.candidate = action.payload
+            })
             .addCase(removeUser.fulfilled, (state) => {
                 state.candidate = undefined
             })
@@ -118,7 +138,7 @@ const userSlice = createSlice({
 });
 
 
-const {reducer: userReducer, actions: {makeCandidate, resetCandidate, resetUsers}} = userSlice;
+const {reducer: userReducer, actions: {makeCandidate, resetCandidate, resetUsers, removeUserFromState}} = userSlice;
 const userActions = {
     getCurrent,
     updateProfile,
@@ -128,7 +148,8 @@ const userActions = {
     toAdmin,
     toLower,
     removeUser,
-    resetUsers
+    resetUsers,
+    getById
 }
 
 export {userReducer, userActions}

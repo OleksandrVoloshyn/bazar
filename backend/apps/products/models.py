@@ -8,22 +8,23 @@ from .services import brand_upload_to, product_upload_to
 UserModel = get_user_model()
 
 
+# todo validate product
 class ProductModel(models.Model):
     class Meta:
         db_table = 'product'
         ordering = ('id',)
 
     title = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
     price = models.PositiveIntegerField()
     color = models.CharField(max_length=50)
-    size = models.CharField(max_length=10)
+    size = models.CharField(max_length=5)
     gender = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey('CategoryModel', models.SET_NULL, 'products', null=True)
+    category = models.ForeignKey('CategoryModel', models.SET(''), 'products', blank=True)
 
     owner = models.ForeignKey(UserModel, models.CASCADE, 'products')
-    brand = models.ForeignKey('BrandModel', models.SET_NULL, 'products', null=True)
+    brand = models.ForeignKey('BrandModel', models.SET_NULL, 'products', blank=True, null=True)
 
 
 class BrandModel(models.Model):

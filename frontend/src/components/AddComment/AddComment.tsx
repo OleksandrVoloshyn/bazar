@@ -18,7 +18,7 @@ const AddComment: FC<IProps> = ({pk, setAddComment}) => {
 
     return (
         <div>
-            <input type="text" onChange={e => setText(e.target.value)} value={text}/>
+            <textarea onChange={e => setText(e.target.value)} value={text}/>
             <button onClick={comment} disabled={!text}>comment</button>
         </div>
     );

@@ -1,0 +1,26 @@
+.btn_div {
+    display: flex;
+    justify-content: center;
+}
+
+.btn_div > button:hover {
+    color: darkolivegreen;
+    transition: 0.5s;
+}
+
+.input_line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.input_line > label {
+    font-weight: bold;
+}
+
+.input_line > input, select, textarea {
+    border: 1px solid silver;
+    border-radius: 20px;
+    padding: 3px;
+}

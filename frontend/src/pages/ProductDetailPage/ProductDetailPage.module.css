@@ -1,0 +1,17 @@
+.wrap {
+    margin-top: 30px;
+}
+
+.main {
+    display: flex;
+    column-gap: 10px;
+}
+
+.add_comment_btn {
+    border: 1px solid silver;
+    border-radius: 10px;
+    padding: 3px;
+    cursor: pointer;
+    text-align: center;
+    background-color: #7d8293;
+}

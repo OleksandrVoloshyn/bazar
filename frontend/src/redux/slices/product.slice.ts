@@ -1,38 +1,38 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {productService} from "../../services";
-import {IBrand, ICategory, IComment, IProduct, IProductDetails, IQueryParams, IResponse} from "../../interfaces";
-import {string} from "joi";
+import {
+    IBrand,
+    ICategory,
+    IComment,
+    IProduct,
+    IProductDetails,
+    IProductImage,
+    IQueryParams,
+    IResponse
+} from "../../interfaces";
 
 interface IState {
-    prev: boolean,
-    next: boolean,
-    total_items: number | null,
-    total_pages: number | null,
-    products: IProduct[],
-    categories: ICategory[],
     brands: IBrand[],
-    chosenProduct: IProductDetails | null,
+    categories: ICategory[],
+    products?: IResponse<IProduct>,
+    chosenProduct?: IProductDetails,
+
     orders: IProduct[],
-    myComments: IComment[],
+    myComments?: IResponse<IComment>,
 }
 
 
 const initialState: IState = {
-    prev: false,
-    next: false,
-    total_items: null,
-    total_pages: null,
-    products: [],
-    categories: [],
     brands: [],
-    chosenProduct: null,
+    categories: [],
+    products: undefined,
+    chosenProduct: undefined,
+
     orders: [],
-    myComments: [],
+    myComments: undefined,
 }
 
-// todo TS
-//todo change orders
 const getAll = createAsyncThunk<IResponse<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
     'productSlice/getAll',
     async ({QueryParamsObj}) => {
@@ -40,60 +40,55 @@ const getAll = createAsyncThunk<IResponse<IProduct>, { QueryParamsObj: Partial<I
         return data
     }
 );
-
-const create = createAsyncThunk<any, { product: Partial<IProductDetails> }>(
-    'productSlice/create',
-    async ({product}) => {
-        const {data} = await productService.create(product)
+const getClientProducts = createAsyncThunk<void, Partial<IQueryParams>>(
+    'productSlice/getClientProducts',
+    async (params, {dispatch}) => {
+        const {data} = await productService.getClientProducts(params);
+        dispatch(appendProducts(data))
+    }
+)
+const getProductById = createAsyncThunk<IProductDetails, { pk: string }>(
+    'productSlice/getProductById',
+    async ({pk}) => {
+        const {data} = await productService.getProductById(pk)
         return data
     }
 )
-
-const addProductImage = createAsyncThunk<any, { productId: string, file: File }>(
-    'productSlice/addProductImage',
+const createProduct = createAsyncThunk<void, { product: Partial<IProductDetails> }>(
+    'productSlice/createProduct',
+    async ({product}) => {
+        await productService.createProduct(product)
+    }
+)
+const updateProduct = createAsyncThunk<IProductDetails, Partial<IProductDetails>>(
+    'productSlice/updateProduct',
+    async (product) => {
+        const {data} = await productService.updateProduct(product);
+        return data
+    }
+)
+const removeProduct = createAsyncThunk<void, { pk: string }>(
+    'productSlice/removeProduct',
+    async ({pk}, {dispatch}) => {
+        await productService.removeProduct(pk)
+        dispatch(removeProductFromState(pk))
+    }
+)
+const addImageToProduct = createAsyncThunk<IProductImage, { productId: string, file: File }>(
+    'productSlice/addImageToProduct',
     async ({productId, file}) => {
         const {data} = await productService.addProductImage(productId, file)
         return data
     }
 )
-
-const update = createAsyncThunk<void, Partial<IProductDetails>>(
-    'productSlice/update',
-    async (product) => {
-        await productService.update(product)
-    }
-)
-const addComment = createAsyncThunk<any, { text: string, pk: string }>(
-    'productSlice/addComment',
-    async ({text, pk}) => {
-        const {data} = await productService.addComment(text, pk)
-        return data
+const removeProductImage = createAsyncThunk<void, { pk: string }>(
+    'productSlice/removeProductImage',
+    async ({pk}, {dispatch}) => {
+        await productService.removeImageById(pk)
+        dispatch(removeChosenProductImageFromState(pk))
     }
 )
 
-const getMyProducts = createAsyncThunk<IResponse<IProduct>, void>(
-    'productSlice/getMyProducts',
-    async () => {
-        const {data} = await productService.getMyProducts()
-        return data
-    }
-)
-
-const getMyComments = createAsyncThunk(
-    'productSlice/getMyComments',
-    async () => {
-        const {data} = await productService.getMyComments()
-        return data
-    }
-)
-
-const getById = createAsyncThunk<IProductDetails, { pk: string }>(
-    'productSlice/getById',
-    async ({pk}) => {
-        const {data} = await productService.getById(pk)
-        return data
-    }
-)
 
 const getCategories = createAsyncThunk<IResponse<ICategory>, void>(
     'productSlice/getCategories',
@@ -153,26 +148,26 @@ const removeBrand = createAsyncThunk<void, { pk: string }>(
     }
 )
 
-const removeProduct = createAsyncThunk<string, { pk: string }>(
-    'productSlice/removeProduct',
-    async ({pk}) => {
-        await productService.removeById(pk)
-        return pk
-    }
-)
-const removeProductImage = createAsyncThunk<string, { pk: string }>(
-    'productSlice/removeProductImage',
-    async ({pk}) => {
-        await productService.removeImageById(pk)
-        return pk
-    }
-)
 
-const deleteComment = createAsyncThunk<string, { pk: string }>(
+const addComment = createAsyncThunk<any, { text: string, pk: string }>(
+    'productSlice/addComment',
+    async ({text, pk}) => {
+        const {data} = await productService.addComment(text, pk)
+        return data
+    }
+)
+const getClientComments = createAsyncThunk<IResponse<IComment>, void>(
+    'productSlice/getClientComments',
+    async () => {
+        const {data} = await productService.getClientComments()
+        return data
+    }
+)
+const deleteComment = createAsyncThunk<void, { pk: string }>(
     'productSlice/deleteComment',
-    async ({pk}) => {
+    async ({pk}, {dispatch}) => {
         await productService.deleteComment(pk)
-        return pk
+        dispatch(removeCommentFromState(pk))
     }
 )
 
@@ -188,13 +183,33 @@ const productSlice = createSlice({
             const index = state.brands.findIndex(item => item.id === action.payload);
             state.brands.splice(index, 1)
         },
+        removeProductFromState: (state, action) => {
+            if (state.products) {
+                const index = state.products.data.findIndex(item => item.id === action.payload);
+                state.products.data.splice(index, 1)
+            }
+        },
+        removeChosenProductFromState: (state) => {
+            state.chosenProduct = undefined
+        },
+        removeChosenProductImageFromState: (state, action) => {
+            if (state.chosenProduct && state.chosenProduct.images) {
+                const index = state.chosenProduct.images.findIndex(item => item.id === action.payload)
+                state.chosenProduct.images.splice(index, 1)
+            }
+        },
+        removeCommentFromState: (state, action) => {
+            if (state.chosenProduct) {
+                const index = state.chosenProduct?.comments.findIndex(item => item.id === action.payload)
+                state.chosenProduct.comments?.splice(index, 1)
+            }
+        },
+        appendProducts: (state, action) => {
+            state.products = action.payload
+        },
 
-        //todo orders to local storage
         addToOrder: (state, action) => {
-            // let isInOrders = false
-            // state.orders.forEach(item => (item.id === action.payload.id) && (isInOrders = true))
             state.orders.forEach(item => (item.id === action.payload.id) && state.orders.push(action.payload))
-            // !isInOrders && state.orders.push(action.payload)
         },
         deleteFromOrder: (state, action) => {
             const index = state.orders.findIndex(item => item.id === action.payload.id);
@@ -204,11 +219,21 @@ const productSlice = createSlice({
     extraReducers: builder => {
         builder
             .addCase(getAll.fulfilled, (state, action) => {
-                state.products = action.payload.data
-                state.prev = action.payload.prev
-                state.next = action.payload.next
-                state.total_items = action.payload.total_items
-                state.total_pages = action.payload.total_pages
+                state.products = action.payload
+            })
+            .addCase(getProductById.fulfilled, (state, action) => {
+                state.chosenProduct = action.payload
+            })
+            .addCase(addImageToProduct.fulfilled, (state, action) => {
+                if (state.chosenProduct && state.chosenProduct.images) {
+                    state.chosenProduct.images.push(action.payload)
+                }
+            })
+            .addCase(updateProduct.fulfilled, (state, action) => {
+                if (state.products) {
+                    const index = state.products.data.findIndex(item => item.id === action.payload.id);
+                    state.products.data.splice(index, 1, action.payload)
+                }
             })
 
             .addCase(getCategories.fulfilled, (state, action) => {
@@ -233,68 +258,46 @@ const productSlice = createSlice({
                 state.brands.splice(index, 1, action.payload)
             })
 
-            .addCase(getById.fulfilled, (state, action) => {
-                state.chosenProduct = action.payload
-            })
-            .addCase(getMyProducts.fulfilled, (state, action) => {
-                state.prev = action.payload.prev
-                state.next = action.payload.next
-                state.products = action.payload.data
-                state.total_items = action.payload.total_items
-                state.total_pages = action.payload.total_pages
+            .addCase(getClientComments.fulfilled, (state, action) => {
+                state.myComments = action.payload
             })
             .addCase(addComment.fulfilled, (state, action) => {
                 state.chosenProduct?.comments.push(action.payload)
-            })
-            .addCase(removeProduct.fulfilled, (state, action) => {
-                const index = state.products.findIndex(item => item.id === action.payload);
-                state.products.splice(index, 1)
-            })
-            .addCase(getMyComments.fulfilled, (state, action) => {
-                state.myComments = action.payload.data
-                state.prev = action.payload.prev
-                state.next = action.payload.next
-                state.total_items = action.payload.total_items
-                state.total_pages = action.payload.total_pages
-            })
-            .addCase(deleteComment.fulfilled, (state, action) => {
-                const index = state.myComments.findIndex(item => item.id === action.payload);
-                state.myComments.splice(index, 1)
-            })
-            .addCase(removeProductImage.fulfilled, (state, action) => {
-                if (state.chosenProduct && state.chosenProduct.images) {
-                    const index = state.chosenProduct.images.findIndex(item => item.id === action.payload)
-                    state.chosenProduct.images.splice(index, 1)
-                }
-            })
-            .addCase(addProductImage.fulfilled, (state, action) => {
-                if (state.chosenProduct && state.chosenProduct.images) {
-                    state.chosenProduct.images.push(action.payload)
-                }
             })
     }
 });
 
 const {
     reducer: productReducer,
-    actions: {removeCategoryFromState, removeBrandFromState, addToOrder, deleteFromOrder}
+    actions: {
+        removeCategoryFromState,
+        removeBrandFromState,
+        appendProducts,
+        removeProductFromState,
+        addToOrder,
+        deleteFromOrder,
+        removeChosenProductFromState,
+        removeChosenProductImageFromState,
+        removeCommentFromState
+    }
 } = productSlice;
+
 const productActions = {
     getAll,
     getCategories,
     getBrands,
-    getById,
-    create,
-    getMyProducts,
+    getProductById,
+    createProduct,
+    getClientProducts,
     addComment,
     addToOrder,
     deleteFromOrder,
     removeProduct,
-    getMyComments,
+    getClientComments,
     deleteComment,
-    update,
+    updateProduct,
     removeProductImage,
-    addProductImage,
+    addImageToProduct,
     removeCategory,
     createCategory,
     removeBrand,
@@ -302,7 +305,13 @@ const productActions = {
     removeCategoryFromState,
     updateCategory,
     removeBrandFromState,
-    updateBrand
+    updateBrand,
+    appendProducts,
+    removeProductFromState,
+    removeChosenProductFromState,
+    removeChosenProductImageFromState,
+    removeCommentFromState
 }
+//todo remove useless from export
 
 export {productReducer, productActions}

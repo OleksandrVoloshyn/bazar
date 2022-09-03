@@ -1,7 +1,7 @@
 from django.db import transaction
 
 from rest_framework.request import Request
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import CharField, ModelSerializer
 
 from apps.users.serializers import UserSerializer
 
@@ -44,9 +44,9 @@ class CommentSerializer(ModelSerializer):
 
 
 class ProductDetailSerializer(ModelSerializer):
-    category = CategorySerializer(required=False)
+    category = CategorySerializer(required=False, read_only=True)
+    brand = BrandSerializer(required=False, read_only=True)
     owner = UserSerializer(required=False)
-    brand = BrandSerializer(required=False)
     comments = CommentSerializer(read_only=True, many=True)
     images = ImageSerializer(many=True, read_only=True)
 
@@ -59,9 +59,24 @@ class ProductDetailSerializer(ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         request: Request = self.context.get('request')
-        product = ProductModel.objects.create(**validated_data)
+
+        brand_id = request.data['brand'].get('id') or None
+        category_id = request.data['category'].get('id') or None
+        product = ProductModel.objects.create(**validated_data, owner=request.user, category_id=category_id,
+                                              brand_id=brand_id)
+
         for image in request.FILES.getlist('images'):
             serializer = ImageSerializer(data={'image': image})
             serializer.is_valid(raise_exception=True)
             serializer.save(product=product)
         return product
+
+    # def update(self, instance, validated_data):
+        # request: Request = self.context.get('request')
+        # brand_id = request.data['brand'].get('id') or None
+        # category_id = request.data['category'].get('id') or None
+        # ProductDetailSerializer(instance, data=)
+
+        # product = ProductModel.objects.create(**validated_data, owner=request.user, category_id=category_id,
+        #                                       brand_id=brand_id)
+        # return super().update(instance, validated_data)

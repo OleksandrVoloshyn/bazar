@@ -1,5 +1,5 @@
 import {FC, useEffect, useState} from "react"
-import {useLocation} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {UpdateProfileForm} from "../UpdateProfileForm/UpdateProfileForm";
@@ -8,10 +8,10 @@ import {AdminPanelForProfile} from "../AdminPanelForProfile/AdminPanelForProfile
 import {userActions} from "../../redux";
 
 const Profile: FC = () => {
-    // todo  check from comment or check product owner
     const {user, updateProfileErrors, candidate} = useAppSelector(({userReducer}) => userReducer);
     const [isUpdateProfile, setIsUpdateProfile] = useState<boolean>(false);
     const dispatch = useAppDispatch();
+    const {pk} = useParams();
 
     const {pathname} = useLocation();
     const isAdminPage = pathname.includes('admin')
@@ -20,10 +20,11 @@ const Profile: FC = () => {
     const isOwner = !candidate || (candidate.id === user?.id)
 
     useEffect(() => {
+        pk && dispatch(userActions.getById({pk}))
         return () => {
             dispatch(userActions.resetCandidate())
         }
-    }, [])
+    }, [user])
 
     return (
         <div>

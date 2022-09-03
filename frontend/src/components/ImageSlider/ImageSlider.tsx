@@ -3,15 +3,15 @@ import Carousel from "nuka-carousel";
 
 import {IProductImage} from "../../interfaces";
 import {notFoundImage} from '../../constants'
+import css from './ImageSlider.module.css'
 
 interface IProps {
     items: IProductImage[]
 }
 
 const ImageSlider: FC<IProps> = ({items}) => {
-    console.log(items.length)
     return (
-        <div>
+        <div className={css.slider}>
             <Carousel>
                 {items.length
                     ? items.map(item => <img src={item.image} alt="Product img" key={item.id}/>)
@@ -19,6 +19,7 @@ const ImageSlider: FC<IProps> = ({items}) => {
                 }
             </Carousel>
         </div>
+
     );
 };
 
