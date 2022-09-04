@@ -16,9 +16,7 @@ const RequireAuth: FC<IProps> = ({children}) => {
     const access = localStorage.getItem('access')
 
     useEffect(() => {
-        if (!user) {
-            dispatch(userActions.getCurrent())
-        }
+        !user && dispatch(userActions.getCurrent())
     }, [dispatch, user])
 
     if (!access) {
@@ -27,7 +25,7 @@ const RequireAuth: FC<IProps> = ({children}) => {
 
 
     if (pathname.includes('admin') && !user?.is_staff) {
-        return <div>Шо за мамкин хацкер</div>
+        return <Navigate to={'/'}/>
     }
 
     return children

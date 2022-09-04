@@ -2,7 +2,7 @@ import {FC, useEffect} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {productActions} from "../../redux";
+import {brandActions, categoryActions, categoryReducer, productActions} from "../../redux";
 import {UpdateProductImage} from "../UpdateProductImage/UpdateProductImage";
 import {IProductDetails} from "../../interfaces";
 import css from './ProductForm.module.css'
@@ -12,16 +12,23 @@ interface IProps {
     idForUpdate?: string,
 }
 
-// todo validate
 const ProductForm: FC<IProps> = ({idForUpdate}) => {
-    const {brands, categories, chosenProduct} = useAppSelector(({productReducer}) => productReducer);
     const {register, handleSubmit, setValue, reset} = useForm<IProductDetails>();
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const {
+        brandReducer: {brands},
+        categoryReducer: {categories},
+        productReducer: {chosenProduct}
+    } = useAppSelector((state) => state);
+
+    // todo validate
+
 
     useEffect(() => {
-        dispatch(productActions.getBrands())
-        dispatch(productActions.getCategories())
+        dispatch(brandActions.getBrands())
+        dispatch(categoryActions.getCategories())
         idForUpdate ? dispatch(productActions.getProductById({pk: idForUpdate})) : reset()
 
         return () => {

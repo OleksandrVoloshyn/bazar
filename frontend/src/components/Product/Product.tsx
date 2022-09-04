@@ -1,11 +1,11 @@
 import {FC} from "react"
 import {Link} from "react-router-dom";
 
-import css from './Product.module.css'
 import {notFoundImage} from "../../constants";
 import {IProduct} from '../../interfaces'
 import {useAppDispatch} from "../../hooks";
 import {productActions} from "../../redux";
+import css from './Product.module.css'
 
 interface IProps {
     product: IProduct

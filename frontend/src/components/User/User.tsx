@@ -1,7 +1,6 @@
 import {FC} from "react"
+
 import {IUser} from "../../interfaces";
-import {Link} from "react-router-dom";
-import {AdminPanelForProfile} from "../AdminPanelForProfile/AdminPanelForProfile";
 import {useAppDispatch} from "../../hooks";
 import {userActions} from "../../redux";
 

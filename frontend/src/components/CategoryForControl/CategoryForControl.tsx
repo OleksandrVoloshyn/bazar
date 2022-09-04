@@ -1,7 +1,7 @@
 import {FC, useState} from "react"
 import {BsFillPencilFill, BsTrash} from "react-icons/bs";
 
-import {productActions} from "../../redux";
+import {categoryActions, productActions} from "../../redux";
 import {ICategory} from "../../interfaces";
 import {useAppDispatch} from "../../hooks";
 
@@ -25,7 +25,7 @@ const CategoryForControl: FC<IProps> = ({category}) => {
 
     const updateCategory = async (pk: string) => {
         setCategoryIdForUpdate(null)
-        await dispatch(productActions.updateCategory({pk, title: newTitle}))
+        await dispatch(categoryActions.updateCategory({pk, title: newTitle}))
         setIsUpdating(false)
     }
 
@@ -38,7 +38,7 @@ const CategoryForControl: FC<IProps> = ({category}) => {
                 </div>
                 : <div>{category.title}
                     <BsFillPencilFill onClick={() => toUpdateCategory(category)}/>
-                    <BsTrash onClick={() => dispatch(productActions.removeCategory({pk: category.id}))}/>
+                    <BsTrash onClick={() => dispatch(categoryActions.removeCategory({pk: category.id}))}/>
                 </div>}
         </div>
     );

@@ -1,5 +1,5 @@
 import {FC} from "react"
-import {IComment, IResponse} from "../../interfaces";
+import {IComment} from "../../interfaces";
 import {Comment} from "../Comment/Comment";
 
 interface IProps {

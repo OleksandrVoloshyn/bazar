@@ -2,7 +2,11 @@ import {ICategory} from "./category.interface";
 import {IUser} from "./user.interface";
 import {IBrand} from "./brand.interface";
 import {IComment} from "./comment.interface";
-import {IProductImage} from "./productImage.interface";
+
+export interface IProductImage {
+    id: string,
+    image: string,
+}
 
 export interface IProduct {
     id: string,

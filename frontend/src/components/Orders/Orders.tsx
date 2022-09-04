@@ -2,7 +2,6 @@ import {FC, useEffect} from "react"
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {Order} from "../Order/Order";
-import {IProduct} from "../../interfaces";
 import {productActions} from "../../redux";
 
 const Orders: FC = () => {

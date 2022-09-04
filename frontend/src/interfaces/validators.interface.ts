@@ -6,3 +6,4 @@ export interface IValidators {
     isPhoneError:boolean,
     isNameError: boolean
 }
+// todo remove useless

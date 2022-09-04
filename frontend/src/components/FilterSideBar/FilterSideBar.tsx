@@ -4,11 +4,11 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {BiReset} from 'react-icons/bi'
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {productActions} from "../../redux";
+import {brandActions} from "../../redux";
 import css from './FilterSideBar.module.css'
 
 const FilterSideBar: FC = () => {
-    const {brands} = useAppSelector(({productReducer}) => productReducer);
+    const {brands} = useAppSelector(({brandReducer}) => brandReducer);
     const dispatch = useAppDispatch();
     const [query, setQuery] = useSearchParams();
     const {register, handleSubmit} = useForm();
@@ -21,7 +21,7 @@ const FilterSideBar: FC = () => {
         setQuery(queryObj)
     }
     useEffect(() => {
-        dispatch(productActions.getBrands())
+        dispatch(brandActions.getBrands())
     }, [dispatch])
 
     return (

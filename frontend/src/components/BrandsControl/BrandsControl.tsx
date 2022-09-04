@@ -5,14 +5,14 @@ import {joiResolver} from "@hookform/resolvers/joi";
 import {BsFillPencilFill, BsTrash, BsBackspaceFill} from "react-icons/bs";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {productActions} from "../../redux";
+import {brandActions} from "../../redux";
 import {IBrand} from "../../interfaces";
 import {BrandValidator} from "../../validators";
 import {InputError} from "../InputError/InputError";
 import css from './BrandsControl.module.css'
 
 const BrandsControl: FC = () => {
-    const {brands} = useAppSelector(({productReducer}) => productReducer);
+    const {brands} = useAppSelector(({brandReducer}) => brandReducer);
     const dispatch = useAppDispatch();
     const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<IBrand>({
         resolver: joiResolver(BrandValidator),
@@ -25,17 +25,17 @@ const BrandsControl: FC = () => {
     const brandSubmit: SubmitHandler<IBrand> = async (newBrand) => {
         newBrand.image?.length ? (newBrand.image = newBrand.image[0]) : (newBrand.image = '')
         if (brandForUpdate) {
-            await dispatch(productActions.updateBrand({newBrandData: newBrand, pk: brandForUpdate.id}))
+            await dispatch(brandActions.updateBrand({newBrandData: newBrand, pk: brandForUpdate.id}))
             setBrandForUpdate(null)
         } else {
-            await dispatch(productActions.createBrand({newBrand}))
+            await dispatch(brandActions.createBrand({newBrand}))
         }
         reset()
     }
 
     const activate = async () => {
         setIsActive(prevState => !prevState)
-        !isActive ? await dispatch(productActions.getBrands()) : cancelUpdate()
+        !isActive ? await dispatch(brandActions.getBrands()) : cancelUpdate()
     }
 
     const cancelUpdate = () => {
@@ -81,7 +81,7 @@ const BrandsControl: FC = () => {
                     {brands.map(brand => <div key={brand.id}>{brand.name}
                         <BsFillPencilFill onClick={() => toUpdateBrand(brand)}/>
                         {brand.id !== brandForUpdate?.id &&
-                            <BsTrash onClick={() => dispatch(productActions.removeBrand({pk: brand.id}))}/>}
+                            <BsTrash onClick={() => dispatch(brandActions.removeBrand({pk: brand.id}))}/>}
                     </div>)}
                 </div>}
         </div>

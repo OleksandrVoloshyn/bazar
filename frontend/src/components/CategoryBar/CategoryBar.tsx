@@ -2,16 +2,16 @@ import {FC, useEffect} from "react"
 import {useSearchParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {productActions} from "../../redux";
+import {categoryActions} from "../../redux";
 
 const CategoryBar: FC = () => {
-    const {categories} = useAppSelector(({productReducer}) => productReducer);
+    const {categories} = useAppSelector(({categoryReducer}) => categoryReducer);
     const dispatch = useAppDispatch();
     const [query, setQuery] = useSearchParams();
     const queryObj = Object.fromEntries(query.entries())
 
     useEffect(() => {
-        dispatch(productActions.getCategories())
+        dispatch(categoryActions.getCategories())
     }, [dispatch])
 
     const setCategory = (title: string) => {

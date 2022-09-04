@@ -9,5 +9,4 @@ export interface IQueryParams {
     page: string,
     ordering: string,
     pagination: string
-
 }

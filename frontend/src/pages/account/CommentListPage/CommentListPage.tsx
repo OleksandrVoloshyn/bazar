@@ -1,7 +1,7 @@
 import {FC, useEffect} from "react"
 import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {productActions} from "../../../redux";
-import {Comments, PageNavigate} from "../../../components";
+import {Comments} from "../../../components";
 
 const CommentListPage: FC = () => {
     const {myComments} = useAppSelector(({productReducer}) => productReducer);

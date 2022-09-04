@@ -2,12 +2,12 @@ import {FC, useState} from "react"
 import {BsChevronDown, BsChevronUp} from 'react-icons/bs'
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {productActions} from "../../redux";
+import {categoryActions, productActions} from "../../redux";
 import {CategoryForControl} from "../CategoryForControl/CategoryForControl";
 import css from './CategoriesControl.module.css'
 
 const CategoriesControl: FC = () => {
-    const {categories} = useAppSelector(({productReducer}) => productReducer);
+    const {categories} = useAppSelector(({categoryReducer}) => categoryReducer);
     const [categoryValue, setCategoryValue] = useState<string>('');
     const [isActive, setIsActive] = useState<boolean>(false);
     const dispatch = useAppDispatch();
@@ -17,12 +17,12 @@ const CategoriesControl: FC = () => {
     const activate = async () => {
         setIsActive(prevState => !prevState)
         if (!isActive && !categories.length) {
-            await dispatch(productActions.getCategories())
+            await dispatch(categoryActions.getCategories())
         }
     }
 
     const createCategory = async () => {
-        await dispatch(productActions.createCategory({categoryTitle: categoryValue}))
+        await dispatch(categoryActions.createCategory({categoryTitle: categoryValue}))
         setCategoryValue('')
     }
 

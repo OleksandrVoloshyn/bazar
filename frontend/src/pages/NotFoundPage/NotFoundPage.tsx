@@ -1,9 +1,14 @@
 import {FC} from "react"
 
-import {MessageInfo} from "../../components";
+import {Header, MessageInfo} from "../../components";
 
 const NotFoundPage: FC = () => {
-    return <MessageInfo data={'Not Found'}/>
+    return (
+        <div>
+            <Header/>
+            <MessageInfo data={'Oooops something wrong'}/>
+        </div>
+    )
 };
 
 export {NotFoundPage};
