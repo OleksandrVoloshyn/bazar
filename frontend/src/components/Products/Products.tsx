@@ -1,59 +1,36 @@
-import {FC, FormEvent, useEffect, useMemo} from "react"
-import {useParams, useSearchParams} from "react-router-dom";
+import {FC, useEffect, useMemo} from "react"
+import {useSearchParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {Product} from "../Product/Product";
 import {productActions} from "../../redux";
+import css from './Products.module.css'
+import {PageNavigate} from "../PageNavigate/PageNavigate";
 
 const Products: FC = () => {
-    // const {products, prev, next} = useAppSelector(({productReducer}) => productReducer);
+    const {products} = useAppSelector(({productReducer}) => productReducer);
     const [query, setQuery] = useSearchParams({page: '1'});
     const queryObj = useMemo(() => Object.fromEntries(query.entries()), [query]);
     const dispatch = useAppDispatch();
-    const {title} = useParams();
 
     useEffect(() => {
-        if (title) {
-            queryObj['category'] = title
-        }
         dispatch(productActions.getAll({QueryParamsObj: queryObj}))
-    }, [dispatch, queryObj, title])
+    }, [dispatch, queryObj])
 
-    const prevPage = (): void => {
-        queryObj.page = (+queryObj.page - 1).toString()
-        setQuery(queryObj)
-    //    todo try to change
-    }
-
-    const nextPage = (): void => {
-        queryObj.page = (+queryObj.page + 1).toString()
-        setQuery(queryObj)
-    }
-
-    const pagination_ordering = (e: FormEvent) => {
-        // todo find correct TS
-        e.preventDefault()
-        // @ts-ignore
+    const pagination_ordering = (e: any) => {
         if (e.target.name === 'ordering') {
-            // @ts-ignore
             e.target.value ? (queryObj.ordering = e.target.value) : (delete queryObj.ordering)
         }
-        // @ts-ignore
-        if (e.target.name === 'pagination') {
-            // @ts-ignore
-            queryObj.pagination = e.target.value
-        }
+        e.target.name === 'pagination' && (queryObj.pagination = e.target.value)
         setQuery(queryObj)
     }
+
     return (
-        <div style={{display: 'flex', flexWrap: 'wrap'}}>
-            <div>
-                {/*<button onClick={prevPage} disabled={!prev}>Prev</button>*/}
-                {/*<button onClick={nextPage} disabled={!next}>Next</button>*/}
-            </div>
-            <div>
-                <form onChange={e => pagination_ordering(e)}>
-                    <select name="pagination">
+        <div className={css.wrap}>
+            <div className={css.nav_page_ordering}>
+                <PageNavigate/>
+                <form onChange={(e) => pagination_ordering(e)} className={css.form}>
+                    <select name="pagination" id='pagination'>
                         <option value="15">15</option>
                         <option value="30">30</option>
                     </select>
@@ -66,8 +43,10 @@ const Products: FC = () => {
                     </select>
                 </form>
             </div>
-            <h1>Products</h1>
-            {/*{products && products.map(product => <Product key={product.id} product={product}/>)}*/}
+
+            <div className={css.products}>
+                {products && products.data.map(product => <Product key={product.id} product={product}/>)}
+            </div>
         </div>
     );
 };

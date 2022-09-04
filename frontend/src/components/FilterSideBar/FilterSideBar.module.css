@@ -1,0 +1,18 @@
+.wrap {
+    width: 300px;
+    padding-left: 20px;
+}
+
+.input_line {
+    display: flex;
+    justify-content: space-between;
+}
+
+.input_line > input {
+    width: 100px;
+    border: 1px solid silver;
+}
+
+.find_btn {
+    margin: 10px;
+}

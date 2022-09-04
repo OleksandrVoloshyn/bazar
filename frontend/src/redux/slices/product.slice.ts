@@ -11,15 +11,15 @@ import {
     IQueryParams,
     IResponse
 } from "../../interfaces";
+import {logDOM} from "@testing-library/react";
 
 interface IState {
     brands: IBrand[],
     categories: ICategory[],
     products?: IResponse<IProduct>,
     chosenProduct?: IProductDetails,
-
-    orders: IProduct[],
     myComments?: IResponse<IComment>,
+    orders: IProduct[],
 }
 
 
@@ -28,9 +28,8 @@ const initialState: IState = {
     categories: [],
     products: undefined,
     chosenProduct: undefined,
-
-    orders: [],
     myComments: undefined,
+    orders: [],
 }
 
 const getAll = createAsyncThunk<IResponse<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
@@ -170,6 +169,13 @@ const deleteComment = createAsyncThunk<void, { pk: string }>(
         dispatch(removeCommentFromState(pk))
     }
 )
+const addToBasket = createAsyncThunk<IProduct, IProduct>(
+    'productSlice/addToBasket',
+    async (product, {dispatch}) => {
+        await dispatch(getBasket())
+        return product
+    }
+)
 
 const productSlice = createSlice({
     name: 'productSlice',
@@ -207,13 +213,18 @@ const productSlice = createSlice({
         appendProducts: (state, action) => {
             state.products = action.payload
         },
-
-        addToOrder: (state, action) => {
-            state.orders.forEach(item => (item.id === action.payload.id) && state.orders.push(action.payload))
+        getBasket: (state) => {
+            const jsonBasket = localStorage.getItem('basket');
+            state.orders = jsonBasket?.length ? JSON.parse(jsonBasket) : []
         },
-        deleteFromOrder: (state, action) => {
+        removeFromBasket: (state, action) => {
             const index = state.orders.findIndex(item => item.id === action.payload.id);
             state.orders.splice(index, 1)
+            localStorage.setItem('basket', JSON.stringify(state.orders))
+        },
+        clearBasket: (state) => {
+            state.orders = []
+            localStorage.removeItem('basket')
         }
     },
     extraReducers: builder => {
@@ -264,6 +275,12 @@ const productSlice = createSlice({
             .addCase(addComment.fulfilled, (state, action) => {
                 state.chosenProduct?.comments.push(action.payload)
             })
+            .addCase(addToBasket.fulfilled, (state, action) => {
+                let isInBasket = false
+                state.orders.forEach(item => (item.id === action.payload.id) && (isInBasket = true))
+                !isInBasket && state.orders.push(action.payload)
+                localStorage.setItem('basket', JSON.stringify(state.orders))
+            })
     }
 });
 
@@ -274,15 +291,17 @@ const {
         removeBrandFromState,
         appendProducts,
         removeProductFromState,
-        addToOrder,
-        deleteFromOrder,
+        removeFromBasket,
         removeChosenProductFromState,
         removeChosenProductImageFromState,
-        removeCommentFromState
+        removeCommentFromState,
+        getBasket,
+        clearBasket
     }
 } = productSlice;
 
 const productActions = {
+    clearBasket,
     getAll,
     getCategories,
     getBrands,
@@ -290,8 +309,8 @@ const productActions = {
     createProduct,
     getClientProducts,
     addComment,
-    addToOrder,
-    deleteFromOrder,
+    addToBasket,
+    removeFromBasket,
     removeProduct,
     getClientComments,
     deleteComment,
@@ -310,8 +329,8 @@ const productActions = {
     removeProductFromState,
     removeChosenProductFromState,
     removeChosenProductImageFromState,
-    removeCommentFromState
+    removeCommentFromState,
+    getBasket,
 }
-//todo remove useless from export
 
 export {productReducer, productActions}

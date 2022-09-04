@@ -8,28 +8,27 @@ import {useAppDispatch} from "../../hooks";
 import {productActions} from "../../redux";
 
 interface IProps {
-    product: Partial<IProduct>
+    product: IProduct
 }
 
 const Product: FC<IProps> = ({product}) => {
+    const dispatch = useAppDispatch();
     const {title, size, price, images} = product;
     const imgSrc = images && (images[0]?.image || notFoundImage)
-    const dispatch = useAppDispatch();
 
-    const addToCart = async () => {
-        await dispatch(productActions.addToOrder(product))
-    }
+    const addToBasket = async () => await dispatch(productActions.addToBasket(product))
 
     return (
-        <div>
+        <div className={css.wrap}>
             <Link to={`/products/${product.id}/details`}>
-                <div><img src={imgSrc} alt="product_avatar" style={{width: '200px'}}/></div>
+                <div className={css.img}><img src={imgSrc} alt="product_avatar"/></div>
             </Link>
-            <div>Title: {title}</div>
-            <div>Size: {size}</div>
-            <div>Price: {price}</div>
-            <div className={css.add_to_cart} onClick={addToCart}>+</div>
-
+            <div className={css.content}>
+                <div>Title: {title}</div>
+                <div>Size: {size}</div>
+                <div>Price: {price}</div>
+            </div>
+            <div className={css.add_btn} onClick={addToBasket}>love it</div>
         </div>
     );
 };

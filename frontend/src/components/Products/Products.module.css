@@ -1,0 +1,24 @@
+.wrap {
+    width: 100%;
+}
+
+.form {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+    column-gap: 5px;
+}
+
+.nav_page_ordering {
+    margin-left: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.products {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    padding: 7px;
+}

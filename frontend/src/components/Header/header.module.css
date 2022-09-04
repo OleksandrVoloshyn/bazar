@@ -5,7 +5,6 @@
     height: 50px;
     margin: 0 10px 5px;
     border-bottom: 1px solid silver;
-    position: relative;
 }
 
 .logo {
@@ -13,22 +12,27 @@
     color: cornflowerblue;
 }
 
-.shop_cart_button {
-    cursor: pointer;
-    transition: color, transform 500ms ease;
+.right_part {
+    display: flex;
 }
 
-.shop_cart_button:hover,
-.active {
-    color: darkolivegreen;
-    transform: scale(1.5);
+.shop_cart_button {
+    cursor: pointer;
+    position: relative;
+    margin-right: 70px;
+}
+
+.shop_cart_button:hover {
+    color: cornflowerblue;
 }
 
 .shop_cart {
     position: absolute;
-    top: 30px;
-    right: 0;
-    width: 450px;
+    top: 35px;
+    right: 179px;
+    width: 250px;
     background: snow;
-    z-index: 3;
+    z-index: 2;
+    border: 1px solid silver;
+    border-radius: 5px;
 }

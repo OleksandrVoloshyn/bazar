@@ -14,7 +14,6 @@ import {
     ClientProductsPage,
     CreateProductPage,
     BasketPage,
-    MainFilterPage,
     ProductDetailPage,
     CommentListPage,
     ProductControlPage,
@@ -29,7 +28,6 @@ const App: FC = () => {
         <Routes>
             <Route path={'/'} element={<MainLayout/>}>
                 <Route index element={<HomePage/>}/>
-                <Route path={'category/:title'} element={<MainFilterPage/>}/>
                 <Route path={'products/:pk/details'} element={<ProductDetailPage/>}></Route>
                 <Route path={'users/:pk'} element={<UserPage/>}></Route>
 

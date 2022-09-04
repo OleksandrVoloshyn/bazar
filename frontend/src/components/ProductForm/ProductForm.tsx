@@ -19,12 +19,10 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    const isUpdating = (idForUpdate && !chosenProduct) || (idForUpdate && chosenProduct?.id !== idForUpdate)
-
     useEffect(() => {
         dispatch(productActions.getBrands())
         dispatch(productActions.getCategories())
-        isUpdating ? dispatch(productActions.getProductById({pk: idForUpdate})) : reset()
+        idForUpdate ? dispatch(productActions.getProductById({pk: idForUpdate})) : reset()
 
         return () => {
             dispatch(productActions.removeChosenProductFromState())
@@ -44,7 +42,7 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
         }
     }
 
-    chosenProduct && setFormForUpdate()
+    idForUpdate && setFormForUpdate()
 
     const submit: SubmitHandler<Partial<IProductDetails>> = async (product) => {
         if (chosenProduct) {
