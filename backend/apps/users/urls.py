@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (  # DestroyUserView,
+from .views import (
     GetCurrentUserView,
     ListCreateUsersView,
     RetrieveDestroyUserView,

@@ -8,7 +8,6 @@ from .services import brand_upload_to, product_upload_to
 UserModel = get_user_model()
 
 
-# todo validate product
 class ProductModel(models.Model):
     class Meta:
         db_table = 'product'
@@ -17,7 +16,9 @@ class ProductModel(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500, blank=True)
     price = models.PositiveIntegerField()
-    color = models.CharField(max_length=50)
+    color = models.CharField(max_length=25, validators=[
+        RegexValidator(RegEx.COLOR.pattern, RegEx.COLOR.msg)
+    ])
     size = models.CharField(max_length=5)
     gender = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -60,4 +61,4 @@ class CategoryModel(models.Model):
     class Meta:
         db_table = 'category'
 
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=25)

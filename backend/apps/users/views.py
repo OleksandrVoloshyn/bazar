@@ -2,13 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import (
-    DestroyAPIView,
-    GenericAPIView,
-    ListCreateAPIView,
-    RetrieveDestroyAPIView,
-    UpdateAPIView,
-)
+from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveDestroyAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
@@ -49,7 +43,7 @@ class UpdateProfileView(UpdateAPIView):
 
 
 class GetCurrentUserView(GenericAPIView):
-    """get current user from token"""
+    """get current user by token"""
     serializer_class = UserSerializer
 
     def get(self, *args, **kwargs):

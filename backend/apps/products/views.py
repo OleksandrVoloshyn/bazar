@@ -8,7 +8,7 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import AllowAny, IsAdminUser
 
-from core.permissions.user_permission import IsOwnerOrAdmin
+from core.permissions.product_permission import IsOwnerFromSubModelOrAdmin, IsOwnerOrAdmin
 
 from .filters import ProductFilter
 from .models import BrandModel, CategoryModel, CommentModel, ProductImagesModel, ProductModel
@@ -31,7 +31,7 @@ class ListProductView(ListAPIView):
 
 
 class ListClientProductsView(ListAPIView):
-    """get client's product"""
+    """get client's product by token"""
     queryset = ProductModel.objects.all()
     serializer_class = ProductSerializer
 
@@ -72,6 +72,7 @@ class RetrieveUpdateDestroyProductView(RetrieveUpdateDestroyAPIView):
 class CreateProductImageView(CreateAPIView):
     """add image to product"""
     serializer_class = ImageSerializer
+    permission_classes = (IsOwnerFromSubModelOrAdmin,)
 
     def perform_create(self, serializer):
         product_id = self.kwargs.get('pk')
@@ -81,6 +82,10 @@ class CreateProductImageView(CreateAPIView):
 class RemoveProductImageView(DestroyAPIView):
     """remove image by id"""
     queryset = ProductImagesModel.objects.all()
+    permission_classes = (IsOwnerFromSubModelOrAdmin,)
+
+    def get_serializer(self, *args, **kwargs):
+        pass
 
 
 class ListCreateCategoryView(ListCreateAPIView):

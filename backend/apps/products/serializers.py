@@ -1,7 +1,7 @@
 from django.db import transaction
 
 from rest_framework.request import Request
-from rest_framework.serializers import CharField, ModelSerializer
+from rest_framework.serializers import ModelSerializer
 
 from apps.users.serializers import UserSerializer
 
@@ -70,13 +70,3 @@ class ProductDetailSerializer(ModelSerializer):
             serializer.is_valid(raise_exception=True)
             serializer.save(product=product)
         return product
-
-    # def update(self, instance, validated_data):
-        # request: Request = self.context.get('request')
-        # brand_id = request.data['brand'].get('id') or None
-        # category_id = request.data['category'].get('id') or None
-        # ProductDetailSerializer(instance, data=)
-
-        # product = ProductModel.objects.create(**validated_data, owner=request.user, category_id=category_id,
-        #                                       brand_id=brand_id)
-        # return super().update(instance, validated_data)

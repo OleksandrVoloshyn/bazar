@@ -27,10 +27,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['*']
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
-# todo don't need cors
 
 AUTH_USER_MODEL = 'users.UserModel'
 
@@ -45,7 +41,6 @@ INSTALLED_APPS = [
     'drf_yasg2',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',
     'django_filters',
     'django_celery_results',
     'django_celery_beat',
@@ -60,7 +55,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
