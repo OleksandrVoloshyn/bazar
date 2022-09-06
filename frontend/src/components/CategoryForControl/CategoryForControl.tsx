@@ -1,46 +1,42 @@
 import {FC, useState} from "react"
 import {BsFillPencilFill, BsTrash} from "react-icons/bs";
 
-import {categoryActions, productActions} from "../../redux";
+import {categoryActions} from "../../redux";
 import {ICategory} from "../../interfaces";
 import {useAppDispatch} from "../../hooks";
+import css from './CategoryForControl.module.css'
 
 interface IProps {
     category: ICategory
 }
 
 const CategoryForControl: FC<IProps> = ({category}) => {
-    const [categoryIdForUpdate, setCategoryIdForUpdate] = useState<string | null>(null)
+    const dispatch = useAppDispatch();
     const [isUpdating, setIsUpdating] = useState<boolean>(false)
     const [newTitle, setNewTitle] = useState<string>('')
-    const dispatch = useAppDispatch();
 
-    const updateBtnDisabled = !newTitle || (newTitle.length > 50)
+    const updateBtnDisabled = !newTitle || newTitle.length > 25
 
-    const toUpdateCategory = async (data: ICategory) => {
+    const setCategory = (): void => {
         setIsUpdating(true)
-        setCategoryIdForUpdate(data.id)
-        setNewTitle(data.title)
+        setNewTitle(category.title)
     }
 
-    const updateCategory = async (pk: string) => {
-        setCategoryIdForUpdate(null)
-        await dispatch(categoryActions.updateCategory({pk, title: newTitle}))
+    const updateCategory = async () => {
+        await dispatch(categoryActions.updateCategory({pk: category.id, title: newTitle}))
         setIsUpdating(false)
     }
 
     return (
-        <div key={category.id}>
-            {isUpdating && (category.id === categoryIdForUpdate)
-                ? <div>
-                    <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)}/>
-                    <button onClick={() => updateCategory(category.id)} disabled={updateBtnDisabled}>save</button>
-                </div>
-                : <div>{category.title}
-                    <BsFillPencilFill onClick={() => toUpdateCategory(category)}/>
-                    <BsTrash onClick={() => dispatch(categoryActions.removeCategory({pk: category.id}))}/>
-                </div>}
-        </div>
+        isUpdating
+            ? <div>
+                <input value={newTitle} onChange={(e) => setNewTitle(e.target.value)}/>
+                <button onClick={() => updateCategory()} disabled={updateBtnDisabled}>save</button>
+            </div>
+            : <div className={css.icons}>{category.title}
+                <BsFillPencilFill onClick={() => setCategory()}/>
+                <BsTrash onClick={() => dispatch(categoryActions.removeCategory({pk: category.id}))}/>
+            </div>
     );
 };
 

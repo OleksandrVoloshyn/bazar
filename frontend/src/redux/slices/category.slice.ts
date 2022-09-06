@@ -42,28 +42,29 @@ const removeCategory = createAsyncThunk<void, { pk: string }>(
 )
 
 const categorySlice = createSlice({
-    name: 'categorySlice',
-    initialState,
-    reducers: {
-        removeCategoryFromState: (state, action) => {
-            const index = state.categories.findIndex(item => item.id === action.payload);
-            state.categories.splice(index, 1)
+        name: 'categorySlice',
+        initialState,
+        reducers: {
+            removeCategoryFromState: (state, action) => {
+                const index = state.categories.findIndex(item => item.id === action.payload);
+                state.categories.splice(index, 1)
+            },
         },
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(getCategories.fulfilled, (state, action) => {
-                state.categories = action.payload.data
-            })
-            .addCase(createCategory.fulfilled, (state, action) => {
-                state.categories.push(action.payload)
-            })
-            .addCase(updateCategory.fulfilled, (state, action) => {
-                const index = state.categories.findIndex(item => item.id === action.payload.id)
-                state.categories.splice(index, 1, action.payload)
-            })
-    }
-});
+        extraReducers: (builder) => {
+            builder
+                .addCase(getCategories.fulfilled, (state, action) => {
+                    state.categories = action.payload.data
+                })
+                .addCase(createCategory.fulfilled, (state, action) => {
+                    state.categories.push(action.payload)
+                })
+                .addCase(updateCategory.fulfilled, (state, action) => {
+                    const index = state.categories.findIndex(item => item.id === action.payload.id)
+                    state.categories.splice(index, 1, action.payload)
+                })
+        }
+    })
+;
 
 const {reducer: categoryReducer, actions: {removeCategoryFromState}} = categorySlice;
 const categoryActions = {getCategories, createCategory, updateCategory, removeCategory}

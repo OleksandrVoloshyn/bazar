@@ -1,3 +1,7 @@
+.wrap {
+    min-width: 346px;
+}
+
 .brand_header {
     border: 1px solid limegreen;
     border-radius: 5px;
@@ -8,8 +12,45 @@
     cursor: pointer;
 }
 
-.create_form__line{
+.icons > svg{
+    margin-left: 2px;
+}
+
+.btn {
+    display: flex;
+    justify-content: end;
+}
+
+.cancel{
+    display: flex;
+    justify-content: end;
+}
+.img_div {
+    display: flex;
+    justify-content: center;
+}
+
+
+.img_div > img {
+    width: 60px;
+}
+
+.input_line {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.input_line > input {
+    border-color: slategrey;
+    border-radius: 5px;
+}
+
+.input_line > textarea {
+    border-color: sandybrown;
+    border-radius: 10px;
+}
+
+.input_line > label {
+    font-weight: bold;
 }

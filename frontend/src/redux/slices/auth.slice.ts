@@ -125,6 +125,7 @@ const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoginError = false
                 state.isAuth = true
+
                 const {access, refresh} = action.payload;
                 localStorage.setItem('access', access)
                 localStorage.setItem('refresh', refresh)

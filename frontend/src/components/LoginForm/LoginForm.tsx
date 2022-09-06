@@ -13,17 +13,15 @@ const LoginForm: FC = () => {
     const {isLoginError} = useAppSelector(state => state.authReducer);
     const dispatch = useAppDispatch();
 
-    const {register, handleSubmit, formState: {errors}} = useForm<Partial<IUser>>({
+    const {register, handleSubmit, formState: {errors}} = useForm<IUser>({
         resolver: joiResolver(registerValidator),
         mode: "onTouched"
     });
 
-    const submit: SubmitHandler<Partial<IUser>> = async (user: Partial<IUser>) => {
-        await dispatch(authActions.login({user}))
-    }
+    const submit: SubmitHandler<Partial<IUser>> = async (user) => await dispatch(authActions.login({user}))
 
     return (
-        <form onSubmit={handleSubmit(submit)} className={css.login_form}>
+        <form onSubmit={handleSubmit(submit)}>
             <div className={css.input_line}><label>Email: </label>
                 <input type="email" {...register('email')}/></div>
             {errors.email?.message && <InputError errorMsg={errors.email.message}/>}
@@ -33,9 +31,7 @@ const LoginForm: FC = () => {
             {errors.password?.message && <InputError errorMsg={errors.password.message}/>}
             {isLoginError && <InputError errorMsg={'Invalid login or password'}/>}
 
-            <div className={css.display_center}>
-                <button>login</button>
-            </div>
+            <div className={css.btn_div}><button>login</button></div>
         </form>
     );
 };

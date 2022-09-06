@@ -1,5 +1,4 @@
 export interface IRegisterErrors {
     email: string[],
-    profile: string[]
+    profile: { name: string }
 }
-// todo check impact

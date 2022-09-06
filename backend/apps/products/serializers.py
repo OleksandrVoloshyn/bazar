@@ -36,7 +36,7 @@ class ProductSerializer(ModelSerializer):
 
 class CommentSerializer(ModelSerializer):
     owner = UserSerializer(required=False)
-    product = ProductSerializer(read_only=True, required=False)
+    product = ProductSerializer(read_only=True)
 
     class Meta:
         model = CommentModel

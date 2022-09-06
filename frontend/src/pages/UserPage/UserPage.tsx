@@ -4,7 +4,7 @@ import {Profile} from "../../components";
 
 const UserPage: FC = () => {
     return (
-        <div>
+        <div style={{margin:'0 auto'}}>
             <Profile/>
         </div>
     );

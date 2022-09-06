@@ -22,9 +22,9 @@ class ProductModel(models.Model):
     size = models.CharField(max_length=5)
     gender = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey('CategoryModel', models.SET(''), 'products', blank=True)
 
     owner = models.ForeignKey(UserModel, models.CASCADE, 'products')
+    category = models.ForeignKey('CategoryModel', models.SET_NULL, 'products', blank=True, null=True)
     brand = models.ForeignKey('BrandModel', models.SET_NULL, 'products', blank=True, null=True)
 
 
@@ -43,7 +43,6 @@ class CommentModel(models.Model):
 
     text = models.CharField(max_length=255)
     created_at = models.DateField(auto_now_add=True)
-
     product = models.ForeignKey(ProductModel, models.CASCADE, 'comments')
     owner = models.ForeignKey(UserModel, models.CASCADE, 'my_comments')
 
@@ -53,7 +52,6 @@ class ProductImagesModel(models.Model):
         db_table = 'images'
 
     image = models.ImageField(upload_to=product_upload_to)
-
     product = models.ForeignKey(ProductModel, models.CASCADE, 'images')
 
 

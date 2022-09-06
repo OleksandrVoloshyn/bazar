@@ -12,7 +12,9 @@ const ProfileValidator = Joi.object({
         'string.pattern.base': regEx.name.msg,
         'string.empty': errorMessage.empty
     }),
-    age: Joi.number().min(6).max(100).messages({
+    age: Joi.number().min(6).max(100).required().messages({
+        'number.base': 'age must be a number',
+        'number.empty': errorMessage.empty,
         'number.min': 'min 6',
         'number.max': 'max 100',
     }),

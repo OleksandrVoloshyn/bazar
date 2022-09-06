@@ -3,6 +3,11 @@
     margin-bottom: 10px;
 }
 
-.m_left10 {
+.new_img {
+    margin-left: 25px;
+}
+
+.update_avatar {
     margin-left: 10px;
+    cursor: pointer;
 }

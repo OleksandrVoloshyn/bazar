@@ -8,9 +8,7 @@ const userService = {
     create: (user: IUser): Res<void> => axiosService.post(urls.users, user),
     updateProfile: (body: Partial<IUserProfile>): Res<IUserProfile> => axiosService.patch(`${urls.users}/profile/update`,
         {...body}, {headers: {"Content-Type": "multipart/form-data"}}),
-    searchUsers: (searchField: string): Res<IResponse<IUser>> => axiosService.get(`${urls.users}`, {params: {search: searchField}}),
-    // searching by name,surname or email
-
+    searchUsers: (searchValue: string, page: string): Res<IResponse<IUser>> => axiosService.get(`${urls.users}`, {params: {search:searchValue, page}}),
     toAdmin: (pk: string): Res<IUser> => axiosService.patch(`${urls.users}/${pk}/to_admin`),
     toLower: (pk: string): Res<IUser> => axiosService.patch(`${urls.users}/${pk}/to_lower`),
     getById: (pk: string): Res<IUser> => axiosService.get(`${urls.users}/${pk}/target`),

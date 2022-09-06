@@ -2,17 +2,17 @@ import {FC, useState} from "react"
 import {BsChevronDown, BsChevronUp} from 'react-icons/bs'
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {categoryActions, productActions} from "../../redux";
+import {categoryActions} from "../../redux";
 import {CategoryForControl} from "../CategoryForControl/CategoryForControl";
 import css from './CategoriesControl.module.css'
 
 const CategoriesControl: FC = () => {
     const {categories} = useAppSelector(({categoryReducer}) => categoryReducer);
+    const dispatch = useAppDispatch();
     const [categoryValue, setCategoryValue] = useState<string>('');
     const [isActive, setIsActive] = useState<boolean>(false);
-    const dispatch = useAppDispatch();
 
-    const createBtnDisabled = !categoryValue || (categoryValue.length > 50)
+    const createBtnDisabled = !categoryValue || (categoryValue.length > 25)
 
     const activate = async () => {
         setIsActive(prevState => !prevState)
@@ -28,20 +28,21 @@ const CategoriesControl: FC = () => {
 
 
     return (
-        <div>
+        <div className={css.wrap}>
             <div className={css.category_header} onClick={activate}>
                 <span>Categories</span>
                 {isActive ? <BsChevronUp/> : <BsChevronDown/>}
             </div>
 
             {isActive && <div>
-                <label>New Category: </label>
-                <input type="text" onChange={(e) => setCategoryValue(e.target.value)} value={categoryValue}/>
-                <button onClick={createCategory} disabled={createBtnDisabled}>create</button>
+                <div className={css.input_line}>
+                    <label>New Category: </label>
+                    <input onChange={(e) => setCategoryValue(e.target.value)} value={categoryValue}/>
+                    <button onClick={createCategory} disabled={createBtnDisabled}>create</button>
+                </div>
 
                 {categories.map(category => <CategoryForControl key={category.id} category={category}/>)}
             </div>}
-            <hr/>
         </div>
     );
 };

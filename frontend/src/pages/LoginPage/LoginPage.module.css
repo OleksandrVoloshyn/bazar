@@ -1,11 +1,19 @@
 .wrap {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    margin-top: 100px;
 }
 
-a {
+.content {
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 100px;
+    padding: 10px;
+}
+
+.content > div {
+    text-align: center;
+}
+
+.content > div > a {
     text-decoration: none;
 }

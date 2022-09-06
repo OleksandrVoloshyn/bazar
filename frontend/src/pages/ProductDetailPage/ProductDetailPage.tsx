@@ -17,6 +17,9 @@ const ProductDetailPage: FC = () => {
         if (pk) {
             dispatch(productActions.getProductById({pk}))
         }
+        return () => {
+            dispatch(productActions.removeChosenProductFromState())
+        }
     }, [dispatch, pk])
 
     return (
@@ -39,7 +42,7 @@ const ProductDetailPage: FC = () => {
                     </div>
                     {chosenProduct.description && <div>description - {chosenProduct.description}</div>}
                     {/*{user && (user.id !== chosenProduct.owner.id) &&*/}
-                    {/*todo remembre it*/}
+                    {/*// todo remembre it*/}
                     {isAuth &&
                         <div onClick={e => setAddComment(prevState => !prevState)} className={css.add_comment_btn}>add
                             comments</div>}

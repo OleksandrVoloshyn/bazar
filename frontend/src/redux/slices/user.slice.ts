@@ -36,7 +36,7 @@ const getById = createAsyncThunk<IUser, { pk: string }>(
 )
 
 const updateProfile = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
-    'userSlice/updateAccount',
+    'userSlice/updateProfile',
     async (body, {rejectWithValue}) => {
         try {
             const {data} = await userService.updateProfile(body)
@@ -49,10 +49,10 @@ const updateProfile = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
     }
 )
 
-const searchUsers = createAsyncThunk<IResponse<IUser>, string>(
-    'userSlice/getCandidate',
-    async (searchValue) => {
-        const {data} = await userService.searchUsers(searchValue)
+const searchUsers = createAsyncThunk<IResponse<IUser>, { searchValue: string, page: string }>(
+    'userSlice/searchUsers',
+    async ({searchValue, page}) => {
+        const {data} = await userService.searchUsers(searchValue, page)
         return data
     }
 );
@@ -102,7 +102,6 @@ const userSlice = createSlice({
                 state.users.data.splice(index, 1)
             }
         },
-
     },
     extraReducers: (builder) => {
         builder
@@ -121,6 +120,7 @@ const userSlice = createSlice({
 
             .addCase(searchUsers.fulfilled, (state, action) => {
                 state.users = action.payload
+                state.candidate = undefined
             })
             .addCase(getById.fulfilled, (state, action) => {
                 state.candidate = action.payload

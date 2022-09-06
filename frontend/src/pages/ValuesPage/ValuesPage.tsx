@@ -1,10 +1,11 @@
 import {FC} from "react"
 
-import {BrandsControl, CategoriesControl} from "../../../components";
+import {BrandsControl, CategoriesControl} from "../../components";
+import css from './ValuesPage.module.css'
 
 const ValuesPage: FC = () => {
     return (
-        <div style={{minWidth: '250px'}}>
+        <div className={css.wrap}>
             <CategoriesControl/>
             <BrandsControl/>
         </div>

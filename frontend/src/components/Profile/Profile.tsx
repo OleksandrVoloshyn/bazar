@@ -16,28 +16,29 @@ const Profile: FC = () => {
     const {pathname} = useLocation();
     const isAdminPage = pathname.includes('admin')
 
-    const target = candidate || user
+    const data = candidate || user
     const isOwner = !candidate || (candidate.id === user?.id)
 
     useEffect(() => {
         pk && dispatch(userActions.getById({pk}))
+
         return () => {
             dispatch(userActions.resetCandidate())
         }
-    }, [user])
+    }, [dispatch, user])
 
     return (
         <div>
-            {target && !(isAdminPage && !candidate) && <div>
-                <ProfileAvatar currentAvatar={target.profile.avatar} isOwner={isOwner}/>
+            {data && !(isAdminPage && !candidate) && <div>
+                <ProfileAvatar currentAvatar={data.profile.avatar} isOwner={isOwner}/>
 
                 {isUpdateProfile || updateProfileErrors
-                    ? <UpdateProfileForm profile={target.profile} setIsUpdateProfile={setIsUpdateProfile}/>
+                    ? <UpdateProfileForm profile={data.profile} setIsUpdateProfile={setIsUpdateProfile}/>
                     : <div>
-                        <div>Name: {target.profile.name}</div>
-                        <div>Surname: {target.profile.surname}</div>
-                        <div>Age: {target.profile.age}</div>
-                        <div>Phone: {target.profile.phone}</div>
+                        <div>Name: {data.profile.name}</div>
+                        <div>Surname: {data.profile.surname}</div>
+                        <div>Age: {data.profile.age}</div>
+                        <div>Phone: {data.profile.phone}</div>
 
                         {isOwner && <div onClick={() => setIsUpdateProfile(true)}>
                             <button>Change profile</button>

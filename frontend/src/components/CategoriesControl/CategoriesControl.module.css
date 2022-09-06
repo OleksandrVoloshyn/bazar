@@ -1,3 +1,21 @@
+.wrap {
+    min-width: 346px;
+}
+
+.input_line {
+    margin-bottom: 5px;
+}
+
+.input_line > label {
+    font-weight: bold;
+}
+
+.input_line > input {
+    border-radius: 5px;
+    border-color: slategrey;
+    margin-right: 2px;
+}
+
 .category_header {
     border: 1px solid limegreen;
     border-radius: 5px;

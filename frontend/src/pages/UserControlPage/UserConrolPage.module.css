@@ -3,8 +3,3 @@
     align-items: center;
     column-gap: 4px;
 }
-
-.search_line > input {
-    border-color: silver;
-    border-radius: 5px;
-}

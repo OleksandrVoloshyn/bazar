@@ -4,7 +4,7 @@ import {IComment, IProduct, IProductDetails, IProductImage, IQueryParams, IRespo
 import {urls} from "../constants";
 
 const productService = {
-    getAll: (QueryParamsObj: Partial<IQueryParams>): Res<IResponse<IProduct>> => axiosService.get(urls.products, {params: {...QueryParamsObj}}),
+    getProducts: (QueryParamsObj: Partial<IQueryParams>): Res<IResponse<IProduct>> => axiosService.get(urls.products, {params: {...QueryParamsObj}}),
     createProduct: (product: Partial<IProductDetails>): Res<void> => axiosService.post(`${urls.products}/create`, product),
     getClientProducts: (params: Partial<IQueryParams>): Res<IResponse<IProduct>> => axiosService.get(`${urls.products}/client/products`, {params}),
     getProductById: (pk: string): Res<IProductDetails> => axiosService.get(`${urls.products}/${pk}/target`),
@@ -14,7 +14,7 @@ const productService = {
     addProductImage: (productId: string, file: File): Res<IProductImage> => axiosService.post(`${urls.products}/${productId}/add_image`, {image: file}, {headers: {"Content-Type": "multipart/form-data"}}),
     removeImageById: (pk: string): Res<void> => axiosService.delete(`${urls.products}/images/${pk}`),
 
-    getClientComments: (): Res<IResponse<IComment>> => axiosService.get(`${urls.products}/user/comments`),
+    getClientComments: (params: Partial<IQueryParams>): Res<IResponse<IComment>> => axiosService.get(`${urls.products}/user/comments`, {params}),
     addComment: (text: string, pk: string): Res<IComment> => axiosService.post(`${urls.products}/${pk}/add_comment`, {text}),
     deleteComment: (pk: string): Res<void> => axiosService.delete(`${urls.products}/comments/${pk}`,),
 }

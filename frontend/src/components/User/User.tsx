@@ -10,15 +10,12 @@ interface IProps {
 
 const User: FC<IProps> = ({candidate}) => {
     const dispatch = useAppDispatch();
-
-    const makeCandidate = () => {
-        dispatch(userActions.makeCandidate(candidate))
-    }
+    const makeCandidate = () => dispatch(userActions.makeCandidate(candidate))
 
     return (
         <div>
-            {candidate.profile.name} {candidate.profile.surname} {candidate.email}
-            <button onClick={makeCandidate}>show details</button>
+            {candidate.profile.name} {candidate.profile.surname} -- {candidate.email}
+            <button onClick={makeCandidate} style={{marginLeft: '2px'}}>show details</button>
         </div>
     );
 };

@@ -13,11 +13,11 @@ interface IProps {
 
 const Comment: FC<IProps> = ({comment, isProduct}) => {
     const {user} = useAppSelector(({userReducer}) => userReducer);
-    const isOwner = user?.id === comment.owner.id
     const dispatch = useAppDispatch();
+    const isOwner = user?.id === comment.owner.id
 
     useEffect(() => {
-        dispatch(userActions.getCurrent())
+        !user && dispatch(userActions.getCurrent())
     }, [])
 
     return (

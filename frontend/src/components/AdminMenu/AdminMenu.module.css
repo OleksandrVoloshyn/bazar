@@ -1,13 +1,15 @@
 .menu {
-    padding: 0 40px;
+    padding: 0 20px;
+    min-width: 220px;
 }
 
-.menu li {
+.menu > li {
     margin-bottom: 4px;
     list-style-type: none;
 }
 
-.menu a {
+.menu > li > a {
     color: cornflowerblue;
     font-size: 20px;
+    text-decoration: none;
 }

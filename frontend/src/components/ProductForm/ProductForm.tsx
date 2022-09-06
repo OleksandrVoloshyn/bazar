@@ -2,18 +2,24 @@ import {FC, useEffect} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
-import {brandActions, categoryActions, categoryReducer, productActions} from "../../redux";
+import {brandActions, categoryActions, productActions} from "../../redux";
 import {UpdateProductImage} from "../UpdateProductImage/UpdateProductImage";
 import {IProductDetails} from "../../interfaces";
 import css from './ProductForm.module.css'
 import {useNavigate} from "react-router-dom";
+import {joiResolver} from "@hookform/resolvers/joi";
+import {productValidator} from "../../validators";
+import {InputError} from "../InputError/InputError";
 
 interface IProps {
     idForUpdate?: string,
 }
 
 const ProductForm: FC<IProps> = ({idForUpdate}) => {
-    const {register, handleSubmit, setValue, reset} = useForm<IProductDetails>();
+    const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<IProductDetails>({
+        resolver: joiResolver(productValidator),
+        mode: "onTouched"
+    });
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -22,9 +28,6 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
         categoryReducer: {categories},
         productReducer: {chosenProduct}
     } = useAppSelector((state) => state);
-
-    // todo validate
-
 
     useEffect(() => {
         dispatch(brandActions.getBrands())
@@ -61,16 +64,21 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
         }
         reset()
     }
-
+    console.log(errors)
     return (
         <div>
             <form onSubmit={handleSubmit(submit)}>
                 <div className={css.input_line}><label>Title: </label><input {...register('title')}/></div>
+                {errors.title?.message && <InputError errorMsg={errors.title.message}/>}
                 <div className={css.input_line}><label>Description: </label><textarea {...register('description')}/>
                 </div>
+                {errors.description?.message && <InputError errorMsg={errors.description.message}/>}
                 <div className={css.input_line}><label>Price: </label><input type="number" {...register('price')}/>
                 </div>
+                {errors.price?.message && <InputError errorMsg={errors.price.message}/>}
                 <div className={css.input_line}><label>Color: </label><input {...register('color')}/></div>
+                {errors.color?.message && <InputError errorMsg={errors.color.message}/>}
+
 
                 <div className={css.input_line}>
                     <label>Size: </label>
@@ -83,6 +91,8 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
                         <option value="XXL">XXL</option>
                     </select>
                 </div>
+                {errors.size?.message && <InputError errorMsg={errors.size.message}/>}
+
 
                 <div className={css.input_line}>
                     <label>Gender: </label>
@@ -91,6 +101,7 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
                         <option value="Female">Woman</option>
                     </select>
                 </div>
+                {errors.gender?.message && <InputError errorMsg={errors.gender.message}/>}
 
                 <div className={css.input_line}>
                     <label>Brand: </label>

@@ -38,19 +38,19 @@ const BrandsControl: FC = () => {
         !isActive ? await dispatch(brandActions.getBrands()) : cancelUpdate()
     }
 
-    const cancelUpdate = () => {
+    const cancelUpdate = (): void => {
         setBrandForUpdate(null)
         reset()
     }
 
-    const toUpdateBrand = (data: IBrand) => {
+    const toUpdateBrand = (data: IBrand): void => {
         setBrandForUpdate(data)
         setValue('name', data.name)
         setValue('description', data.description)
     }
 
     return (
-        <div>
+        <div className={css.wrap}>
             <div className={css.brand_header} onClick={activate}>
                 <span>Brands</span>
                 {isActive ? <BsChevronUp/> : <BsChevronDown/>}
@@ -59,26 +59,30 @@ const BrandsControl: FC = () => {
             {isActive &&
                 <div>
                     <form onSubmit={handleSubmit(brandSubmit)} className={css.create_form}>
-                        <div className={css.create_form__line}><label>Brand Name: </label><input{...register('name')}/>
-                            {errors.name?.message && <InputError errorMsg={errors.name.message}/>}
-                        </div>
+                        {brandForUpdate && <div className={css.cancel}><BsBackspaceFill onClick={cancelUpdate}/></div>}
 
-                        <div className={css.create_form__line}><label>Description: </label>
-                            <textarea {...register('description')}/>
-                            {errors.description?.message && <InputError errorMsg={errors.description.message}/>}
+                        <div className={css.input_line}><label>Brand Name: </label>
+                            <input {...register('name')}/>
                         </div>
+                        {errors.name?.message && <InputError errorMsg={errors.name.message}/>}
+
+                        <div className={css.input_line}><label>Description: </label>
+                            <textarea {...register('description')}/>
+                        </div>
+                        {errors.description?.message && <InputError errorMsg={errors.description.message}/>}
 
                         <div>
-                            <label>Image: <input type="file" {...register('image')}/></label>
-                            <button>{brandForUpdate ? 'update' : 'create'}</button>
-                            {brandForUpdate && <BsBackspaceFill onClick={cancelUpdate}/>}
-                            {brandForUpdate?.image && <div>
-                                <img src={brandForUpdate.image} alt={brandForUpdate.name} width={'200px'}/>
-                            </div>}
+                            <label>Image: </label>
+                            <input type="file" {...register('image')}/>
+                            <div className={css.btn}>
+                                <button>{brandForUpdate ? 'update' : 'create'}</button>
+                            </div>
                         </div>
                     </form>
+                    {brandForUpdate?.image &&
+                        <div className={css.img_div}><img src={brandForUpdate.image} alt={brandForUpdate.name}/></div>}
 
-                    {brands.map(brand => <div key={brand.id}>{brand.name}
+                    {brands.map(brand => <div key={brand.id} className={css.icons}>{brand.name}
                         <BsFillPencilFill onClick={() => toUpdateBrand(brand)}/>
                         {brand.id !== brandForUpdate?.id &&
                             <BsTrash onClick={() => dispatch(brandActions.removeBrand({pk: brand.id}))}/>}

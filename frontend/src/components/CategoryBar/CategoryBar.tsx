@@ -3,6 +3,7 @@ import {useSearchParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {categoryActions} from "../../redux";
+import css from './CategoryBar.module.css'
 
 const CategoryBar: FC = () => {
     const {categories} = useAppSelector(({categoryReducer}) => categoryReducer);
@@ -20,7 +21,7 @@ const CategoryBar: FC = () => {
     }
 
     return (
-        <div>
+        <div className={css.wrap}>
             {categories && categories.map(category => <div
                 onClick={() => setCategory(category.title)}>{category.title}</div>)}
         </div>

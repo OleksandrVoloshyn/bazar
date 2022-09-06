@@ -3,6 +3,7 @@ import {Navigate, useLocation} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {userActions} from "../redux";
+import {MessageInfo} from "../components";
 
 interface IProps {
     children: ReactElement
@@ -25,7 +26,7 @@ const RequireAuth: FC<IProps> = ({children}) => {
 
 
     if (pathname.includes('admin') && !user?.is_staff) {
-        return <Navigate to={'/'}/>
+        return <MessageInfo data={'This page only for admin'}/>
     }
 
     return children

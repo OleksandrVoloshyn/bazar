@@ -21,7 +21,7 @@ const initialState: IState = {
 const getAll = createAsyncThunk<IResponse<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
     'productSlice/getAll',
     async ({QueryParamsObj}) => {
-        const {data} = await productService.getAll(QueryParamsObj);
+        const {data} = await productService.getProducts(QueryParamsObj);
         return data
     }
 );
@@ -75,10 +75,10 @@ const removeProductImage = createAsyncThunk<void, { pk: string }>(
     }
 )
 
-const getClientComments = createAsyncThunk<IResponse<IComment>, void>(
+const getClientComments = createAsyncThunk<IResponse<IComment>, Partial<IQueryParams>>(
     'productSlice/getClientComments',
-    async () => {
-        const {data} = await productService.getClientComments()
+    async (params) => {
+        const {data} = await productService.getClientComments(params)
         return data
     }
 )
@@ -113,6 +113,9 @@ const productSlice = createSlice({
                 const index = state.products.data.findIndex(item => item.id === action.payload);
                 state.products.data.splice(index, 1)
             }
+        },
+        clearProducts: state => {
+            state.products = undefined
         },
         removeChosenProductFromState: (state) => {
             state.chosenProduct = undefined
@@ -193,7 +196,8 @@ const {
         removeChosenProductImageFromState,
         removeCommentFromState,
         getBasket,
-        clearBasket
+        clearBasket,
+        clearProducts
     }
 } = productSlice;
 
@@ -218,6 +222,7 @@ const productActions = {
     removeChosenProductImageFromState,
     removeCommentFromState,
     getBasket,
+    clearProducts
 }
 
 export {productReducer, productActions}

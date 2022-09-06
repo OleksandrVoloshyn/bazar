@@ -7,7 +7,7 @@ import {authActions} from "../../redux";
 import css from './LoginPage.module.css'
 
 const LoginPage: FC = () => {
-    const {isAuth} = useAppSelector(({authReducer})=>authReducer);
+    const {isAuth} = useAppSelector(({authReducer}) => authReducer);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -20,9 +20,11 @@ const LoginPage: FC = () => {
 
     return (
         <div className={css.wrap}>
-            <LoginForm/>
-            <div><Link to={'/register'}>to registration</Link></div>
-            <div><Link to={'/recovery'}>recovery password</Link></div>
+            <div className={css.content}>
+                <LoginForm/>
+                <div><Link to={'/register'}>to registration</Link></div>
+                <div><Link to={'/recovery'}>recovery password</Link></div>
+            </div>
         </div>
     );
 };

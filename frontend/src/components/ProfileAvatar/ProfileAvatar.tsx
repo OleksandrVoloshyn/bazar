@@ -26,11 +26,11 @@ const ProfileAvatar: FC<IProps> = ({currentAvatar, isOwner}) => {
         <div className={css.wrap}>
             <img src={currentAvatar || notFoundImage} alt={'Avatar'} style={{width: '400px'}}/>
             {isUpdateAvatar
-                ? <div className={css.m_left10}>
+                ? <div className={css.new_img}>
                     <input type="file" ref={avatar}/>
-                    <button onClick={updateAvatar}>save</button>
+                    <div><button onClick={updateAvatar}>save</button></div>
                 </div>
-                : isOwner && <GrUpdate onClick={() => setIsUpdateAvatar(true)} className={css.m_left10}/>}
+                : isOwner && <GrUpdate onClick={() => setIsUpdateAvatar(true)} className={css.update_avatar}/>}
         </div>
     );
 };
