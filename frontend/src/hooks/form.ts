@@ -8,7 +8,6 @@ interface IError {
     status: boolean,
     msg: string
 }
-// todo remove useless
 const useValidation = (value: string, validations: Partial<IValidators>) => {
     const [emailError, setEmailError] = useState<IError>({status: false, msg: regEx.email.msg});
     const [passwordError, setPasswordError] = useState<IError>({status: false, msg: regEx.password.msg});

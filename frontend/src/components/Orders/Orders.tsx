@@ -7,7 +7,6 @@ import {productActions} from "../../redux";
 const Orders: FC = () => {
     const {orders} = useAppSelector(({productReducer}) => productReducer);
     const dispatch = useAppDispatch();
-
     let orderSum = 0
     orders.forEach(item => orderSum += item.price)
 

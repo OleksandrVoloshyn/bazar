@@ -29,7 +29,7 @@ const Comment: FC<IProps> = ({comment, isProduct}) => {
                         {comment.owner.profile.name} {comment.owner.profile.surname}
                     </Link></span>}
             : {comment.text}
-            {isOwner && <BsTrash onClick={() => dispatch(productActions.deleteComment({pk: comment.id}))}/>}
+            {(isOwner || user?.is_staff) && <BsTrash onClick={() => dispatch(productActions.deleteComment({pk: comment.id}))}/>}
         </div>
     );
 };
