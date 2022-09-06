@@ -29,5 +29,4 @@ export * from './User/User'
 export * from './CategoryForControl/CategoryForControl'
 export * from './BrandsControl/BrandsControl'
 
-export * from './PageNavigate/PageNavigate'
 export * from './AuthBar/AuthBar'
