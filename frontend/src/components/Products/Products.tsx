@@ -5,7 +5,6 @@ import {useAppDispatch, useAppSelector} from "../../hooks";
 import {Product} from "../Product/Product";
 import {productActions} from "../../redux";
 import css from './Products.module.css'
-import {PageNavigate} from "../PageNavigate/PageNavigate";
 import {PagePagination} from "../PagePagination/PagePagination";
 
 const Products: FC = () => {

@@ -8,8 +8,8 @@ import css from './LoginPage.module.css'
 
 const LoginPage: FC = () => {
     const {isAuth} = useAppSelector(({authReducer}) => authReducer);
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const access = localStorage.getItem('access')

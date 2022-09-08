@@ -17,7 +17,6 @@ const Users: FC = () => {
 
     useEffect(() => {
         queryObj.page && dispatch(userActions.searchUsers({searchValue, page: queryObj.page}))
-
         return () => {
             dispatch(userActions.resetUsers())
         }
@@ -27,7 +26,7 @@ const Users: FC = () => {
         setQuery('')
         await dispatch(userActions.searchUsers({searchValue, page: '1'}))
     }
-    console.log(users?.data)
+
     return (
         <div>
             <div>

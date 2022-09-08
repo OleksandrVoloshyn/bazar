@@ -1,4 +1,5 @@
 import Joi from "joi";
+
 import {errorMessage} from '../constants'
 
 const BrandValidator = Joi.object({

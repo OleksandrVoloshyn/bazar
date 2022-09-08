@@ -28,7 +28,7 @@ const BrandsControl: FC = () => {
             await dispatch(brandActions.updateBrand({newBrandData: newBrand, pk: brandForUpdate.id}))
             setBrandForUpdate(null)
         } else {
-            await dispatch(brandActions.createBrand({newBrand}))
+            await dispatch(brandActions.createBrand({brand: newBrand}))
         }
         reset()
     }
@@ -49,6 +49,8 @@ const BrandsControl: FC = () => {
         setValue('description', data.description)
     }
 
+    const removeBrand = async (pk: string) => await dispatch(brandActions.removeBrand({pk}))
+
     return (
         <div className={css.wrap}>
             <div className={css.brand_header} onClick={activate}>
@@ -61,12 +63,14 @@ const BrandsControl: FC = () => {
                     <form onSubmit={handleSubmit(brandSubmit)} className={css.create_form}>
                         {brandForUpdate && <div className={css.cancel}><BsBackspaceFill onClick={cancelUpdate}/></div>}
 
-                        <div className={css.input_line}><label>Brand Name: </label>
+                        <div className={css.input_line}>
+                            <label>Brand Name: </label>
                             <input {...register('name')}/>
                         </div>
                         {errors.name?.message && <InputError errorMsg={errors.name.message}/>}
 
-                        <div className={css.input_line}><label>Description: </label>
+                        <div className={css.input_line}>
+                            <label>Description: </label>
                             <textarea {...register('description')}/>
                         </div>
                         {errors.description?.message && <InputError errorMsg={errors.description.message}/>}
@@ -84,8 +88,7 @@ const BrandsControl: FC = () => {
 
                     {brands.map(brand => <div key={brand.id} className={css.icons}>{brand.name}
                         <BsFillPencilFill onClick={() => toUpdateBrand(brand)}/>
-                        {brand.id !== brandForUpdate?.id &&
-                            <BsTrash onClick={() => dispatch(brandActions.removeBrand({pk: brand.id}))}/>}
+                        {brand.id !== brandForUpdate?.id && <BsTrash onClick={() => removeBrand(brand.id)}/>}
                     </div>)}
                 </div>}
         </div>

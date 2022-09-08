@@ -2,7 +2,9 @@ const baseURL = process.env.REACT_APP_API
 
 const urls = {
     auth: '/auth',
+    recovery: '/auth/recovery',
     users: '/users',
+
     products: '/products',
     categories: '/products/categories',
     brands: '/products/brands'

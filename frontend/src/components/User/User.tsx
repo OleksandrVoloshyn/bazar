@@ -10,6 +10,7 @@ interface IProps {
 
 const User: FC<IProps> = ({candidate}) => {
     const dispatch = useAppDispatch();
+
     const makeCandidate = () => dispatch(userActions.makeCandidate(candidate))
 
     return (

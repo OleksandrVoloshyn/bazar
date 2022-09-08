@@ -27,6 +27,8 @@ const CategoryForControl: FC<IProps> = ({category}) => {
         setIsUpdating(false)
     }
 
+    const removeCategory = async () => await dispatch(categoryActions.removeCategory({pk: category.id}))
+
     return (
         isUpdating
             ? <div>
@@ -34,8 +36,8 @@ const CategoryForControl: FC<IProps> = ({category}) => {
                 <button onClick={() => updateCategory()} disabled={updateBtnDisabled}>save</button>
             </div>
             : <div className={css.icons}>{category.title}
-                <BsFillPencilFill onClick={() => setCategory()}/>
-                <BsTrash onClick={() => dispatch(categoryActions.removeCategory({pk: category.id}))}/>
+                <BsFillPencilFill onClick={setCategory}/>
+                <BsTrash onClick={removeCategory}/>
             </div>
     );
 };

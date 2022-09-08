@@ -22,7 +22,7 @@ const CategoriesControl: FC = () => {
     }
 
     const createCategory = async () => {
-        await dispatch(categoryActions.createCategory({categoryTitle: categoryValue}))
+        await dispatch(categoryActions.createCategory({title: categoryValue}))
         setCategoryValue('')
     }
 

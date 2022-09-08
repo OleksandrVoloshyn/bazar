@@ -1,6 +1,6 @@
 export interface IQueryParams {
-    price_gt: number,
     price_lt: number,
+    price_gt: number,
     gender: string,
     size: string,
     brand: string,

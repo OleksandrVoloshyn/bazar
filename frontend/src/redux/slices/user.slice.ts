@@ -22,11 +22,10 @@ const initialState: IState = {
 const getCurrent = createAsyncThunk<IUser, void>(
     'userSlice/getCurrent',
     async () => {
-        const {data} = await userService.current();
+        const {data} = await userService.getCurrent();
         return data
     }
 );
-
 const getById = createAsyncThunk<IUser, { pk: string }>(
     'userSlice/getById',
     async ({pk}) => {
@@ -34,6 +33,13 @@ const getById = createAsyncThunk<IUser, { pk: string }>(
         return data
     }
 )
+const searchUsers = createAsyncThunk<IResponse<IUser>, { searchValue: string, page: string }>(
+    'userSlice/searchUsers',
+    async ({searchValue, page}) => {
+        const {data} = await userService.searchUsers({search: searchValue, page})
+        return data
+    }
+);
 
 const updateProfile = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
     'userSlice/updateProfile',
@@ -48,24 +54,6 @@ const updateProfile = createAsyncThunk<IUserProfile, Partial<IUserProfile>>(
 
     }
 )
-
-const searchUsers = createAsyncThunk<IResponse<IUser>, { searchValue: string, page: string }>(
-    'userSlice/searchUsers',
-    async ({searchValue, page}) => {
-        const {data} = await userService.searchUsers(searchValue, page)
-        return data
-    }
-);
-
-const removeUser = createAsyncThunk<void, { pk: string }>(
-    'userSlice/removeUser',
-    async ({pk}, {dispatch}) => {
-        await userService.removeUser(pk)
-        dispatch(removeUserFromState(pk))
-    }
-)
-
-
 const toAdmin = createAsyncThunk<IUser, { pk: string }>(
     'userSlice/toAdmin',
     async ({pk}) => {
@@ -73,7 +61,6 @@ const toAdmin = createAsyncThunk<IUser, { pk: string }>(
         return data
     }
 )
-
 const toLower = createAsyncThunk<IUser, { pk: string }>(
     'userSlice/toLower',
     async ({pk}) => {
@@ -82,6 +69,13 @@ const toLower = createAsyncThunk<IUser, { pk: string }>(
     }
 )
 
+const removeUser = createAsyncThunk<void, { pk: string }>(
+    'userSlice/removeUser',
+    async ({pk}, {dispatch}) => {
+        await userService.removeUser(pk)
+        dispatch(removeCandidate())
+    }
+)
 
 const userSlice = createSlice({
     name: 'userSlice',
@@ -96,17 +90,25 @@ const userSlice = createSlice({
         resetUsers: state => {
             state.users = undefined
         },
-        removeUserFromState: (state, action) => {
+        removeCandidate: (state) => {
             if (state.users) {
-                const index = state.users.data.findIndex(item => item.id == action.payload);
+                const index = state.users.data.findIndex(item => item.id == state.candidate?.id);
                 state.users.data.splice(index, 1)
             }
+            state.candidate = undefined
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(getCurrent.fulfilled, (state, action) => {
                 state.user = action.payload
+            })
+            .addCase(getById.fulfilled, (state, action) => {
+                state.candidate = action.payload
+            })
+            .addCase(searchUsers.fulfilled, (state, action) => {
+                state.users = action.payload
+                state.candidate = undefined
             })
 
             .addCase(updateProfile.fulfilled, (state, action) => {
@@ -118,16 +120,6 @@ const userSlice = createSlice({
                 state.updateProfileErrors = name[0]
             })
 
-            .addCase(searchUsers.fulfilled, (state, action) => {
-                state.users = action.payload
-                state.candidate = undefined
-            })
-            .addCase(getById.fulfilled, (state, action) => {
-                state.candidate = action.payload
-            })
-            .addCase(removeUser.fulfilled, (state) => {
-                state.candidate = undefined
-            })
             .addCase(toAdmin.fulfilled, (state, action) => {
                 state.candidate && (state.candidate.is_staff = true)
             })
@@ -138,7 +130,7 @@ const userSlice = createSlice({
 });
 
 
-const {reducer: userReducer, actions: {makeCandidate, resetCandidate, resetUsers, removeUserFromState}} = userSlice;
+const {reducer: userReducer, actions: {makeCandidate, resetCandidate, resetUsers, removeCandidate}} = userSlice;
 const userActions = {
     getCurrent,
     updateProfile,

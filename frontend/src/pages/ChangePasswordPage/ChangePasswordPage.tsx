@@ -1,8 +1,8 @@
 import {FC, useState} from "react"
 import {useParams} from "react-router-dom";
 
-import {ChangePasswordForm, MessageInfo} from "../../components";
 import {useAppSelector} from "../../hooks";
+import {ChangePasswordForm, MessageInfo} from "../../components";
 
 
 const ChangePasswordPage: FC = () => {
@@ -10,7 +10,7 @@ const ChangePasswordPage: FC = () => {
     const [changed, setChanged] = useState<boolean>(false);
     const {token} = useParams<string>();
 
-    const msg = isChangePasswordError ? 'Oppps something wrong' : 'your password was changed'
+    const msg = isChangePasswordError ? 'Oppps something wrong' : 'your password has been changed'
 
     return (
         changed

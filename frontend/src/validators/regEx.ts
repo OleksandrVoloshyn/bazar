@@ -6,10 +6,7 @@ const regEx = {
     },
     name: {pattern: /^[a-zA-ZА-яёЁЇїІіЄєҐґ]{2,50}$/, msg: 'only letters min 2 max 50 ch'},
     phone: {pattern: /^0\d{9}$/, msg: 'Invalid phone, example -> 095*******'},
-    color: {
-        pattern: /^[a-zA-ZА-яёЁЇїІіЄєҐґ]{2,25}$/,
-        msg: 'only letters min 2 max 25 ch'
-    }
+    color: {pattern: /^[a-zA-ZА-яёЁЇїІіЄєҐґ]{2,25}$/, msg: 'only letters min 2 max 25 ch'}
 }
 
 export {regEx}

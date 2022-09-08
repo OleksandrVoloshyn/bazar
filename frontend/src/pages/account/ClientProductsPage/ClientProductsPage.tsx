@@ -3,7 +3,7 @@ import {Link, Outlet, useSearchParams} from "react-router-dom";
 
 import {useAppDispatch, useAppSelector} from "../../../hooks";
 import {productActions} from "../../../redux";
-import {PageNavigate, PagePagination, ProductForm} from "../../../components";
+import {PagePagination} from "../../../components";
 
 const ClientProductsPage: FC = () => {
     const {products} = useAppSelector(({productReducer}) => productReducer);

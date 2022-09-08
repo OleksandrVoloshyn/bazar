@@ -48,9 +48,8 @@ const UpdateProfileForm: FC<IProps> = ({profile, setIsUpdateProfile}) => {
             <div><label></label>Phone: <input type="text"{...register('phone')}/></div>
             {errors.phone?.message && <InputError errorMsg={errors.phone.message}/>}
             {updateProfileErrors && <InputError errorMsg={updateProfileErrors}/>}
-            <div>
-                <button>update</button>
-            </div>
+
+            <div><button>update</button></div>
         </form>
     );
 };

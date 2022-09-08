@@ -17,14 +17,14 @@ const getBrands = createAsyncThunk<IResponse<IBrand>, void>(
         return data
     }
 )
-const createBrand = createAsyncThunk<IBrand, { newBrand: IBrand }>(
+const createBrand = createAsyncThunk<IBrand, { brand: IBrand }>(
     'productSlice/createBrand',
-    async ({newBrand}) => {
-        const {data} = await brandService.createBrand(newBrand)
+    async ({brand}) => {
+        const {data} = await brandService.createBrand(brand)
         return data
     }
 )
-const updateBrand = createAsyncThunk<IBrand, { newBrandData: Partial<IBrand>, pk: string }>(
+const updateBrand = createAsyncThunk<IBrand, { newBrandData: IBrand, pk: string }>(
     'productSlice/updateBrand',
     async ({newBrandData, pk}) => {
         const {data} = await brandService.updateBrand(newBrandData, pk)

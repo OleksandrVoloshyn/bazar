@@ -2,8 +2,8 @@ import {FC} from "react"
 
 import {useAppDispatch, useInput} from "../../hooks";
 import {authActions} from "../../redux";
-import css from './ChangePasswordForm.module.css'
 import {InputError} from "../InputError/InputError";
+import css from './ChangePasswordForm.module.css'
 
 interface IProps {
     token: string,
@@ -21,9 +21,10 @@ const ChangePasswordForm: FC<IProps> = ({token, setChanged}) => {
 
     return (
         <div className={css.change_password_form}>
-            <div className={`${css.display_canter} ${css.input_line}`}><label>New Password:</label>
+            <div className={`${css.display_canter} ${css.input_line}`}>
+                <label>New Password:</label>
                 <input onChange={e => password.onChange(e)} onBlur={() => password.onBlur()}
-                       name={'password'} type="text" value={password.value}/>
+                       name={'password'} value={password.value}/>
             </div>
             {password.isDirty && password.empty.status && <InputError errorMsg={password.empty.msg}/>}
             {password.isDirty && password.passwordError.status && <InputError errorMsg={password.passwordError.msg}/>}

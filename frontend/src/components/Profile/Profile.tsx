@@ -21,7 +21,6 @@ const Profile: FC = () => {
 
     useEffect(() => {
         pk && dispatch(userActions.getById({pk}))
-
         return () => {
             dispatch(userActions.resetCandidate())
         }
@@ -29,7 +28,7 @@ const Profile: FC = () => {
 
     return (
         <div>
-            {data && !(isAdminPage && !candidate) && <div>
+            {data && (!isAdminPage || candidate) && <div>
                 <ProfileAvatar currentAvatar={data.profile.avatar} isOwner={isOwner}/>
 
                 {isUpdateProfile || updateProfileErrors
@@ -40,11 +39,11 @@ const Profile: FC = () => {
                         <div>Age: {data.profile.age}</div>
                         <div>Phone: {data.profile.phone}</div>
 
-                        {isOwner && <div onClick={() => setIsUpdateProfile(true)}>
-                            <button>Change profile</button>
+                        {isOwner && <div>
+                            <button onClick={() => setIsUpdateProfile(true)}>Update profile</button>
                         </div>}
+                        {user?.is_staff && candidate && <AdminPanelForProfile/>}
                     </div>}
-                {user?.is_staff && candidate && <AdminPanelForProfile/>}
             </div>}
         </div>
     );

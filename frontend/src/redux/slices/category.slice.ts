@@ -19,10 +19,10 @@ const getCategories = createAsyncThunk<IResponse<ICategory>, void>(
     }
 )
 
-const createCategory = createAsyncThunk<ICategory, { categoryTitle: string }>(
+const createCategory = createAsyncThunk<ICategory, { title: string }>(
     'productSlice/createCategory',
-    async ({categoryTitle}) => {
-        const {data} = await categoryService.createCategory(categoryTitle)
+    async ({title}) => {
+        const {data} = await categoryService.createCategory(title)
         return data
     }
 )

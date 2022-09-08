@@ -16,7 +16,7 @@ UserModel = get_user_model()
 class ListCreateUsersView(ListCreateAPIView):
     """
     get:
-        search users for changing
+        search users by email, name or surname
     post:
         create user
     """
@@ -25,6 +25,9 @@ class ListCreateUsersView(ListCreateAPIView):
 
     filter_backends = (SearchFilter,)
     search_fields = ('email', 'profile__name', 'profile__surname')
+
+    def get_queryset(self):
+        return self.queryset.exclude(id=self.request.user.id)
 
     def get_permissions(self):
         method = self.request.method
@@ -43,7 +46,7 @@ class UpdateProfileView(UpdateAPIView):
 
 
 class GetCurrentUserView(GenericAPIView):
-    """get current user by token"""
+    """get current user from token"""
     serializer_class = UserSerializer
 
     def get(self, *args, **kwargs):
@@ -69,7 +72,7 @@ class RetrieveDestroyUserView(RetrieveDestroyAPIView):
 
 
 class UserToAdminView(GenericAPIView):
-    """give admin power"""
+    """grant admin power"""
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsSuperUser,)

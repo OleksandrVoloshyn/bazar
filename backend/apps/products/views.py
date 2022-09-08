@@ -31,7 +31,7 @@ class ListProductView(ListAPIView):
 
 
 class ListClientProductsView(ListAPIView):
-    """get client's product by token"""
+    """get products by client token"""
     queryset = ProductModel.objects.all()
     serializer_class = ProductSerializer
 
@@ -108,7 +108,7 @@ class ListCreateCategoryView(ListCreateAPIView):
 class UpdateDestroyCategoryView(UpdateAPIView, DestroyAPIView):
     """
     put:
-        change category title
+        update category
     delete:
         remove category
     """
@@ -159,7 +159,7 @@ class CreateCommentView(CreateAPIView):
 
 
 class ListClientCommentsView(ListAPIView):
-    """get client comments by id from token"""
+    """get comments by client token"""
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (IsOwnerOrAdmin,)

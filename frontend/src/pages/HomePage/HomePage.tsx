@@ -1,19 +1,17 @@
 import {FC} from "react"
 import {useSearchParams} from "react-router-dom";
 
-import {Products, CategoryBar, FilterSideBar, PageNavigate} from "../../components";
+import {Products, CategoryBar, FilterSideBar} from "../../components";
 
 const HomePage: FC = () => {
     const [query] = useSearchParams();
     const queryObj = Object.fromEntries(query.entries())
-    const hasCategory = queryObj.category
+
+    const homePageBar = queryObj.category ? <FilterSideBar/> : <CategoryBar/>
 
     return (
         <div style={{'display': "flex"}}>
-            {hasCategory
-                ? <FilterSideBar/>
-                : <CategoryBar/>
-            }
+            {homePageBar}
             <Products/>
         </div>
     );

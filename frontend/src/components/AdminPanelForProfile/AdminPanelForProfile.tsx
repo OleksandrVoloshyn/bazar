@@ -8,9 +8,9 @@ const AdminPanelForProfile: FC = () => {
     const {candidate, user} = useAppSelector(({userReducer}) => userReducer);
     const dispatch = useAppDispatch();
 
-    const removeUser = async () => {
-        candidate && await dispatch(userActions.removeUser({pk: candidate?.id}))
-    }
+    const removeUser = async () => candidate && await dispatch(userActions.removeUser({pk: candidate.id}))
+    const toAdmin = async () => candidate && await dispatch(userActions.toAdmin({pk: candidate.id}))
+    const toLower = async () => candidate && await dispatch(userActions.toLower({pk: candidate.id}))
 
     return (
         <div className={css.panel}>
@@ -21,10 +21,9 @@ const AdminPanelForProfile: FC = () => {
 
                 {(!candidate.is_staff || user?.is_superuser) && <button onClick={removeUser}>Remove User</button>}
                 {user?.is_superuser && !candidate.is_superuser && <span>
-
-                <button onClick={() => dispatch(userActions.toAdmin({pk: candidate.id}))}>User to Admin</button>
-                <button onClick={() => dispatch(userActions.toLower({pk: candidate.id}))}>Admin to User</button>
-            </span>}
+                        <button onClick={toAdmin}>User to Admin</button>
+                        <button onClick={toLower}>Admin to User</button>
+                    </span>}
             </div>}
         </div>
     );
