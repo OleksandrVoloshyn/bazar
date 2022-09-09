@@ -1,14 +1,23 @@
 import {axiosService, Res} from "./axios.service";
 
-import {IComment, IProduct, IProductDetails, IProductImage, IQueryParams, IResponse} from "../interfaces";
+import {
+    IComment,
+    IProduct,
+    IProductDetails,
+    IProductImage,
+    IProductManipulated,
+    IQueryParams,
+    IResponse
+} from "../interfaces";
 import {urls} from "../constants";
 
 const productService = {
     getProducts: (QueryParamsObj: Partial<IQueryParams>): Res<IResponse<IProduct>> => axiosService.get(urls.products, {params: {...QueryParamsObj}}),
-    createProduct: (product: Partial<IProductDetails>): Res<void> => axiosService.post(`${urls.products}/create`, product),
+    createProduct: (product: Partial<IProductDetails>): Res<void> => axiosService.post(`${urls.products}/create`, {...product}, {headers: {"Content-Type": "multipart/form-data"}}),
     getClientProducts: (params: Partial<IQueryParams>): Res<IResponse<IProduct>> => axiosService.get(`${urls.products}/client/products`, {params}),
     getProductById: (pk: string): Res<IProductDetails> => axiosService.get(`${urls.products}/${pk}/target`),
-    updateProduct: (product: Partial<IProductDetails>): Res<IProductDetails> => axiosService.patch(`${urls.products}/${product.id}/target`, product),
+    // updateProduct: (product: Partial<IProductDetails>): Res<IProductDetails> => axiosService.patch(`${urls.products}/${product.id}/target`, {...product}),
+    updateProduct: (product: Partial<IProductManipulated>): Res<IProductDetails> => axiosService.patch(`${urls.products}/${product.id}/target`, {...product}),
     removeProduct: (pk: string): Res<void> => axiosService.delete(`${urls.products}/${pk}/target`),
 
     addProductImage: (productId: string, file: File): Res<IProductImage> => axiosService.post(`${urls.products}/${productId}/add_image`, {image: file}, {headers: {"Content-Type": "multipart/form-data"}}),

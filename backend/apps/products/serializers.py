@@ -59,9 +59,8 @@ class ProductDetailSerializer(ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         request: Request = self.context.get('request')
-
-        brand_id = request.data['brand'].get('id') or None
-        category_id = request.data['category'].get('id') or None
+        brand_id = request.data.get('brand.id') or None
+        category_id = request.data.get('category.id') or None
         product = ProductModel.objects.create(**validated_data, owner=request.user, category_id=category_id,
                                               brand_id=brand_id)
 

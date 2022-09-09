@@ -20,4 +20,4 @@ class ProductFilter(filters.FilterSet):
     @staticmethod
     def my_search_filter(queryset, name, value):
         """search by title or description"""
-        return queryset.filter(Q(title=value) | Q(description=value))
+        return queryset.filter(Q(title__icontains=value) | Q(description__icontains=value))

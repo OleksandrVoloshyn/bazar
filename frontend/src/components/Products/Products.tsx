@@ -14,7 +14,10 @@ const Products: FC = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(productActions.getAll({QueryParamsObj: queryObj}))
+        dispatch(productActions.getProducts({QParamsObj: queryObj}))
+        return () => {
+            dispatch(productActions.clearProducts())
+        }
     }, [dispatch, queryObj])
 
     const pagination_ordering = (e: ChangeEvent<HTMLFormElement>) => {
@@ -31,7 +34,7 @@ const Products: FC = () => {
                 {products &&
                     <PagePagination next={products.next} prev={products.prev} total_pages={products.total_pages}
                                     total_items={products.total_items}/>}
-                <form onChange={(e:ChangeEvent<HTMLFormElement>) => pagination_ordering(e)} className={css.form}>
+                <form onChange={(e: ChangeEvent<HTMLFormElement>) => pagination_ordering(e)} className={css.form}>
                     <select name="pagination" id='pagination'>
                         <option value="20">20</option>
                         <option value="40">40</option>

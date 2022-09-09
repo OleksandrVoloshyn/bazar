@@ -23,12 +23,11 @@ const PagePagination: FC<IProps> = ({prev, next, total_pages, total_items}) => {
         queryObj.page = (+queryObj.page + 1).toString()
         setQuery(queryObj)
     }
+
     return (
         <div>
-            <span>
-                {prev ? <span className={css.nav}><GrFormPreviousLink onClick={prevPage}/></span> : <GrFormClose/>}
-                {next ? <span className={css.nav}><GrFormNextLink onClick={nextPage}/></span> : <GrFormClose/>}
-            </span>
+            {prev ? <span className={css.nav}><GrFormPreviousLink onClick={prevPage}/></span> : <GrFormClose/>}
+            {next ? <span className={css.nav}><GrFormNextLink onClick={nextPage}/></span> : <GrFormClose/>}
             <span className={css.total}>total pages: {total_pages}</span>
             <span className={css.total}>total items: {total_items}</span>
         </div>

@@ -1,7 +1,15 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {productService} from "../../services";
-import {IComment, IProduct, IProductDetails, IProductImage, IQueryParams, IResponse} from "../../interfaces";
+import {
+    IComment,
+    IProduct,
+    IProductDetails,
+    IProductImage,
+    IProductManipulated,
+    IQueryParams,
+    IResponse
+} from "../../interfaces";
 
 interface IState {
     products?: IResponse<IProduct>,
@@ -18,10 +26,10 @@ const initialState: IState = {
     orders: [],
 }
 
-const getAll = createAsyncThunk<IResponse<IProduct>, { QueryParamsObj: Partial<IQueryParams> }>(
-    'productSlice/getAll',
-    async ({QueryParamsObj}) => {
-        const {data} = await productService.getProducts(QueryParamsObj);
+const getProducts = createAsyncThunk<IResponse<IProduct>, { QParamsObj: Partial<IQueryParams> }>(
+    'productSlice/getProducts',
+    async ({QParamsObj}) => {
+        const {data} = await productService.getProducts(QParamsObj);
         return data
     }
 );
@@ -45,7 +53,8 @@ const createProduct = createAsyncThunk<void, { product: Partial<IProductDetails>
         await productService.createProduct(product)
     }
 )
-const updateProduct = createAsyncThunk<IProductDetails, Partial<IProductDetails>>(
+// const updateProduct = createAsyncThunk<IProductDetails, Partial<IProductDetails>>(
+const updateProduct = createAsyncThunk<IProductDetails, Partial<IProductManipulated>>(
     'productSlice/updateProduct',
     async (product) => {
         const {data} = await productService.updateProduct(product);
@@ -152,7 +161,7 @@ const productSlice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(getAll.fulfilled, (state, action) => {
+            .addCase(getProducts.fulfilled, (state, action) => {
                 state.products = action.payload
             })
             .addCase(getProductById.fulfilled, (state, action) => {
@@ -203,7 +212,7 @@ const {
 
 const productActions = {
     clearBasket,
-    getAll,
+    getProducts,
     getProductById,
     createProduct,
     getClientProducts,

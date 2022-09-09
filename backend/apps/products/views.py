@@ -64,8 +64,8 @@ class RetrieveUpdateDestroyProductView(RetrieveUpdateDestroyAPIView):
         return [IsOwnerOrAdmin()]
 
     def perform_update(self, serializer):
-        brand_id = self.request.data['brand'].get('id') or None
-        category_id = self.request.data['category'].get('id') or None
+        brand_id = self.request.data.get('brand_id') or None
+        category_id = self.request.data.get('category_id') or None
         serializer.save(brand_id=brand_id, category_id=category_id)
 
 
