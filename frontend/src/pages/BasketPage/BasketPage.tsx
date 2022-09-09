@@ -1,7 +1,7 @@
 import {FC} from "react"
-import {Orders} from "../../../components";
-import {useAppDispatch} from "../../../hooks";
-import {productActions} from "../../../redux";
+import {Orders} from "../../components";
+import {useAppDispatch} from "../../hooks";
+import {productActions} from "../../redux";
 
 const BasketPage: FC = () => {
     const dispatch = useAppDispatch();

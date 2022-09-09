@@ -1,9 +1,9 @@
 import {FC, useEffect} from "react"
 import {Link, Outlet, useSearchParams} from "react-router-dom";
 
-import {useAppDispatch, useAppSelector} from "../../../hooks";
-import {productActions} from "../../../redux";
-import {PagePagination} from "../../../components";
+import {useAppDispatch, useAppSelector} from "../../hooks";
+import {productActions} from "../../redux";
+import {PagePagination} from "../../components";
 
 const ClientProductsPage: FC = () => {
     const {products} = useAppSelector(({productReducer}) => productReducer);

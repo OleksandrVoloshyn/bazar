@@ -1,9 +1,9 @@
 import {FC, useEffect} from "react"
 import {useSearchParams} from "react-router-dom";
 
-import {useAppDispatch, useAppSelector} from "../../../hooks";
-import {productActions} from "../../../redux";
-import {Comments, PagePagination} from "../../../components";
+import {useAppDispatch, useAppSelector} from "../../hooks";
+import {productActions} from "../../redux";
+import {Comments, PagePagination} from "../../components";
 
 const CommentListPage: FC = () => {
     const {myComments} = useAppSelector(({productReducer}) => productReducer);

@@ -1,6 +1,6 @@
 import {FC} from "react"
 
-import {ProductForm} from "../../../components";
+import {ProductForm} from "../../components";
 
 const CreateProductPage: FC = () => {
     return (

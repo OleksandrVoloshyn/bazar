@@ -1,5 +1,0 @@
-export * from './CreateProductPage/CreateProductPage'
-export * from './ClientProductsPage/ClientProductsPage'
-export * from './UpdateProductPage/UpdateProductPage'
-export * from './BasketPage/BasketPage'
-export * from './CommentListPage/CommentListPage'

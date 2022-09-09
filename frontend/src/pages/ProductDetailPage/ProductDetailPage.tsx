@@ -14,9 +14,8 @@ const ProductDetailPage: FC = () => {
     const isAuth = user || localStorage.getItem('access')
 
     useEffect(() => {
-        if (pk) {
-            dispatch(productActions.getProductById({pk}))
-        }
+        pk && dispatch(productActions.getProductById({pk}))
+
         return () => {
             dispatch(productActions.removeChosenProductFromState())
         }
@@ -43,8 +42,8 @@ const ProductDetailPage: FC = () => {
                     {chosenProduct.description && <div>description - {chosenProduct.description}</div>}
                     {/*{user && (user.id !== chosenProduct.owner.id) &&*/}
                     {isAuth &&
-                        <div onClick={e => setAddComment(prevState => !prevState)} className={css.add_comment_btn}>add
-                            comments</div>}
+                        <div onClick={() =>
+                            setAddComment(prevState => !prevState)} className={css.add_comment_btn}>add comments</div>}
                     {addComment && <AddComment pk={chosenProduct.id} setAddComment={setAddComment}/>}
 
                     {chosenProduct.comments && <Comments comments={chosenProduct.comments}/>}

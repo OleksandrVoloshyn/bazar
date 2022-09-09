@@ -1,6 +1,7 @@
 import {FC} from "react"
-import {ProductForm} from "../../../components";
 import {useParams} from "react-router-dom";
+
+import {ProductForm} from "../../components";
 
 const UpdateProductPage: FC = () => {
     const {pk} = useParams<string>();

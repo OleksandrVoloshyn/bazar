@@ -13,10 +13,12 @@ interface IProps {
 const Order: FC<IProps> = ({item}) => {
     const dispatch = useAppDispatch();
 
+    const removeFromBasket = async () => await dispatch(productActions.removeFromBasket(item))
+
     return (
         <div className={css.item}>
             <div>{item.title} -- {item.price}</div>
-            <FaTrash className={css.delete_icon} onClick={() => dispatch(productActions.removeFromBasket(item))}/>
+            <FaTrash className={css.delete_icon} onClick={removeFromBasket}/>
         </div>
     );
 };
