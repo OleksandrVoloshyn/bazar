@@ -8,6 +8,7 @@ from .services import brand_upload_to, product_upload_to
 UserModel = get_user_model()
 
 
+# todo select_related prefetch_related
 class ProductModel(models.Model):
     class Meta:
         db_table = 'product'

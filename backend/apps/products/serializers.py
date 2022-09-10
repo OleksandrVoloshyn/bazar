@@ -59,15 +59,13 @@ class ProductDetailSerializer(ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         request: Request = self.context.get('request')
-        print(request.FILES, 'fffffffffffffffffffffffffffffffffffff')
-        print(request.data, 'dddddddddddddddddddddddddddddd')
-        brand_id = request.data['brand'].get('id') or None
-        category_id = request.data['category'].get('id') or None
+        brand_id = request.data.get('brand.id') or None
+        category_id = request.data.get('category.id') or None
         product = ProductModel.objects.create(**validated_data, owner=request.user, category_id=category_id,
                                               brand_id=brand_id)
 
-        for image in request.FILES.getlist('images'):
-            serializer = ImageSerializer(data={'image': image})
+        for image in request.FILES:
+            serializer = ImageSerializer(data={'image': request.FILES[image]})
             serializer.is_valid(raise_exception=True)
             serializer.save(product=product)
         return product

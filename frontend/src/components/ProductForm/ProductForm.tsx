@@ -57,9 +57,10 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
             await dispatch(productActions.updateProduct(product))
             navigate('/account/my_products')
         } else {
+            product.images && (product.images = Array.from(product.images))
             await dispatch(productActions.createProduct({product}))
+            reset()
         }
-        reset()
     }
 
     return (

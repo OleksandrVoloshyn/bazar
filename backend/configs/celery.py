@@ -9,3 +9,5 @@ app = Celery('configs')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
+
+# todo remove not active users celery beat
