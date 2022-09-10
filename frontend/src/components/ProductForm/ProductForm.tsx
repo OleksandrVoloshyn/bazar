@@ -1,13 +1,13 @@
 import {FC, useEffect} from "react"
 import {SubmitHandler, useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
+import {joiResolver} from "@hookform/resolvers/joi";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {brandActions, categoryActions, productActions} from "../../redux";
 import {UpdateProductImage} from "../UpdateProductImage/UpdateProductImage";
-import {IProductDetails, IProductManipulated} from "../../interfaces";
+import {IProductDetails} from "../../interfaces";
 import css from './ProductForm.module.css'
-import {useNavigate} from "react-router-dom";
-import {joiResolver} from "@hookform/resolvers/joi";
 import {productValidator} from "../../validators";
 import {InputError} from "../InputError/InputError";
 
@@ -16,8 +16,7 @@ interface IProps {
 }
 
 const ProductForm: FC<IProps> = ({idForUpdate}) => {
-    // const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<IProductDetails>({
-    const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<IProductManipulated>({
+    const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<IProductDetails>({
         resolver: joiResolver(productValidator),
         mode: "onTouched"
     });
@@ -27,7 +26,6 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
         brandReducer: {brands}, categoryReducer: {categories}, productReducer: {chosenProduct}
     } = useAppSelector((state) => state);
 
-    console.log(errors)
     useEffect(() => {
         dispatch(brandActions.getBrands())
         dispatch(categoryActions.getCategories())
@@ -46,28 +44,20 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
             setValue('color', chosenProduct.color)
             setValue('size', chosenProduct.size)
             setValue('gender', chosenProduct.gender)
-            // chosenProduct.brand ? setValue('brand.id', chosenProduct.brand.id) : setValue('brand.id', '')
-            chosenProduct.brand ? setValue('brand_id', chosenProduct.brand.id) : setValue('brand_id', '')
-            // chosenProduct.category ? setValue('category.id', chosenProduct.category.id) : setValue('category.id', '')
-            chosenProduct.category ? setValue('category_id', chosenProduct.category.id) : setValue('category_id', '')
+            chosenProduct.brand ? setValue('brand.id', chosenProduct.brand.id) : setValue('brand.id', '')
+            chosenProduct.category ? setValue('category.id', chosenProduct.category.id) : setValue('category.id', '')
         }
     }
-
     idForUpdate && setFormForUpdate()
-    //todo update переробити до неділі
 
-    // const submit: SubmitHandler<Partial<IProductDetails>> = async (product) => {
-    const submit: SubmitHandler<Partial<IProductManipulated>> = async (product) => {
-        //todo поламалdсь відправка files зробити до неділі
+    const submit: SubmitHandler<Partial<IProductDetails>> = async (product) => {
         console.log(product)
         if (chosenProduct) {
             product['id'] = idForUpdate
-            console.log(product)
             await dispatch(productActions.updateProduct(product))
             navigate('/account/my_products')
         } else {
-            // @ts-ignore
-            dispatch(productActions.createProduct({product}))
+            await dispatch(productActions.createProduct({product}))
         }
         reset()
     }
@@ -110,8 +100,7 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
 
                 <div className={css.input_line}>
                     <label>Brand: </label>
-                    {/*<select {...register('brand.id')}>*/}
-                    <select {...register('brand_id')}>
+                    <select {...register('brand.id')}>
                         <option></option>
                         {brands && brands.map(brand => <option key={brand.id}
                                                                value={brand.id}>{brand.name}</option>)}
@@ -120,8 +109,7 @@ const ProductForm: FC<IProps> = ({idForUpdate}) => {
 
                 <div className={css.input_line}>
                     <label>Category: </label>
-                    {/*<select {...register('category.id')}>*/}
-                    <select {...register('category_id')}>
+                    <select {...register('category.id')}>
                         <option></option>
                         {categories && categories.map(category => <option key={category.id}
                                                                           value={category.id}>{category.title}</option>)}

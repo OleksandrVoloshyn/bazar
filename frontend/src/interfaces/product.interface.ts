@@ -31,19 +31,3 @@ export interface IProductDetails {
     comments: IComment[],
     images?: IProductImage[]
 }
-
-export interface IProductManipulated {
-    id: string,
-    title: string,
-    description?: string,
-    price: number,
-    color: string,
-    size: string,
-    gender: string,
-    // created_at: string,
-    category_id?: string,
-    // owner: IUser,
-    brand_id?: string,
-    // comments: IComment[],
-    images?: FileList | File
-}

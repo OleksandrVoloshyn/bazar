@@ -26,12 +26,9 @@ const productValidator = Joi.object({
     gender: Joi.string().required().messages({
         'string.empty': errorMessage.empty
     }),
-    // brand: Joi.any(),
-    brand_id: Joi.string().empty().allow(''),
-    // category: Joi.any(),
-    category_id: Joi.string().empty().allow(''),
+    brand: Joi.any(),
+    category: Joi.any(),
     images: Joi.any()
-//    todo change any
 });
 
 export {productValidator}

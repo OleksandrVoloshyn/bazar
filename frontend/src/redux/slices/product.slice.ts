@@ -6,7 +6,6 @@ import {
     IProduct,
     IProductDetails,
     IProductImage,
-    IProductManipulated,
     IQueryParams,
     IResponse
 } from "../../interfaces";
@@ -53,8 +52,7 @@ const createProduct = createAsyncThunk<void, { product: Partial<IProductDetails>
         await productService.createProduct(product)
     }
 )
-// const updateProduct = createAsyncThunk<IProductDetails, Partial<IProductDetails>>(
-const updateProduct = createAsyncThunk<IProductDetails, Partial<IProductManipulated>>(
+const updateProduct = createAsyncThunk<IProductDetails, Partial<IProductDetails>>(
     'productSlice/updateProduct',
     async (product) => {
         const {data} = await productService.updateProduct(product);
