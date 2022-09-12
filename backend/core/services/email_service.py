@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from django.contrib.auth import get_user_model
@@ -35,3 +36,11 @@ class EmailService:
         url = f'{os.environ.get("FRONTEND_URL")}/recovery/{token}'
         cls._send_email.delay(user.email, TemplateEnum.RECOVERY.value, {'name': user.profile.name, 'link': url},
                               'Recovery')
+
+    @staticmethod
+    @app.task
+    def remove_users():
+        date_for_remove = datetime.datetime.today() - datetime.timedelta(hours=25)
+        for user in UserModel.objects.filter(is_active=False).filter(created_at__lt=date_for_remove):
+            EmailService._send_email(user.email, TemplateEnum.REMOVE.value, {}, 'Remove')
+            user.delete()
