@@ -25,14 +25,14 @@ from .serializers import (
 class ListProductView(ListAPIView):
     """get products with short info, can filter"""
     serializer_class = ProductSerializer
-    queryset = ProductModel.objects.all()
+    queryset = ProductModel.objects.all().prefetch_related('images')
     permission_classes = (AllowAny,)
     filterset_class = ProductFilter
 
 
 class ListClientProductsView(ListAPIView):
     """get products by client token"""
-    queryset = ProductModel.objects.all()
+    queryset = ProductModel.objects.all().prefetch_related('images')
     serializer_class = ProductSerializer
 
     def get_queryset(self):
@@ -53,7 +53,8 @@ class RetrieveUpdateDestroyProductView(RetrieveUpdateDestroyAPIView):
     delete:
         remove product
     """
-    queryset = ProductModel.objects.all()
+    queryset = ProductModel.objects.all().select_related('brand').select_related('category').select_related(
+        'owner').prefetch_related('images').prefetch_related('comments').prefetch_related('comments__owner')
     serializer_class = ProductDetailSerializer
     http_method_names = ('get', 'patch', 'delete')
 
@@ -160,7 +161,7 @@ class CreateCommentView(CreateAPIView):
 
 class ListClientCommentsView(ListAPIView):
     """get comments by client token"""
-    queryset = CommentModel.objects.all()
+    queryset = CommentModel.objects.all().select_related('product').select_related('owner')
     serializer_class = CommentSerializer
     permission_classes = (IsOwnerOrAdmin,)
 

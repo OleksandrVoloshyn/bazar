@@ -21,7 +21,7 @@ class ListCreateUsersView(ListCreateAPIView):
         create user
     """
     serializer_class = UserSerializer
-    queryset = UserModel.objects.all()
+    queryset = UserModel.objects.all().select_related('profile')
 
     filter_backends = (SearchFilter,)
     search_fields = ('email', 'profile__name', 'profile__surname')
