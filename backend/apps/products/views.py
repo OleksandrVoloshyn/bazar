@@ -53,8 +53,7 @@ class RetrieveUpdateDestroyProductView(RetrieveUpdateDestroyAPIView):
     delete:
         remove product
     """
-    queryset = ProductModel.objects.all().select_related('brand').select_related('category').select_related(
-        'owner').prefetch_related('images').prefetch_related('comments').prefetch_related('comments__owner')
+    queryset = ProductModel.objects.all().select_related('brand', 'category', 'owner').prefetch_related('images', 'comments', 'comments__owner')
     serializer_class = ProductDetailSerializer
     http_method_names = ('get', 'patch', 'delete')
 
@@ -161,7 +160,7 @@ class CreateCommentView(CreateAPIView):
 
 class ListClientCommentsView(ListAPIView):
     """get comments by client token"""
-    queryset = CommentModel.objects.all().select_related('product').select_related('owner')
+    queryset = CommentModel.objects.all().select_related('product', 'owner')
     serializer_class = CommentSerializer
     permission_classes = (IsOwnerOrAdmin,)
 
